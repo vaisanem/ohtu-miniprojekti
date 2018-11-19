@@ -16,6 +16,7 @@ class ServerRule extends ExternalResource{
 
     @Override
     protected void before() throws Throwable {
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
         this.app = SpringApplication.run(Main.class);
     }
 
