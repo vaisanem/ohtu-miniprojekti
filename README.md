@@ -5,7 +5,7 @@ Suorita sovellus komennolla _gradle run_, käynnistyy osoitteeseen http://localh
 
 Testit suoritetaan komennolla _gradle test_
 
-[![Build Status](https://travis-ci.org/mluukkai/spring-cucumber.svg?branch=master)](https://travis-ci.org/mluukkai/spring-cucumber)
+[![Build Status](https://travis-ci.org/vaisanem/ohtu-miniprojekti.svg?branch=master)](https://travis-ci.org/vaisanem/ohtu-miniprojekti)
 
 Testit käyttävät _lib_-hakemistossa olevaa firefox Geckodriveriä
 
