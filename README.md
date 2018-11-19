@@ -1,4 +1,5 @@
-# spring boot + cucumber 
+<<<<<<< HEAD
+# ohtu-miniprojekti
 
 Suorita sovellus komennolla _gradle run_, käynnistyy osoitteeseen http://localhost:8080
 
