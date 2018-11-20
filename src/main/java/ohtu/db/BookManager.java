@@ -26,10 +26,27 @@ public class BookManager implements sqlManager<Book, Integer> {
         this.database = database;
     }
 
+    public boolean addBook(Book book) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call AddBook(?,?,?,?)}");
+
+        stmt.setObject(1, book.getTitle());
+        stmt.setObject(2, book.getIsbn());
+        stmt.setObject(3, book.getAuthor());
+        stmt.setObject(4, book.getYear());
+
+        int diu = stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
+
+        return diu == 1;
+    }
+
     @Override
     public Book findOne(Integer key) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT book.id, isbn as ISBN, title as Title, relYear as releaseYear, name as Author FROM Book, Author WHERE Book.id = ?");
+        PreparedStatement stmt = connection.prepareStatement("SELECT book.id, isbn as ISBN, title as Title, relYear as releaseYear, name as Author FROM Book, Author WHERE Book.id = ?  AND Book.fk_AuthorID = Author.id");
         stmt.setObject(1, key);
 
         ResultSet rs = stmt.executeQuery();
@@ -50,7 +67,7 @@ public class BookManager implements sqlManager<Book, Integer> {
     @Override
     public List<Book> findAll() throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT book.id, isbn as ISBN, title as Title, relYear as releaseYear, name as Author FROM Book, Author");
+        PreparedStatement stmt = connection.prepareStatement("SELECT book.id, isbn as ISBN, title as Title, relYear as releaseYear, name as Author FROM Book, Author WHERE Author.id = Book.fk_AuthorID");
 
         ResultSet rs = stmt.executeQuery();
         List<Book> books = new ArrayList<>();

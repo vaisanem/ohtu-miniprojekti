@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -36,6 +38,18 @@ public class Controllers {
         List<Book> books = bookMan.findAll();
         model.addAttribute("books", books);
         return "bookview";
+    }
+
+    @RequestMapping(value = "/newItem", method = RequestMethod.GET)
+    public String itemAdd(ModelMap model) throws SQLException {
+        return "newItem";
+    }
+
+    @PostMapping("/addItem")
+    public String addItem(ModelMap model, @RequestParam String title, @RequestParam String isbn, @RequestParam Integer year, @RequestParam String author) throws SQLException {
+       Book book = new Book(isbn, title, author, year);
+       boolean succeeded = bookMan.addBook(book);
+       return "redirect:/books";
     }
 
     @RequestMapping(value = "/book/{id}", method = RequestMethod.GET)

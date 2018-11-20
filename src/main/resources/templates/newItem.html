@@ -7,11 +7,38 @@ and open the template in the editor.
 <html>
     <head>
         <title>Create new Book entry</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
+	
     <body>
         <div id="NavBar"></div>
+		
+		<input type="radio" name="type" value="book" checked="checked"> Book </input>
+		
+		<!-- For future reference
+		<input type="radio" name="type" value="podcast"> Book</input>
+		<input type="radio" name="type" value="video"> Book</input>
+		!-->
+		
+		<br/>
+		
+		 <form method="POST"  action="addItem">
+			Title of book:<br/>
+			<input type="text" id="title" name="title"/><br/>
+			
+			ISBN:  <br/>
+			<input type="text" id="isbn" name="isbn"/><br/>
+			
+			Author: <br/>
+			<input type="text" id="author" name="author"/><br/>
+			
+			Publishing year: <br/>
+			<input type="text" id="year" name="year"/><br/>
+			
+			<input type="submit" value="Add new book"/>
+		</form>
+		
         <h1>NOT IMPLEMENTED</h1>
         <p>TODO</p>
     </body>
