@@ -5,6 +5,9 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import java.io.File;
+import ohtu.db.sqlManager;
+import ohtu.stubs.StubBookManager;
+import ohtu.types.Book;
 import static org.junit.Assert.assertTrue;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -15,6 +18,9 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 public class Stepdefs {
 
     WebDriver driver;
+    String baseUrl;
+    sqlManager<Book, Integer> manager;
+    WebElement element;
 
     public Stepdefs() {
         File file;
@@ -29,9 +35,11 @@ public class Stepdefs {
         if (System.getProperty("os.name").matches("Windows 10")) {
             this.driver = new ChromeDriver();
         } else {
-            this.driver = new ChromeDriver();
-            //this.driver = new FirefoxDriver();
+            //this.driver = new ChromeDriver();
+            this.driver = new FirefoxDriver();
         }
+        baseUrl = "http://localhost:" + 8080 + "/";
+        manager = new StubBookManager();
     }
 
     @After
@@ -41,21 +49,30 @@ public class Stepdefs {
 
     @Given("^user is at the main page$")
     public void user_is_at_the_main_page() throws Throwable {
-        driver.get("http://localhost:" + 8080 + "/");
+        driver.get(baseUrl);
         Thread.sleep(1000);
     }
 
-    @When("^a link is clicked$")
-    public void a_link_is_clicked() throws Throwable {
+    @When("^link \"([^\"]*)\" is clicked$")
+    public void a_link_is_clicked(String link) throws Throwable {
         Thread.sleep(1000);
-        clickLinkWithText("linkki");
+        clickLinkWithText(link);
+        Thread.sleep(1000);
+    }
+    
+    @When("^book fields title \"([^\"]*)\" and others are filled and submitted$")
+    public void book_fields_are_submitted(String title) throws Throwable {
+        Thread.sleep(1000);
+        findElementAndFill("title", title);
+        findElementAndFill("isbn", "98765432100");
+        findElementAndFill("author", "Ruoan Laittaja");
+        findElementAndFill("year", "2011");
         Thread.sleep(1000);
     }
 
     @Then("^\"([^\"]*)\" is shown$")
-    public void is_shown(String arg1) throws Throwable {
-        assertTrue(driver.findElement(By.tagName("body"))
-                .getText().contains(arg1));
+    public void is_shown(String content) throws Throwable {
+        assertTrue(driver.getPageSource().contains(content));
     }
 
     private void clickLinkWithText(String text) {
@@ -69,6 +86,11 @@ public class Stepdefs {
                 System.out.println(e.getStackTrace());
             }
         }
+    }
+    
+    private void findElementAndFill(String name, String value) {
+        element = driver.findElement(By.name(name));
+        element.sendKeys(value);
     }
 
 }
