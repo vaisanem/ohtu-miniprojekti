@@ -38,13 +38,16 @@ dependencies {
     compile("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect")
     
     compile("com.h2database:h2")
+    
+   compile('com.microsoft.sqlserver:mssql-jdbc')
+    
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("com.heroku.sdk:heroku-jdbc:0.1.1")
     compile("org.postgresql:postgresql:9.4.1212.jre7")
     
     compile("org.springframework.boot:spring-boot-devtools")
 	
-	compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
     
     compile group: 'org.seleniumhq.selenium', name: 'selenium-firefox-driver', version: seleniumVersion
     compile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version:seleniumVersion
