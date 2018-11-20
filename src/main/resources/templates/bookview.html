@@ -19,7 +19,7 @@
 		
             <ul class="items">
                 <li class="items" th:each="book: ${books}">
-                    <a class="items" th:href="${'/book/' + book.id}" th:text="${book.title} + ' - '">Book Title</a>
+                    <a class="items" th:href="${'/book/' + book.id}" th:text="${book.title}">Book Title</a>
                 </li>
             </ul>
 		
