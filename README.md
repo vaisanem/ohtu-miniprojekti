@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # ohtu-miniprojekti
 
 Suorita sovellus komennolla _gradle run_, käynnistyy osoitteeseen http://localhost:8080
@@ -14,3 +13,6 @@ Konfiguraatiosta on kiittäminen kevään 2017 [TKT-FUBAR](https://github.com/TK
 [Project BackLog](https://docs.google.com/spreadsheets/d/1buq7sBb_nRdBZMHKWHFA3ipxtxQ8gRC5szWM1WUgi8A/edit?usp=sharing)
 
 [First Sprint](https://docs.google.com/spreadsheets/d/1ImM3rdsm4RPNh8BDvbMcLxRbnVOARmnco10cEbbXApI/edit?usp=sharing)
+
+## Definition of Done
+ * ?

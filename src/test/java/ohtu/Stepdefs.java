@@ -29,7 +29,8 @@ public class Stepdefs {
         if (System.getProperty("os.name").matches("Windows 10")) {
             this.driver = new ChromeDriver();
         } else {
-            this.driver = new FirefoxDriver();
+            this.driver = new ChromeDriver();
+            //this.driver = new FirefoxDriver();
         }
     }
 
