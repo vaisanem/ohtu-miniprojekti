@@ -36,6 +36,12 @@ public class Book {
         year = rs.getInt("releaseYear");
     }
 
+    public int getId() {
+        return id;
+    }
+    
+    
+
     public String getAuthor() {
         return author;
     }

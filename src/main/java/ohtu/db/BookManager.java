@@ -50,7 +50,7 @@ public class BookManager implements sqlManager<Book, Integer> {
     @Override
     public List<Book> findAll() throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT isbn as ISBN, title as Title, relYear as releaseYear, name as Author FROM Book, Author");
+        PreparedStatement stmt = connection.prepareStatement("SELECT book.id, isbn as ISBN, title as Title, relYear as releaseYear, name as Author FROM Book, Author");
 
         ResultSet rs = stmt.executeQuery();
         List<Book> books = new ArrayList<>();
