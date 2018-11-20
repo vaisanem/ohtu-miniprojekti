@@ -1,0 +1,109 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 20, 2018, 6:35:15 PM
+    Author     : Toothy
+*/
+
+
+/* global styling */
+h1 {
+    color: cornflowerblue;
+    font-family: verdana;
+    font-size: 30px;
+    text-align:  center;
+    margin: 20px;
+}
+h2 {
+    color: black;
+    font-family: verdana;
+    font-size: 15px;
+    text-align:  left;
+    margin: 20px;    
+}
+body {
+    margin: 0;
+}
+div {
+    margin-left: 10%;
+    padding: 1px 16px;
+    height: 100%
+}
+p {
+    text-align:left;
+    font-family: verdana;
+    font-size: 15px;
+    margin-left: 40px;
+}
+
+/*nav bar styling*/
+ul.nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 10%;
+    background-color: lightsteelblue;
+    border: 1px solid black;
+    height: 100%;
+    position: fixed;
+    overflow: auto;
+   }
+li.nav a {
+    color: black;
+    font-family: verdana;
+    text-decoration: none;
+    display: block;
+    padding: 10px 20px;
+    
+}
+li.nav {
+    text-align: center;
+    
+}
+
+li.nav a.active {
+    background-color: steelblue;
+    color: white;
+}
+li.nav a:hover:not(.active) {
+    background-color: darkslategray;
+    color: white;
+}
+
+/*Item listing style*/
+
+ul.items {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 50%;
+    background-color: white;
+    overflow: auto;
+}
+li.items a {
+    color: black;
+    font-family: verdana;
+    text-decoration: none;
+    display: block;
+    padding: 10px 20px;
+    
+}
+li.items {
+    text-align: center;
+    border-bottom: 1px solid black;    
+}
+li.items:last-child{
+    border-bottom: none;
+}
+li.items a:hover {
+    background-color: darkslategray;
+    color: white;
+}
+
+
+
+
+
