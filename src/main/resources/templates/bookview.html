@@ -2,19 +2,28 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
     <head>
-        <title>MiniProject</title>
+        <title>Mini Project</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" href="/style.css"/>
     </head>
 
     <body>
-        <h1>NOT IMPLEMENTED</h1>
+        <ul class = "nav">
+            <li class="nav"><a href="/" >Home</a></li>
+            <li class="nav"><a href="/books" class="active">View Books</a></li>
+            <li class="nav"><a href="/newItem">Add new item</a></li>
+        </ul>        
+        
+        <div>
+            <h1>NOT IMPLEMENTED</h1>
 		
-		<ul>
-            <li th:each="book: ${books}">
-				<a th:href="${'/book/' + book.id}" th:text="${book.title} + ' - '">Book Title</a>
-            </li>
-        </ul>
+            <ul class="items">
+                <li class="items" th:each="book: ${books}">
+                    <a class="items" th:href="${'/book/' + book.id}" th:text="${book.title}">Book Title</a>
+                </li>
+            </ul>
 		
-        <p><a href="/">Back home</a></p>
+            
+        </div>
     </body>
 </html>

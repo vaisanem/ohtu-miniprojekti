@@ -4,17 +4,28 @@
     <head>
         <title>MiniProject</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" href="/style.css"/>
     </head>
 
     <body>
-		<h1> Title: </h1>
+        <ul class = "nav">
+            <li class="nav"><a href="/">Home</a></li>
+            <li class="nav"><a href="/books">View Books</a></li>
+            <li class="nav"><a href="/newItem">Add new item</a></li>
+        </ul>
+        
+        
+        
+        <div>
+		<h2> Title: </h2>
 			<p><span th:text="${book.title}"></span></p>
-		<h1> Author: </h1>
+		<h2> Author: </h2>
 			<p><span th:text="${book.author}"></span></p>
-		<h1> Release year: </h1>
+		<h2> Release year: </h2>
 			<p><span th:text="${book.year}"></span></p>
-		<h1> ISBN:</h1>
+		<h2> ISBN:</h2>
 			<p><span th:text="${book.isbn}"></span></p>
+        </div>
         <p><a href="/">Back home</a></p>
     </body>
 </html>
