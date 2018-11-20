@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>MiniProject</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+
+    <body>
+		<h1> Title: </h1>
+			<p><span th:text="${book.title}"></span></p>
+		<h1> Author: </h1>
+			<p><span th:text="${book.author}"></span></p>
+		<h1> Release year: </h1>
+			<p><span th:text="${book.year}"></span></p>
+		<h1> ISBN:</h1>
+			<p><span th:text="${book.isbn}"></span></p>
+        <p><a href="/">Back home</a></p>
+    </body>
+</html>

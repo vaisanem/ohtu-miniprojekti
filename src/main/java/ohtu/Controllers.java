@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -37,10 +38,11 @@ public class Controllers {
         return "bookview";
     }
 
-    @GetMapping("/book")
-    public String book(@RequestParam(name = "name", required = false, defaultValue = "nerdpunk") String name, Model model) {
-        model.addAttribute("name", name);
-        return "bookview";
+    @RequestMapping(value = "/book/{id}", method = RequestMethod.GET)
+    public String book(@PathVariable int id, ModelMap model) throws SQLException {
+        Book book = bookMan.findOne(id);
+        model.addAttribute("book", book);
+        return "book";
     }
 
 }
