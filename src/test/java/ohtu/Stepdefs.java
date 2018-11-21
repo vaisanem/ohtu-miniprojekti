@@ -109,8 +109,15 @@ public class Stepdefs {
     public void list_of_all_books_is_shown() throws Throwable {    
         BookManager bookMan = new BookManager(db);
         List<Book> Books = bookMan.findAll("default");
+        
+        // Debugging purposes, check which books were gotten
+        for(Book book : Books){
+            System.out.println(book.getTitle());
+        }
+        
         Boolean EverythingIsThere = true;
         for(Book book : Books){
+            Thread.sleep(50);
             if(!driver.getPageSource().contains(book.getTitle())){
                 EverythingIsThere = false;
             }
