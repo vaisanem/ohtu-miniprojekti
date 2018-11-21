@@ -11,6 +11,7 @@ import ohtu.stubs.StubBookManager;
 import ohtu.types.Book;
 import static org.junit.Assert.assertTrue;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -60,21 +61,28 @@ public class Stepdefs {
         clickLinkWithText(link);
         Thread.sleep(1000);
     }
-    
+
     @When("^book fields title \"([^\"]*)\", isbn \"([^\"]*)\", author and year \"([^\"]*)\" are filled and submitted$")
     public void book_fields_are_submitted(String title, String isbn, String year) throws Throwable {
         Thread.sleep(1000);
-        if (isbn.isEmpty()) isbn = Integer.toString(random.nextInt());
+        if (isbn.isEmpty()) {
+            isbn = Integer.toString(random.nextInt());
+        }
         findElementAndFill("title", title);
         findElementAndFill("isbn", isbn);
         findElementAndFill("author", "Testaaja");
         findElementAndFill("year", year);
+
+        // Setus user to "testUser"
+        JavascriptExecutor jse = (JavascriptExecutor) driver;        
+        String strJS = "document.getElementById('user').value='testUser'";
+        jse.executeScript(strJS);
+
         element = driver.findElement(By.name("Add new book"));
         element.submit();
         Thread.sleep(1000);
         //driver.get(baseUrl + "books");
     }
-
 
     @Then("^\"([^\"]*)\" is shown$")
     public void is_shown(String content) throws Throwable {
@@ -93,7 +101,7 @@ public class Stepdefs {
             }
         }
     }
-    
+
     private void findElementAndFill(String name, String value) {
         element = driver.findElement(By.name(name));
         element.sendKeys(value);

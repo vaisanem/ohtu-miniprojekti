@@ -14,8 +14,6 @@ import java.util.*;
  * @author ColdFish
  */
 public interface sqlManager<T,K> {
-    
-    boolean add(T object) throws SQLException;
 
     T findOne(K key) throws SQLException;
 
