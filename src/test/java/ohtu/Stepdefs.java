@@ -5,7 +5,11 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import java.io.File;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Random;
+import ohtu.db.BookManager;
+import ohtu.db.Database;
 import ohtu.db.sqlManager;
 import ohtu.stubs.StubBookManager;
 import ohtu.types.Book;
@@ -19,13 +23,17 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class Stepdefs {
 
-    WebDriver driver;
-    String baseUrl;
-    WebElement element;
-    Random random;
-
-    public Stepdefs() {
+    private WebDriver driver;
+    private String baseUrl;
+    private WebElement element;
+    private Random random;
+    private Database db;
+    public Stepdefs() throws ClassNotFoundException {
         File file;
+        String addr = "ohmipro.ddns.net";
+        String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMP;user=ohtuadm;password=hakimi1337";
+        db = new Database(url);
+        
         if (System.getProperty("os.name").matches("Mac OS X")) {
             file = new File("lib/macgeckodriver");
         } else {
@@ -45,7 +53,8 @@ public class Stepdefs {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws SQLException {
+        db.getConnection().close();
         driver.quit();
     }
 
@@ -73,8 +82,8 @@ public class Stepdefs {
         findElementAndFill("author", "Testaaja");
         findElementAndFill("year", year);
 
-        // Setus user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;        
+        // Sets user to "testUser"
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
         String strJS = "document.getElementById('user').value='testUser'";
         jse.executeScript(strJS);
 
@@ -87,6 +96,26 @@ public class Stepdefs {
     @Then("^\"([^\"]*)\" is shown$")
     public void is_shown(String content) throws Throwable {
         assertTrue(driver.getPageSource().contains(content));
+    }
+
+    @When("^Link \"([^\"]*)\" is clicked$")
+    public void link_is_clicked(String link) throws Throwable {
+        Thread.sleep(1000);
+        clickLinkWithText(link);
+        Thread.sleep(1000);
+    }
+
+    @Then("^List of all books is shown$")
+    public void list_of_all_books_is_shown() throws Throwable {    
+        BookManager bookMan = new BookManager(db);
+        List<Book> Books = bookMan.findAll("default");
+        Boolean EverythingIsThere = true;
+        for(Book book : Books){
+            if(!driver.getPageSource().contains(book.getTitle())){
+                EverythingIsThere = false;
+            }
+        }
+        assertTrue(EverythingIsThere);       
     }
 
     private void clickLinkWithText(String text) {
