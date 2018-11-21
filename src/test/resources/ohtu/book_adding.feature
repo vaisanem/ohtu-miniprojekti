@@ -4,6 +4,7 @@ Feature: user can add new book
     Given user is at the main page
     When link "Add new item" is clicked
     And book fields title "Cucumber", isbn "", author and year "2018" are filled and submitted
+    And link "Cucumber" is clicked
     Then "Cucumber" is shown
 
   Scenario: user cannot add book with already existing isbn
