@@ -48,7 +48,7 @@ public class Controllers {
     @PostMapping("/addItem")
     public String addItem(ModelMap model, @RequestParam String title, @RequestParam String isbn, @RequestParam Integer year, @RequestParam String author) throws SQLException {
        Book book = new Book(isbn, title, author, year);
-       boolean succeeded = bookMan.addBook(book);
+       boolean succeeded = bookMan.add(book);
        return "redirect:/books";
     }
 

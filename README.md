@@ -1,8 +1,6 @@
 # ohtu-miniprojekti
 
-Suorita sovellus komennolla _gradle run_, käynnistyy osoitteeseen http://localhost:8080
-
-Testit suoritetaan komennolla _gradle test_
+https://ohmipro.herokuapp.com/
 
 [![Build Status](https://travis-ci.org/vaisanem/ohtu-miniprojekti.svg?branch=master)](https://travis-ci.org/vaisanem/ohtu-miniprojekti)
 

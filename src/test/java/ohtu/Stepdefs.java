@@ -19,7 +19,6 @@ public class Stepdefs {
 
     WebDriver driver;
     String baseUrl;
-    sqlManager<Book, Integer> manager;
     WebElement element;
 
     public Stepdefs() {
@@ -39,7 +38,6 @@ public class Stepdefs {
             this.driver = new FirefoxDriver();
         }
         baseUrl = "http://localhost:" + 8080 + "/";
-        manager = new StubBookManager();
     }
 
     @After
@@ -65,10 +63,14 @@ public class Stepdefs {
         Thread.sleep(1000);
         findElementAndFill("title", title);
         findElementAndFill("isbn", "98765432100");
-        findElementAndFill("author", "Ruoan Laittaja");
+        findElementAndFill("author", "Cucumber Testaaja");
         findElementAndFill("year", "2011");
+        element = driver.findElement(By.name("submit"));
+        element.submit();
         Thread.sleep(1000);
+        //driver.get(baseUrl + "books");
     }
+
 
     @Then("^\"([^\"]*)\" is shown$")
     public void is_shown(String content) throws Throwable {

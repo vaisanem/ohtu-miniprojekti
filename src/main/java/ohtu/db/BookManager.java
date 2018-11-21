@@ -26,7 +26,8 @@ public class BookManager implements sqlManager<Book, Integer> {
         this.database = database;
     }
 
-    public boolean addBook(Book book) throws SQLException {
+    @Override
+    public boolean add(Book book) throws SQLException {
         Connection connection = database.getConnection();
         CallableStatement stmt = connection.prepareCall("{call AddBook(?,?,?,?)}");
 
