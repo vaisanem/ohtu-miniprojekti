@@ -5,6 +5,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import java.io.File;
+import java.util.Random;
 import ohtu.db.sqlManager;
 import ohtu.stubs.StubBookManager;
 import ohtu.types.Book;
@@ -20,6 +21,7 @@ public class Stepdefs {
     WebDriver driver;
     String baseUrl;
     WebElement element;
+    Random random;
 
     public Stepdefs() {
         File file;
@@ -38,6 +40,7 @@ public class Stepdefs {
             this.driver = new FirefoxDriver();
         }
         baseUrl = "http://localhost:" + 8080 + "/";
+        random = new Random();
     }
 
     @After
@@ -58,13 +61,14 @@ public class Stepdefs {
         Thread.sleep(1000);
     }
     
-    @When("^book fields title \"([^\"]*)\" and others are filled and submitted$")
-    public void book_fields_are_submitted(String title) throws Throwable {
+    @When("^book fields title \"([^\"]*)\", isbn \"([^\"]*)\", author and year \"([^\"]*)\" are filled and submitted$")
+    public void book_fields_are_submitted(String title, String isbn, String year) throws Throwable {
         Thread.sleep(1000);
+        if (isbn.isEmpty()) isbn = Integer.toString(random.nextInt());
         findElementAndFill("title", title);
-        findElementAndFill("isbn", "98765432100");
+        findElementAndFill("isbn", isbn);
         findElementAndFill("author", "Cucumber Testaaja");
-        findElementAndFill("year", "2011");
+        findElementAndFill("year", year);
         element = driver.findElement(By.name("Add new book"));
         element.submit();
         Thread.sleep(1000);

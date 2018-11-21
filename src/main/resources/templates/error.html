@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>MiniProject</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" href="/style.css"/>
+    </head>
+
+    <body>
+        <ul class = "nav">
+            <li class="nav"><a href="/">Home</a></li>
+            <li class="nav"><a href="/books">View Books</a></li>
+            <li class="nav"><a href="/newItem">Add new item</a></li>
+        </ul>
+        
+        
+        
+        <div>
+		<h2> Error occurred </h2>
+			<p><span th:text="${error}"></span></p>
+        </div>
+        <p><a href="/">Back home</a></p>
+    </body>
+</html>
