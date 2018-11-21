@@ -25,16 +25,16 @@ public class BookManager implements sqlManager<Book, Integer> {
     public BookManager(Database database) {
         this.database = database;
     }
-
-    @Override
-    public boolean add(Book book) throws SQLException {
+    
+        public boolean add(Book book, String user) throws SQLException {
         Connection connection = database.getConnection();
-        CallableStatement stmt = connection.prepareCall("{call AddBook(?,?,?,?)}");
+        CallableStatement stmt = connection.prepareCall("{call AddBookAndLink(?,?,?,?,?)}");
 
         stmt.setObject(1, book.getTitle());
         stmt.setObject(2, book.getIsbn());
         stmt.setObject(3, book.getAuthor());
         stmt.setObject(4, book.getYear());
+        stmt.setObject(5, user);
 
         int diu = stmt.executeUpdate();
 
@@ -69,7 +69,24 @@ public class BookManager implements sqlManager<Book, Integer> {
     public List<Book> findAll() throws SQLException {
         Connection connection = database.getConnection();
         PreparedStatement stmt = connection.prepareStatement("SELECT book.id, isbn as ISBN, title as Title, relYear as releaseYear, name as Author FROM Book, Author WHERE Author.id = Book.fk_AuthorID");
+        ResultSet rs = stmt.executeQuery();
+        List<Book> books = new ArrayList<>();
+        while (rs.next()) {
+            books.add(new Book(rs));
+        }
 
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return books;
+    }
+    
+        public List<Book> findAll(String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call getBooksForId(?)}");
+        stmt.setObject(1, user);
+        
         ResultSet rs = stmt.executeQuery();
         List<Book> books = new ArrayList<>();
         while (rs.next()) {
