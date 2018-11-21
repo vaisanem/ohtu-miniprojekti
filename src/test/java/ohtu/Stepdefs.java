@@ -34,8 +34,8 @@ public class Stepdefs {
         if (System.getProperty("os.name").matches("Windows 10")) {
             this.driver = new ChromeDriver();
         } else {
-            //this.driver = new ChromeDriver();
-            this.driver = new FirefoxDriver();
+            this.driver = new ChromeDriver();
+            //this.driver = new FirefoxDriver();
         }
         baseUrl = "http://localhost:" + 8080 + "/";
     }
@@ -65,7 +65,7 @@ public class Stepdefs {
         findElementAndFill("isbn", "98765432100");
         findElementAndFill("author", "Cucumber Testaaja");
         findElementAndFill("year", "2011");
-        element = driver.findElement(By.name("submit"));
+        element = driver.findElement(By.name("Add new book"));
         element.submit();
         Thread.sleep(1000);
         //driver.get(baseUrl + "books");
@@ -75,6 +75,7 @@ public class Stepdefs {
     @Then("^\"([^\"]*)\" is shown$")
     public void is_shown(String content) throws Throwable {
         assertTrue(driver.getPageSource().contains(content));
+        Thread.sleep(10000);
     }
 
     private void clickLinkWithText(String text) {
