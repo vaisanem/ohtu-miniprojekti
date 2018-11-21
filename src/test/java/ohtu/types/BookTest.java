@@ -9,10 +9,20 @@ import org.junit.BeforeClass;
 
 public class BookTest {
     
+    private Book book;
+    
     @Before
     public void setUp() {
         int year = 2016;
-        Book book = new Book("isbn", "title", "author", year);
+        book = new Book("isbn", "title", "author", year);
+    }
+    
+    @Test
+    public void constructorCreatesABook(){
+        assertEquals("isbn", book.getIsbn());
+        assertEquals("title", book.getTitle());
+        assertEquals("author", book.getAuthor());
+        assertEquals(2016, book.getYear());
     }
     
 }

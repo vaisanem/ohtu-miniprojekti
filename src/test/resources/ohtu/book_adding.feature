@@ -10,7 +10,7 @@ Feature: user can add new book
     Given user is at the main page
     When link "Add new item" is clicked
     And book fields title "Cucumber", isbn "1234567891011", author and year "2018" are filled and submitted
-    Then "Violation of UNIQUE KEY constraint" is shown
+    Then "Error occurred" is shown
 
   Scenario: user cannot add book with non-numerical year
     Given user is at the main page
