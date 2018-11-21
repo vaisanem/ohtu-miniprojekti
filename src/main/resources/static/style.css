@@ -38,6 +38,13 @@ p {
     font-size: 15px;
     margin-left: 40px;
 }
+a {
+    text-decoration: underline;
+    font-family: verdana;
+    font-size: 15px;
+    margin-left: 40px;
+    color: black;
+}
 
 /*nav bar styling*/
 ul.nav {
@@ -57,6 +64,7 @@ li.nav a {
     text-decoration: none;
     display: block;
     padding: 10px 20px;
+    margin-left: 0;
     
 }
 li.nav {
