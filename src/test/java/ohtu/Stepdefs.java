@@ -67,7 +67,7 @@ public class Stepdefs {
         if (isbn.isEmpty()) isbn = Integer.toString(random.nextInt());
         findElementAndFill("title", title);
         findElementAndFill("isbn", isbn);
-        findElementAndFill("author", "Cucumber Testaaja");
+        findElementAndFill("author", "Testaaja");
         findElementAndFill("year", year);
         element = driver.findElement(By.name("Add new book"));
         element.submit();
@@ -79,7 +79,6 @@ public class Stepdefs {
     @Then("^\"([^\"]*)\" is shown$")
     public void is_shown(String content) throws Throwable {
         assertTrue(driver.getPageSource().contains(content));
-        Thread.sleep(10000);
     }
 
     private void clickLinkWithText(String text) {
