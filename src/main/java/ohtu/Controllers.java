@@ -33,10 +33,14 @@ public class Controllers {
         db = new Database(url);
         bookMan = new BookManager(db);
     }
+   
 
     @RequestMapping(value = "/books", method = RequestMethod.GET)
     public String books(ModelMap model, @ModelAttribute("user") String user) throws SQLException {
         System.out.println("Gotten redirect : " + user );
+        if(user.length() < 1){
+            user = "default";
+        }
         List<Book> books = bookMan.findAll(user);
         model.addAttribute("books", books);
         return "bookview";
