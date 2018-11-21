@@ -119,8 +119,9 @@ public class Stepdefs {
         Boolean EverythingIsThere = true;
         for (Book book : Books) {
             Boolean found = false;
-            Thread.sleep(50);
+            Thread.sleep(150);
             for (int i = 0; i < 4; i++) {
+                Thread.sleep(150);
                 if (driver.getPageSource().contains(book.getTitle())) {
                     found = true;
                     break;
