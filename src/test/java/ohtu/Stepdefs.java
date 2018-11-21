@@ -28,12 +28,13 @@ public class Stepdefs {
     private WebElement element;
     private Random random;
     private Database db;
+
     public Stepdefs() throws ClassNotFoundException {
         File file;
         String addr = "ohmipro.ddns.net";
         String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMP;user=ohtuadm;password=hakimi1337";
         db = new Database(url);
-        
+
         if (System.getProperty("os.name").matches("Mac OS X")) {
             file = new File("lib/macgeckodriver");
         } else {
@@ -106,16 +107,33 @@ public class Stepdefs {
     }
 
     @Then("^List of all books is shown$")
-    public void list_of_all_books_is_shown() throws Throwable {    
+    public void list_of_all_books_is_shown() throws Throwable {
         BookManager bookMan = new BookManager(db);
         List<Book> Books = bookMan.findAll("default");
+
+        // Debugging purposes, check which books were gotten
+        for (Book book : Books) {
+            System.out.println(book.getTitle());
+        }
+
         Boolean EverythingIsThere = true;
-        for(Book book : Books){
-            if(!driver.getPageSource().contains(book.getTitle())){
+        for (Book book : Books) {
+            Boolean found = false;
+            Thread.sleep(150);
+            for (int i = 0; i < 4; i++) {
+                Thread.sleep(150);
+                if (driver.getPageSource().contains(book.getTitle())) {
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (!found) {
                 EverythingIsThere = false;
             }
+
         }
-        assertTrue(EverythingIsThere);       
+        assertTrue(EverythingIsThere);
     }
 
     private void clickLinkWithText(String text) {
