@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class Controllers {
@@ -34,8 +35,9 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/books", method = RequestMethod.GET)
-    public String books(ModelMap model) throws SQLException {
-        List<Book> books = bookMan.findAll();
+    public String books(ModelMap model, @ModelAttribute("user") String user) throws SQLException {
+        System.out.println("Gotten redirect : " + user );
+        List<Book> books = bookMan.findAll(user);
         model.addAttribute("books", books);
         return "bookview";
     }
@@ -46,10 +48,12 @@ public class Controllers {
     }
 
     @PostMapping("/addItem")
-    public String addItem(ModelMap model, @RequestParam String title, @RequestParam String isbn, @RequestParam Integer year, @RequestParam String author) throws SQLException {
+    public String addItem(ModelMap model, RedirectAttributes userAttribute, @RequestParam String title, @RequestParam String isbn, @RequestParam Integer year, @RequestParam String author, @RequestParam String user) throws SQLException {
         try {
+            userAttribute.addFlashAttribute("user", user);
+            System.out.println("Redirected user : " + user);
             Book book = new Book(isbn, title, author, year);
-            boolean succeeded = bookMan.add(book);
+            boolean succeeded = bookMan.add(book, user);
             return "redirect:/books";
         } catch (Exception e) {
             //model.addAttribute("error", e.getMessage());

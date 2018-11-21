@@ -29,22 +29,23 @@ and open the template in the editor.
 		<input type="radio" name="type" value="video"> Book</input>
 		!-->
 		<br/>
-		
-            <form method="POST"  action="addItem">
-		Title of book:<br/>
-                <input type="text" id="title" name="title"/><br/>
-		
-		ISBN:  <br/>
-		<input type="text" id="isbn" name="isbn"/><br/>
-		
-		Author: <br/>
-		<input type="text" id="author" name="author"/><br/>
-		
-		Publishing year: <br/>
-		<input type="text" id="year" name="year"/><br/>
-		
-		<input type="submit" value="Add new book" name="Add new book"/>
-            </form>
+        <form method="POST"  action="addItem">
+			<input type="hidden" id="user" name="user" value ="default"/>
+			
+			Title of book:<br/>
+			<input type="text" id="title" name="title"/><br/>
+			
+			ISBN:  <br/>
+			<input type="text" id="isbn" name="isbn"/><br/>
+			
+			Author: <br/>
+			<input type="text" id="author" name="author"/><br/>
+			
+			Publishing year: <br/>
+			<input type="text" id="year" name="year"/><br/>
+			
+			<input type="submit" value="Add new book" name="Add new book"/>
+        </form>
 		
             <h2>NOT IMPLEMENTED</h2>
             <p>TODO</p>

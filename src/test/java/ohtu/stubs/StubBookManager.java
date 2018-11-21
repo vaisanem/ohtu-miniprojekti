@@ -15,8 +15,7 @@ public class StubBookManager implements sqlManager<Book, Integer> {
         bookDatabase = new HashMap<>();
         initialize();
     }
-    
-    @Override
+
     public boolean add(Book book) {
         bookDatabase.put(nextId, book);
         nextId++;
