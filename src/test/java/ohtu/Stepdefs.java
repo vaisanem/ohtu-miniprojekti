@@ -135,20 +135,20 @@ public class Stepdefs {
         assertTrue(EverythingIsThere);
     }
     
-        @Then("^individual book is shown$")
+    @Then("^individual book is shown$")
     public void individual_book_is_shown() throws Throwable {
         //driver.get(baseUrl + "books/");
         Book one = bookMan.findAll("default").get(0);
         Thread.sleep(150);
         clickLinkWithText(one.getTitle().trim());
         Thread.sleep(150);
-        assertTrue(driver.getPageSource().contains(one.getTitle()));
+        is_shown(one.getTitle());
         Thread.sleep(150);
-        assertTrue(driver.getPageSource().contains(one.getIsbn()));
+        is_shown(one.getIsbn());
         Thread.sleep(150);
-        assertTrue(driver.getPageSource().contains(one.getAuthor()));
+        is_shown(one.getAuthor());
         Thread.sleep(150);
-        assertTrue(driver.getPageSource().contains(Integer.toString(one.getYear())));
+        is_shown(Integer.toString(one.getYear()));
     }
 
     private void clickLinkWithText(String text) {
