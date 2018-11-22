@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Random;
 import ohtu.db.BookManager;
 import ohtu.db.Database;
-import ohtu.db.sqlManager;
-import ohtu.stubs.StubBookManager;
 import ohtu.types.Book;
 import static org.junit.Assert.assertTrue;
 import org.openqa.selenium.By;
@@ -76,7 +74,10 @@ public class Stepdefs {
     
     @When("^link to book's page is clicked$")
     public void link_to_book_page_is_clicked() throws Throwable {
-        //this is just for description
+        Book one = bookMan.findAll("default").get(0);
+        Thread.sleep(1000);
+        clickLinkWithText(one.getTitle().trim());
+        Thread.sleep(1000);
     }
 
     @When("^book fields title \"([^\"]*)\", isbn \"([^\"]*)\", author and year \"([^\"]*)\" are filled and submitted$")
@@ -103,7 +104,14 @@ public class Stepdefs {
     
     @Then("^\"([^\"]*)\" is shown$")
     public void is_shown(String content) throws Throwable {
-        assertTrue(driver.getPageSource().contains(content));
+        boolean isShown = false;
+        for(int i =0;i<5;i++){
+            if(driver.getPageSource().contains(content)){
+                isShown = true;
+                break;
+            }
+        }
+        assertTrue(isShown);
     }
 
     @Then("^List of all books is shown$")
@@ -138,9 +146,7 @@ public class Stepdefs {
     @Then("^individual book is shown$")
     public void individual_book_is_shown() throws Throwable {
         //driver.get(baseUrl + "books/");
-        Book one = bookMan.findAll("default").get(0);
-        Thread.sleep(150);
-        clickLinkWithText(one.getTitle().trim());
+        Book one = bookMan.findAll("default").get(0);    
         Thread.sleep(150);
         is_shown(one.getTitle());
         Thread.sleep(150);

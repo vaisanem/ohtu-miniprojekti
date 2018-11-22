@@ -9,6 +9,6 @@ Scenario: user can view individual book
   Given user is at the main page
   When link "View Books" is clicked
   And link to book's page is clicked
-  Then individual book should show
+  Then individual book is shown
 
 
