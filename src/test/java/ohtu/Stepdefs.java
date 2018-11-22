@@ -139,11 +139,15 @@ public class Stepdefs {
     public void individual_book_is_shown() throws Throwable {
         //driver.get(baseUrl + "books/");
         Book one = bookMan.findAll("default").get(0);
+        Thread.sleep(150);
         clickLinkWithText(one.getTitle().trim());
-        Thread.sleep(300);
+        Thread.sleep(150);
         assertTrue(driver.getPageSource().contains(one.getTitle()));
+        Thread.sleep(150);
         assertTrue(driver.getPageSource().contains(one.getIsbn()));
+        Thread.sleep(150);
         assertTrue(driver.getPageSource().contains(one.getAuthor()));
+        Thread.sleep(150);
         assertTrue(driver.getPageSource().contains(Integer.toString(one.getYear())));
     }
 
