@@ -28,13 +28,15 @@ public class Stepdefs {
     private WebElement element;
     private Random random;
     private Database db;
+    private BookManager bookMan;
 
     public Stepdefs() throws ClassNotFoundException {
         File file;
         String addr = "ohmipro.ddns.net";
         String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMP;user=ohtuadm;password=hakimi1337";
         db = new Database(url);
-
+        bookMan = new BookManager(db);
+        
         if (System.getProperty("os.name").matches("Mac OS X")) {
             file = new File("lib/macgeckodriver");
         } else {
@@ -66,17 +68,22 @@ public class Stepdefs {
     }
 
     @When("^link \"([^\"]*)\" is clicked$")
-    public void a_link_is_clicked(String link) throws Throwable {
+    public void link_is_clicked(String link) throws Throwable {
         Thread.sleep(1000);
         clickLinkWithText(link);
         Thread.sleep(1000);
+    }
+    
+    @When("^link to book's page is clicked$")
+    public void link_to_book_page_is_clicked() throws Throwable {
+        //this is just for description
     }
 
     @When("^book fields title \"([^\"]*)\", isbn \"([^\"]*)\", author and year \"([^\"]*)\" are filled and submitted$")
     public void book_fields_are_submitted(String title, String isbn, String year) throws Throwable {
         Thread.sleep(1000);
         if (isbn.isEmpty()) {
-            isbn = Integer.toString(random.nextInt());
+            isbn = Integer.toString(Math.abs(random.nextInt()));
         }
         findElementAndFill("title", title);
         findElementAndFill("isbn", isbn);
@@ -93,22 +100,14 @@ public class Stepdefs {
         Thread.sleep(1000);
         //driver.get(baseUrl + "books");
     }
-
+    
     @Then("^\"([^\"]*)\" is shown$")
     public void is_shown(String content) throws Throwable {
         assertTrue(driver.getPageSource().contains(content));
     }
 
-    @When("^Link \"([^\"]*)\" is clicked$")
-    public void link_is_clicked(String link) throws Throwable {
-        Thread.sleep(1000);
-        clickLinkWithText(link);
-        Thread.sleep(1000);
-    }
-
     @Then("^List of all books is shown$")
     public void list_of_all_books_is_shown() throws Throwable {
-        BookManager bookMan = new BookManager(db);
         List<Book> Books = bookMan.findAll("default");
 
         // Debugging purposes, check which books were gotten
@@ -134,6 +133,18 @@ public class Stepdefs {
 
         }
         assertTrue(EverythingIsThere);
+    }
+    
+        @Then("^individual book is shown$")
+    public void individual_book_is_shown() throws Throwable {
+        //driver.get(baseUrl + "books/");
+        Book one = bookMan.findAll("default").get(0);
+        clickLinkWithText(one.getTitle().trim());
+        Thread.sleep(300);
+        assertTrue(driver.getPageSource().contains(one.getTitle()));
+        assertTrue(driver.getPageSource().contains(one.getIsbn()));
+        assertTrue(driver.getPageSource().contains(one.getAuthor()));
+        assertTrue(driver.getPageSource().contains(Integer.toString(one.getYear())));
     }
 
     private void clickLinkWithText(String text) {
