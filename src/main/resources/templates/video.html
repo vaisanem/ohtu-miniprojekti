@@ -22,10 +22,10 @@
 		<h2> Author: </h2>
 			<p><span th:text="${video.author}"></span></p>
 		<h2> URL: </h2>
-			<a><span th:text="${video.URL}"></span></a>
+			<a><span th:text="http://www.youtube.com/watch?v=${video.URL}"></span></a>
                 <br/>
-                <!-- Hopefully working video embedding, not 100% on the thymeleaf syntax. Embedded URL returns entire embedded address. !-->
-                <iframe width="1280" height="720" th:src="@{${video.EmbeddedURL}}"/>
+                
+                <iframe width="1280" height="720" th:src="@{http://www.youtube.com/embed/${video.URL}}"/>
         </div>
     </body>
 </html>

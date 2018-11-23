@@ -13,33 +13,45 @@ import java.sql.SQLException;
  * @author Toothy
  */
 public class Video {
+
     private String URL;
     private String poster;
     private String title;
     private int id;
-    private String EmbeddedURL;
 
     public Video(String URL, String title, String poster) {
-        this.URL = URL;
+        if (URL.contains("watch?v=")) {
+            this.URL = URL.substring(URL.indexOf('=') + 1);
+        } else if (URL.contains("youtu.be")) {
+            this.URL = URL.substring(URL.indexOf('/') + 1);
+        } else {
+            URL = URL;
+        }
         this.poster = poster;
-        this.title = title;       
-        this.EmbeddedURL = "https://www.youtube.com/embed/" + URL.substring(URL.indexOf('=')+1);
+        this.title = title;
+
     }
 
     public Video(int id, String URL, String title, String poster) {
-        this.URL = URL;
+        if (URL.contains("=")) {
+            this.URL = URL.substring(URL.indexOf('=') + 1);
+        } else if (URL.contains("youtu.be")) {
+            this.URL = URL.substring(URL.indexOf('.') + 4);
+        } else {
+            URL = URL;
+        }
         this.poster = poster;
         this.title = title;
         this.id = id;
-        this.EmbeddedURL = "https://www.youtube.com/embed/" + URL.substring(URL.indexOf('=')+1);
+
     }
-    
-        public Video(ResultSet rs) throws SQLException {
+
+    public Video(ResultSet rs) throws SQLException {
         id = rs.getInt("id");
         URL = rs.getString("URL");
         title = rs.getString("Title");
-        poster = rs.getString("Poster");  
-        EmbeddedURL = rs.getString("EmbeddedURL");
+        poster = rs.getString("Poster");
+
     }
 
     public String getURL() {
@@ -73,14 +85,4 @@ public class Video {
     public void setId(int id) {
         this.id = id;
     }
-
-    public String getEmbeddedURL() {
-        return EmbeddedURL;
-    }
-
-    public void setEmbeddedURL(String EmbeddedURL) {
-        this.EmbeddedURL = EmbeddedURL;
-    }
-    
-          
 }
