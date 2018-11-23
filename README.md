@@ -12,6 +12,8 @@ Konfiguraatiosta on kiittäminen kevään 2017 [TKT-FUBAR](https://github.com/TK
 
 [First Sprint](https://docs.google.com/spreadsheets/d/1ImM3rdsm4RPNh8BDvbMcLxRbnVOARmnco10cEbbXApI/edit?usp=sharing)
 
+[Second Sprint](https://docs.google.com/spreadsheets/d/1Xu1ig0rCxu1gXpYKWknRI-xM2RVYmvBYSLnWqSSbdas/edit?usp=sharing)
+
 ## Definition of Done
  * Toiminnallisuus integroitu
  * Toiminnallisuus testattu onnistuneesti ja vakuuttavasti, myös Travisissa
