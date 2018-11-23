@@ -19,7 +19,7 @@
 		
             <ul class="items">
                 <li class="items" th:each="itemType: ${items}">
-                    <a class="items" th:href="${'/' + itemType.type +'/' + itemType.id}" th:text="${itemType.title}"></a>
+                    <a class="items" th:href="${'/' + itemType.type +'/' + itemType.id}" th:text="${itemType.type + ' - ' + itemType.title}"></a>
                 </li>
             </ul>
 		

@@ -54,7 +54,7 @@ public class Controllers {
             System.out.println("Redirected user : " + user);
             Book book = new Book(isbn, title, author, year);
             boolean succeeded = itemMan.getBookMan().add(book, user);
-            return "redirect:/books";
+            return "redirect:/items";
         } catch (Exception e) {
             //model.addAttribute("error", e.getMessage());
             //return "newItem";

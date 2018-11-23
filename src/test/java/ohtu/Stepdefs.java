@@ -12,6 +12,7 @@ import ohtu.db.BookManager;
 import ohtu.db.Database;
 import ohtu.db.ItemTypeManager;
 import ohtu.types.Book;
+import ohtu.types.Video;
 import static org.junit.Assert.assertTrue;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -56,6 +57,26 @@ public class Stepdefs {
         driver.quit();
     }
 
+    // <editor-fold desc="generic methods">
+    @Then("^\"([^\"]*)\" is shown$")
+    public void is_shown(String content) throws Throwable {
+        Thread.sleep(250);
+        boolean isShown = false;
+        for (int i = 0; i < 5; i++) {
+            if (driver.getPageSource().contains(content)) {
+                isShown = true;
+                break;
+            }
+        }
+        assertTrue(isShown);
+        Thread.sleep(250);
+    }
+
+    @When("^link for \"([^\"]*)\" named \"([^\"]*)\" is clicked$")
+    public void link_for_named_is_clicked(String arg1, String arg2) throws Throwable {
+        clickLinkWithText(arg2, arg1);
+    }
+
     @Given("^user is at the main page$")
     public void user_is_at_the_main_page() throws Throwable {
         driver.get(baseUrl);
@@ -69,11 +90,46 @@ public class Stepdefs {
         Thread.sleep(1000);
     }
 
+    private void clickLinkWithText(String text) {
+        int trials = 0;
+        while (trials++ < 5) {
+            try {
+                WebElement element = driver.findElement(By.linkText(text));
+                element.click();
+                break;
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
+        }
+    }
+
+    private void clickLinkWithText(String text, String secondText) {
+        int trials = 0;
+        while (trials++ < 5) {
+            try {
+                List<WebElement> elements = driver.findElements(By.partialLinkText(text));
+                WebElement element = elements.stream().filter(elem -> elem.getText().contains(secondText)).findFirst().get();
+                element.click();
+                break;
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
+        }
+    }
+
+    private void findElementAndFill(String name, String value) {
+        element = driver.findElement(By.name(name));
+        element.sendKeys(value);
+    }
+
+    // </editor-fold>
+    //                  spacer
+    // <editor-fold desc="Book testing">
     @When("^link to book's page is clicked$")
     public void link_to_book_page_is_clicked() throws Throwable {
         Book one = itemMan.getBookMan().findAll("default").get(0);
         Thread.sleep(1000);
-        clickLinkWithText(one.getTitle().trim());
+        clickLinkWithText(one.getTitle().trim(), "book");
         Thread.sleep(1000);
     }
 
@@ -99,16 +155,18 @@ public class Stepdefs {
         //driver.get(baseUrl + "books");
     }
 
-    @Then("^\"([^\"]*)\" is shown$")
-    public void is_shown(String content) throws Throwable {
-        boolean isShown = false;
-        for (int i = 0; i < 5; i++) {
-            if (driver.getPageSource().contains(content)) {
-                isShown = true;
-                break;
-            }
-        }
-        assertTrue(isShown);
+    @Then("^individual book is shown$")
+    public void individual_book_is_shown() throws Throwable {
+        //driver.get(baseUrl + "books/");
+        Book one = itemMan.getBookMan().findAll("default").get(0);
+        Thread.sleep(250);
+        is_shown(one.getTitle());
+        Thread.sleep(250);
+        is_shown(one.getIsbn());
+        Thread.sleep(250);
+        is_shown(one.getAuthor());
+        Thread.sleep(250);
+        is_shown(Integer.toString(one.getYear()));
     }
 
     @Then("^List of all books is shown$")
@@ -140,36 +198,54 @@ public class Stepdefs {
         assertTrue(EverythingIsThere);
     }
 
-    @Then("^individual book is shown$")
-    public void individual_book_is_shown() throws Throwable {
-        //driver.get(baseUrl + "books/");
-        Book one = itemMan.getBookMan().findAll("default").get(0);
+    // </editor-fold>
+    //                  spacer
+    // <editor-fold desc="video testing">
+    @Then("^List of all videos is shown$")
+    public void list_of_all_videos_is_shown() throws Throwable {
+        List<Video> videos = itemMan.getVideoMan().findAll("default");
+
+        // Debugging purposes, check which videos were gotten
+        for (Video video : videos) {
+            System.out.println(video.getTitle());
+        }
+
+        Boolean EverythingIsThere = true;
+        for (Video video : videos) {
+            Boolean found = false;
+            Thread.sleep(150);
+            for (int i = 0; i < 4; i++) {
+                Thread.sleep(150);
+                if (driver.getPageSource().contains(video.getTitle())) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                EverythingIsThere = false;
+            }
+
+        }
+        assertTrue(EverythingIsThere);
+    }
+
+    @When("^link to videos's page is clicked$")
+    public void link_to_videos_s_page_is_clicked() throws Throwable {
+        Video one = itemMan.getVideoMan().findAll("default").get(0);
+        Thread.sleep(1000);
+        clickLinkWithText(one.getTitle().trim(), "video");
+        Thread.sleep(1000);
+    }
+
+    @Then("^individual video is shown$")
+    public void individual_video_is_shown() throws Throwable {
+        Video one = itemMan.getVideoMan().findAll("default").get(0);
         Thread.sleep(150);
         is_shown(one.getTitle());
         Thread.sleep(150);
-        is_shown(one.getIsbn());
-        Thread.sleep(150);
-        is_shown(one.getAuthor());
-        Thread.sleep(150);
-        is_shown(Integer.toString(one.getYear()));
+        is_shown(one.getPoster());
     }
 
-    private void clickLinkWithText(String text) {
-        int trials = 0;
-        while (trials++ < 5) {
-            try {
-                WebElement element = driver.findElement(By.linkText(text));
-                element.click();
-                break;
-            } catch (Exception e) {
-                System.out.println(e.getStackTrace());
-            }
-        }
-    }
-
-    private void findElementAndFill(String name, String value) {
-        element = driver.findElement(By.name(name));
-        element.sendKeys(value);
-    }
-
+    // </editor-fold>
 }
