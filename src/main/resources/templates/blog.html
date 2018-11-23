@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
     <head>
-        <title>MiniProject</title>
+        <title>Blog</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="stylesheet" href="/style.css"/>
     </head>
@@ -13,10 +13,16 @@
             <li class="nav"><a href="/books">View List</a></li>
             <li class="nav"><a href="/newItem">Add new item</a></li>
         </ul>
-               
+        
+        
+        
         <div>
-		<h2> Error occurred </h2>
-		<p><span th:text="${error}"></span></p>
+		<h2> Title: </h2>
+			<p><span th:text="${blog.title}"></span></p>
+		<h2> Author: </h2>
+			<p><span th:text="${blog.author}"></span></p>	
+		<h2>URL:</h2>
+			<a><span th:text="${blog.URL}"></span></a>
         </div>
     </body>
 </html>

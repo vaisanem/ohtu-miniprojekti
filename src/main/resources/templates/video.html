@@ -18,13 +18,14 @@
         
         <div>
 		<h2> Title: </h2>
-			<p><span th:text="${book.title}"></span></p>
+			<p><span th:text="${video.title}"></span></p>
 		<h2> Author: </h2>
-			<p><span th:text="${book.author}"></span></p>
-		<h2> Release year: </h2>
-			<p><span th:text="${book.year}"></span></p>
-		<h2> ISBN:</h2>
-			<p><span th:text="${book.isbn}"></span></p>
+			<p><span th:text="${video.author}"></span></p>
+		<h2> URL: </h2>
+			<a><span th:text="${video.URL}"></span></a>
+                <br/>
+                <!-- Hopefully working video embedding, not 100% on the thymeleaf syntax. Embedded URL returns entire embedded address. !-->
+                <iframe width="1280" height="720" th:src="@{${video.EmbeddedURL}}"/>
         </div>
     </body>
 </html>

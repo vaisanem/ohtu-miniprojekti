@@ -10,43 +10,88 @@ and open the template in the editor.
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="stylesheet" href="/style.css"/>
+        <script type="text/javascript" src="/newItemRadioButtonScript.js"></script>
     </head>
-	
+
     <body>
         <ul class = "nav">
             <li class="nav"><a href="/" >Home</a></li>
-            <li class="nav"><a href="/books" >View Books</a></li>
+            <li class="nav"><a href="/books" >View List</a></li>
             <li class="nav"><a href="/newItem" class="active">Add new item</a></li>
         </ul>
         <div>
             <h1>Add new item</h1>
             <p><span th:text="${error}"></span></p>
             <br/>
-            <input type="radio" name="type" value="book" checked="checked"> Book </input>
-		
-		<!-- For future reference
-		<input type="radio" name="type" value="podcast"> Book</input>
-		<input type="radio" name="type" value="video"> Book</input>
-		!-->
-		<br/>
-        <form method="POST"  action="addItem">
-			<input type="hidden" id="user" name="user" value ="default"/>
-			
-			Title of book:<br/>
-			<input type="text" id="title" name="title"/><br/>
-			
-			ISBN:  <br/>
-			<input type="text" id="isbn" name="isbn"/><br/>
-			
-			Author: <br/>
-			<input type="text" id="author" name="author"/><br/>
-			
-			Publishing year: <br/>
-			<input type="text" id="year" name="year"/><br/>
-			
-			<input type="submit" value="Add new book" name="Add new book"/>
-        </form>
-		
+            <input type="radio" id="book" onclick="WhichCheck();" name="type" value="book" checked="checked"> Book </input>
+            <input type="radio" id="blog" onclick="WhichCheck();" name="type" value="blog"> Blog </input>
+            <input type="radio" id="video" onclick="WhichCheck();" name="type" value="video"> Video </input>
+            <!-- For future reference
+            <input type="radio" name="type" value="podcast"> Book</input>
+            <input type="radio" name="type" value="video"> Book</input>
+            !-->
+            <br/>
+            <div id="bookAdd" style="display:block;" class="formthings">
+                <form  method="POST" name="addBook" action="addItem">
+                    <input type="hidden" id="user" name="user" value ="default"/>
+
+                    Title of book:<br/>
+                    <input type="text" id="title" name="title"/><br/>
+
+                    ISBN:  <br/>
+                    <input type="text" id="isbn" name="isbn"/><br/>
+
+                    Author: <br/>
+                    <input type="text" id="author" name="author"/><br/>
+
+                    Publishing year: <br/>
+                    <input type="text" id="year" name="year"/><br/>
+
+                    <input type="submit" value="Add new book" name="Add new book"/>
+                </form>
+            </div>
+
+            <div id="blogAdd" style="display: none;" class="formthings">
+                <form method="POST" name="addBlog" action="addItem">
+
+                    TODO add Back End // NOT IMPLEMENTED!<br/>
+
+                    <input type="hidden" id="user" name="user" value ="default"/><br/>
+
+                    Title:<br/>
+                    <input type="text" id="blogTitle" name="blogTitle"/><br/>
+
+                    URL:<br/>         
+                    <input type="text" id="blogURL" name="blogURL"/><br/>
+
+                    Blog Posted By:<br/>
+                    <input type="text" id="blogPoster" name="blogPoster"/><br/>
+
+                    <input type="submit" value="Add new blog" name="Add new blog"/>
+
+                </form>
+            </div>
+
+            <div id="videoAdd" style="display: none;" class="formthings">
+                <form method="POST" name="addVideo" action="addItem">
+
+                    TODO add Back End // NOT IMPLEMENTED!<br/>
+
+                    <input type="hidden" id="user" name="user" value ="default"/>
+
+                    Title:<br/>
+                    <input type="text" id="videoTitle" name="videoTitle"/><br/>
+
+                    URL:<br/>
+                    <input type="text" id="videoURL" name="videoURL"/><br/>
+
+                    Video Posted By:<br/>
+                    <input type="text" id="videoPoster" name="videoPoster"/><br/>
+
+                    <input type="submit" value="Add new video" name="Add new video"/>
+
+                </form>
+            </div>
         </div>
     </body>
 </html>

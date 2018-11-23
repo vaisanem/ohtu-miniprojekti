@@ -111,7 +111,11 @@ li.items a:hover {
     color: white;
 }
 
+/* div styling for the adding forms*/
 
+div.formthings {
+    margin-left: 10px;
+}
 
 
 

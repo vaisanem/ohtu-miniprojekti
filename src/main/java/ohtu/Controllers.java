@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import ohtu.db.BookManager;
 import ohtu.db.Database;
-import ohtu.types.Book;
+import ohtu.types.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,6 +71,18 @@ public class Controllers {
         Book book = bookMan.findOne(id);
         model.addAttribute("book", book);
         return "book";
+    }
+    @RequestMapping(value= "/blog/{id}", method = RequestMethod.GET)
+    public String blog(@PathVariable int id, ModelMap model) throws SQLException {
+        Blog blog = null;  // TODO -> missing manager.
+        model.addAttribute("blog",blog);
+        return "blog";
+    }
+    @RequestMapping(value = "/video/{id}",method = RequestMethod.GET)
+    public String video(@PathVariable int id, ModelMap model) throws SQLException {
+        Video video = null; // TODO -> missing manager.
+        model.addAttribute("video",video);
+        return "video";
     }
 
 }
