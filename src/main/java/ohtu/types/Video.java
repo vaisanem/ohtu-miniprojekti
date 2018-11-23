@@ -46,6 +46,17 @@ public class Video {
 
     }
 
+    public Video(String URL) {
+        if (URL.contains("=")) {
+            this.URL = URL.substring(URL.indexOf('=') + 1);
+        } else if (URL.contains("youtu.be")) {
+            this.URL = URL.substring(URL.indexOf('.') + 4);
+        } else {
+            URL = URL;
+        }
+        // TODO Fetch information from YouTubeAPI.
+    }
+
     public Video(ResultSet rs) throws SQLException {
         id = rs.getInt("id");
         URL = rs.getString("URL");
