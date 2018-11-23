@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 import ohtu.db.BookManager;
 import ohtu.db.Database;
+import ohtu.db.ItemTypeManager;
 import ohtu.types.Book;
 import static org.junit.Assert.assertTrue;
 import org.openqa.selenium.By;
@@ -25,16 +26,12 @@ public class Stepdefs {
     private String baseUrl;
     private WebElement element;
     private Random random;
-    private Database db;
-    private BookManager bookMan;
+    private ItemTypeManager itemMan;
 
     public Stepdefs() throws ClassNotFoundException {
         File file;
-        String addr = "ohmipro.ddns.net";
-        String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMP;user=ohtuadm;password=hakimi1337";
-        db = new Database(url);
-        bookMan = new BookManager(db);
-        
+        itemMan = new ItemTypeManager();
+
         if (System.getProperty("os.name").matches("Mac OS X")) {
             file = new File("lib/macgeckodriver");
         } else {
@@ -55,7 +52,7 @@ public class Stepdefs {
 
     @After
     public void tearDown() throws SQLException {
-        db.getConnection().close();
+        itemMan.closeConnection();
         driver.quit();
     }
 
@@ -71,10 +68,10 @@ public class Stepdefs {
         clickLinkWithText(link);
         Thread.sleep(1000);
     }
-    
+
     @When("^link to book's page is clicked$")
     public void link_to_book_page_is_clicked() throws Throwable {
-        Book one = bookMan.findAll("default").get(0);
+        Book one = itemMan.getBookMan().findAll("default").get(0);
         Thread.sleep(1000);
         clickLinkWithText(one.getTitle().trim());
         Thread.sleep(1000);
@@ -101,12 +98,12 @@ public class Stepdefs {
         Thread.sleep(1000);
         //driver.get(baseUrl + "books");
     }
-    
+
     @Then("^\"([^\"]*)\" is shown$")
     public void is_shown(String content) throws Throwable {
         boolean isShown = false;
-        for(int i =0;i<5;i++){
-            if(driver.getPageSource().contains(content)){
+        for (int i = 0; i < 5; i++) {
+            if (driver.getPageSource().contains(content)) {
                 isShown = true;
                 break;
             }
@@ -116,7 +113,7 @@ public class Stepdefs {
 
     @Then("^List of all books is shown$")
     public void list_of_all_books_is_shown() throws Throwable {
-        List<Book> Books = bookMan.findAll("default");
+        List<Book> Books = itemMan.getBookMan().findAll("default");
 
         // Debugging purposes, check which books were gotten
         for (Book book : Books) {
@@ -134,7 +131,7 @@ public class Stepdefs {
                     break;
                 }
             }
-            
+
             if (!found) {
                 EverythingIsThere = false;
             }
@@ -142,11 +139,11 @@ public class Stepdefs {
         }
         assertTrue(EverythingIsThere);
     }
-    
+
     @Then("^individual book is shown$")
     public void individual_book_is_shown() throws Throwable {
         //driver.get(baseUrl + "books/");
-        Book one = bookMan.findAll("default").get(0);    
+        Book one = itemMan.getBookMan().findAll("default").get(0);
         Thread.sleep(150);
         is_shown(one.getTitle());
         Thread.sleep(150);

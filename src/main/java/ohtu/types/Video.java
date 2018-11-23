@@ -12,14 +12,13 @@ import java.sql.SQLException;
  *
  * @author Toothy
  */
-public class Video {
+public class Video extends ItemType {
 
     private String URL;
     private String poster;
-    private String title;
-    private int id;
 
     public Video(String URL, String title, String poster) {
+        super.setType(typeIdentifier.video);
         if (URL.contains("watch?v=")) {
             this.URL = URL.substring(URL.indexOf('=') + 1);
         } else if (URL.contains("youtu.be")) {
@@ -28,11 +27,12 @@ public class Video {
             URL = URL;
         }
         this.poster = poster;
-        this.title = title;
+        super.setTitle(title);
 
     }
 
     public Video(int id, String URL, String title, String poster) {
+        super.setType(typeIdentifier.video);
         if (URL.contains("=")) {
             this.URL = URL.substring(URL.indexOf('=') + 1);
         } else if (URL.contains("youtu.be")) {
@@ -41,12 +41,13 @@ public class Video {
             URL = URL;
         }
         this.poster = poster;
-        this.title = title;
-        this.id = id;
+        super.setId(id);
+        super.setTitle(title);
 
     }
 
     public Video(String URL) {
+        super.setType(typeIdentifier.video);
         if (URL.contains("=")) {
             this.URL = URL.substring(URL.indexOf('=') + 1);
         } else if (URL.contains("youtu.be")) {
@@ -58,10 +59,11 @@ public class Video {
     }
 
     public Video(ResultSet rs) throws SQLException {
-        id = rs.getInt("id");
+        super.setType(typeIdentifier.video);
+        super.setId(rs.getInt("id"));
+        super.setTitle(rs.getString("title"));
         URL = rs.getString("URL");
-        title = rs.getString("Title");
-        poster = rs.getString("Poster");
+        poster = rs.getString("Author");
 
     }
 
@@ -79,21 +81,5 @@ public class Video {
 
     public void setPoster(String poster) {
         this.poster = poster;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

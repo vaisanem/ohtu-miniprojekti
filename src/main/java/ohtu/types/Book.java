@@ -14,40 +14,35 @@ import org.springframework.stereotype.Component;
  *
  * @author ColdFish
  */
+public class Book extends ItemType implements Serializable {
 
-public class Book implements Serializable {
-
-    private int id;
     private String isbn;
-    private String title;
     private String author;
     private int year;
 
     public Book(int id, String isbn, String title, String author, int year) {
-        this.id = id;
+        super.setType(typeIdentifier.book);
         this.isbn = isbn;
-        this.title = title;
         this.author = author;
         this.year = year;
+        super.setId(id);
+        super.setTitle(title);
     }
 
     public Book(String isbn, String title, String author, int year) {
+        super.setType(typeIdentifier.book);
         this.isbn = isbn;
-        this.title = title;
         this.author = author;
         this.year = year;
     }
 
     public Book(ResultSet rs) throws SQLException {
-        id = rs.getInt("id");
+        super.setType(typeIdentifier.book);
+        super.setId(rs.getInt("id"));
+        super.setTitle(rs.getString("title"));
         isbn = rs.getString("ISBN");
-        title = rs.getString("Title");
         author = rs.getString("Author");
         year = rs.getInt("releaseYear");
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getAuthor() {
@@ -62,10 +57,6 @@ public class Book implements Serializable {
         return year;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
     public void setAuthor(String author) {
         this.author = author;
     }
@@ -74,17 +65,10 @@ public class Book implements Serializable {
         this.isbn = isbn;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public void setYear(int year) {
         this.year = year;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
-    
 }

@@ -10,16 +10,16 @@
     <body>
         <ul class = "nav">
             <li class="nav"><a href="/" >Home</a></li>
-            <li class="nav"><a href="/books" class="active">View List</a></li>
+            <li class="nav"><a href="/items" class="active">View List</a></li>
             <li class="nav"><a href="/newItem">Add new item</a></li>
         </ul>        
         
         <div>
-            <h1>The list of added books</h1>
+            <h1>The list of added items</h1>
 		
             <ul class="items">
-                <li class="items" th:each="book: ${books}">
-                    <a class="items" th:href="${'/book/' + book.id}" th:text="${book.title}">Book Title</a>
+                <li class="items" th:each="itemType: ${items}">
+                    <a class="items" th:href="${'/' + itemType.type +'/' + itemType.id}" th:text="${itemType.title}"></a>
                 </li>
             </ul>
 		

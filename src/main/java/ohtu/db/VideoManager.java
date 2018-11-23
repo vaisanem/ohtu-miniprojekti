@@ -47,7 +47,7 @@ public class VideoManager implements sqlManager<Video, Integer> {
     @Override
     public Video findOne(Integer key) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT Video.id, title, URL FROM Video, Author FROM Video, Author WHERE Video.id = ?  AND Video.fk_Poster_id = Author.id");
+        PreparedStatement stmt = connection.prepareStatement("SELECT Video.id, title, URL, Author.name as Author FROM Video, Author WHERE Video.id = ?  AND Video.fk_Poster_id = Author.id");
         stmt.setObject(1, key);
 
         ResultSet rs = stmt.executeQuery();
@@ -68,7 +68,7 @@ public class VideoManager implements sqlManager<Video, Integer> {
     @Override
     public List<Video> findAll() throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT Video.id, title, URL FROM Video, Author WHERE Video.id = ? FROM Video, Author WHERE Video.fk_Poster_id = Author.id");
+        PreparedStatement stmt = connection.prepareStatement("SELECT Video.id, title, URL, Author.name as Author FROM Video, Author WHERE Video.id = ? FROM Video, Author WHERE Video.fk_Poster_id = Author.id");
         ResultSet rs = stmt.executeQuery();
         List<Video> videos = new ArrayList<>();
         while (rs.next()) {

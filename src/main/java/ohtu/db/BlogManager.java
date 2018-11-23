@@ -30,7 +30,7 @@ public class BlogManager implements sqlManager<Blog, Integer> {
     @Override
     public Blog findOne(Integer key) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT WebBlog.id, title, URL FROM WebBlog, Author WHERE WebBlog.id = ?  AND WebBlog.fk_Writer_id = Author.id");
+        PreparedStatement stmt = connection.prepareStatement("SELECT WebBlog.id, title, URL, Author.name as Author FROM WebBlog, Author WHERE WebBlog.id = ?  AND WebBlog.fk_Writer_id = Author.id");
         stmt.setObject(1, key);
 
         ResultSet rs = stmt.executeQuery();
@@ -51,7 +51,7 @@ public class BlogManager implements sqlManager<Blog, Integer> {
     @Override
     public List<Blog> findAll() throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT WebBlog.id, title, URL FROM WebBlog, Author AND WebBlog.fk_Writer_id = Author.id");
+        PreparedStatement stmt = connection.prepareStatement("SELECT WebBlog.id, title, URL, Author.name as Author FROM WebBlog, Author AND WebBlog.fk_Writer_id = Author.id");
         ResultSet rs = stmt.executeQuery();
         List<Blog> videos = new ArrayList<>();
         while (rs.next()) {
