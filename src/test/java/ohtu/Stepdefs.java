@@ -66,14 +66,17 @@ public class Stepdefs {
 
     @When("^user is redirected to \"([^\"]*)\"$")
     public void user_is_redirected_to(String arg1) throws Throwable {
-        Thread.sleep(250);
+        Thread.sleep(500);
         boolean isRedirected = driver.getCurrentUrl().contains(arg1);
         assertTrue(isRedirected);
+        Thread.sleep(500);
     }
 
     @When("^link for \"([^\"]*)\" named \"([^\"]*)\" is clicked$")
     public void link_for_named_is_clicked(String arg1, String arg2) throws Throwable {
+        Thread.sleep(500);
         clickLinkWithText(arg2, arg1);
+        Thread.sleep(500);
     }
 
     @When("^link \"([^\"]*)\" is clicked$")
@@ -85,22 +88,24 @@ public class Stepdefs {
 
     @Then("^\"([^\"]*)\" is shown$")
     public void is_shown(String content) throws Throwable {
-        Thread.sleep(250);
+        Thread.sleep(500);
         boolean isShown = false;
         for (int i = 0; i < 5; i++) {
+            Thread.sleep(500);
             if (driver.getPageSource().contains(content)) {
                 isShown = true;
                 break;
             }
         }
         assertTrue(isShown);
-        Thread.sleep(250);
+        Thread.sleep(500);
     }
 
     private void clickLinkWithText(String text) {
         int trials = 0;
         while (trials++ < 5) {
             try {
+                Thread.sleep(500);
                 WebElement element = driver.findElement(By.linkText(text));
                 element.click();
                 if (driver.getCurrentUrl().contains(text)) {
@@ -116,6 +121,7 @@ public class Stepdefs {
         int trials = 0;
         while (trials++ < 5) {
             try {
+                Thread.sleep(500);
                 List<WebElement> elements = driver.findElements(By.partialLinkText(text));
                 WebElement element = elements.stream().filter(elem -> elem.getText().contains(secondText)).findFirst().get();
                 element.click();
@@ -190,9 +196,9 @@ public class Stepdefs {
         Boolean EverythingIsThere = true;
         for (Book book : Books) {
             Boolean found = false;
-            Thread.sleep(250);
-            for (int i = 0; i < 5; i++) {
-                Thread.sleep(250);
+            Thread.sleep(500);
+            for (int i = 0; i < 10; i++) {
+                Thread.sleep(500);
                 if (driver.getPageSource().contains(book.getTitle())) {
                     found = true;
                     break;
@@ -222,9 +228,9 @@ public class Stepdefs {
         Boolean EverythingIsThere = true;
         for (Video video : videos) {
             Boolean found = false;
-            Thread.sleep(150);
+            Thread.sleep(500);
             for (int i = 0; i < 4; i++) {
-                Thread.sleep(150);
+                Thread.sleep(500);
                 if (driver.getPageSource().contains(video.getTitle())) {
                     found = true;
                     break;
@@ -250,9 +256,9 @@ public class Stepdefs {
     @Then("^individual video is shown$")
     public void individual_video_is_shown() throws Throwable {
         Video one = itemMan.getVideoMan().findAll("default").get(0);
-        Thread.sleep(150);
+        Thread.sleep(500);
         is_shown(one.getTitle());
-        Thread.sleep(150);
+        Thread.sleep(500);
         is_shown(one.getPoster());
     }
 
