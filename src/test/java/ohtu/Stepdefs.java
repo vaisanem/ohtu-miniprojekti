@@ -230,8 +230,9 @@ public class Stepdefs {
         assertTrue(EverythingIsThere);
     }
 
-    @When("^link to videos's page is clicked$")
-    public void link_to_videos_s_page_is_clicked() throws Throwable {
+
+    @When("^link to video's page is clicked$")
+    public void link_to_video_s_page_is_clicked() throws Throwable {
         Video one = itemMan.getVideoMan().findAll("default").get(0);
         Thread.sleep(1000);
         clickLinkWithText(one.getTitle().trim(), "video");
