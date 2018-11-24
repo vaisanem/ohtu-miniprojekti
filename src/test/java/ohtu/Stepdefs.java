@@ -93,6 +93,8 @@ public class Stepdefs {
         boolean isShown = false;
         for (int i = 0; i < 5; i++) {
             Thread.sleep(500);
+            System.out.println("Expected element : " + content.toString());
+            System.out.println("Page source : " + driver.getPageSource().toString());
             if (driver.getPageSource().contains(content)) {
                 isShown = true;
                 break;
@@ -266,9 +268,9 @@ public class Stepdefs {
     public void individual_video_is_shown() throws Throwable {
         Video one = itemMan.getVideoMan().findAll("default").get(0);
         Thread.sleep(500);
-        is_shown(one.getTitle());
+        is_shown(one.getTitle().trim());
         Thread.sleep(500);
-        is_shown(one.getPoster());
+        is_shown(one.getPoster().trim());
     }
 
     // </editor-fold>
