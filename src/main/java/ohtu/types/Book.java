@@ -8,7 +8,6 @@ package ohtu.types;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.springframework.stereotype.Component;
 
 /**
  *
