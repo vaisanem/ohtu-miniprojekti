@@ -116,6 +116,7 @@ public class Stepdefs {
                 System.out.println(e.getStackTrace());
             }
         }
+        System.out.println("Link " + text + " was never found....");
     }
 
     private void clickLinkWithText(String text, String secondText) {
