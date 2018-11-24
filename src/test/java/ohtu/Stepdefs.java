@@ -108,9 +108,7 @@ public class Stepdefs {
                 Thread.sleep(500);
                 WebElement element = driver.findElement(By.linkText(text));
                 element.click();
-                if (driver.getCurrentUrl().contains(text)) {
-                    break;
-                }
+                break;
             } catch (Exception e) {
                 System.out.println(e.getStackTrace());
             }
