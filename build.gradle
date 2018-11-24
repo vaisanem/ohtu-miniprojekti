@@ -18,7 +18,7 @@ logging.captureStandardOutput LogLevel.QUIET
 project.ext {
     cucumberVersion = "1.2.5"
     junitVersion = "4.12"
-    seleniumVersion = "3.4.0"
+    seleniumVersion = "2.53.1"
 }
 
 run {
@@ -26,14 +26,18 @@ run {
 }
 
 repositories {
-	jcenter()
     mavenCentral()
+		jcenter()
     maven { url 'https://repo.spring.io/snapshot' }
 }
     
 mainClassName='ohtu.Main'
 
 dependencies {
+	compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
+	compile group: 'net.sourceforge.htmlunit', name: 'htmlunit', version: '2.18'
+	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.1'
+
 
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
@@ -54,10 +58,13 @@ dependencies {
     compile group: 'org.seleniumhq.selenium', name: 'selenium-firefox-driver', version: seleniumVersion
     compile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version:seleniumVersion
 	compile group: 'org.seleniumhq.selenium', name: 'selenium-htmlunit-driver', version: '2.52.0'
-    compile group: 'org.seleniumhq.selenium', name: 'selenium-api', version: seleniumVersion
+   compile group: 'org.seleniumhq.selenium', name: 'selenium-api', version: seleniumVersion
+
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: seleniumVersion
     compile group: 'org.seleniumhq.selenium', name: 'selenium-server', version: seleniumVersion
-    compile group: 'org.seleniumhq.selenium', name: 'selenium-remote-driver', version: seleniumVersion
+	compile group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '2.52.0'
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-remote-driver',version: seleniumVersion
+
     testCompile("io.github.bonigarcia:webdrivermanager:1.6.2") {
         exclude group: 'org.seleniumhq.selenium'
     }

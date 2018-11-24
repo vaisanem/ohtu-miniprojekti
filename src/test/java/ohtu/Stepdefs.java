@@ -8,8 +8,6 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
-import ohtu.db.BookManager;
-import ohtu.db.Database;
 import ohtu.db.ItemTypeManager;
 import ohtu.types.Book;
 import ohtu.types.Video;
@@ -47,7 +45,7 @@ public class Stepdefs {
         } else {
             //this.driver = new ChromeDriver();
             //this.driver = new FirefoxDriver();
-            this.driver = new HtmlUnitDriver();
+            this.driver = new HtmlUnitDriver(true);
         }
         baseUrl = "http://localhost:" + 8080 + "/";
         random = new Random();
@@ -120,7 +118,7 @@ public class Stepdefs {
                 System.out.println(e.getStackTrace());
             }
         }
-        
+
         if (!found) {
             System.out.println("Link " + text + " was never found....");
         }

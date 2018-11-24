@@ -41,18 +41,35 @@ public class Controllers {
     }
 
     @PostMapping("/addItem")
-    public String addItem(ModelMap model, RedirectAttributes userAttribute, @RequestParam String title, @RequestParam String isbn, @RequestParam Integer year, @RequestParam String author, @RequestParam String user) throws SQLException {
-        try {
-            userAttribute.addFlashAttribute("user", user);
-            System.out.println("Redirected user : " + user);
-            Book book = new Book(isbn, title, author, year);
-            itemMan.getBookMan().add(book, user);
-            return "redirect:/items";
-        } catch (Exception e) {
-            //model.addAttribute("error", e.getMessage());
-            //return "newItem";
-            return "error";
+    public String addItem(ModelMap model, RedirectAttributes userAttribute, @RequestParam String type, @RequestParam String title, @RequestParam String isbn, @RequestParam String year, @RequestParam String author, @RequestParam String user) throws SQLException {
+
+        switch (type) {
+            case "book": {
+                int intYear;
+                if (!year.matches("[0-9]+")) {
+                    model.addAttribute("error", "year not numeric");
+                    return "error";
+                } else {
+                    intYear = Integer.parseInt(year);
+                }
+                
+                try {
+                    userAttribute.addFlashAttribute("user", user);
+                    System.out.println("Redirected user : " + user);
+                    Book book = new Book(isbn, title, author, intYear);
+                    itemMan.getBookMan().add(book, user);
+                    return "redirect:/items";
+                } catch (Exception e) {
+                    //model.addAttribute("error", e.getMessage());
+                    //return "newItem";
+                    return "error";
+                }
+            }
+            default: {
+                return "error";
+            }
         }
+
     }
 
     @RequestMapping(value = "/book/{id}", method = RequestMethod.GET)
