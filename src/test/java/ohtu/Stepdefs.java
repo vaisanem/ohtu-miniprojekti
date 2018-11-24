@@ -20,6 +20,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 public class Stepdefs {
 
@@ -45,7 +46,8 @@ public class Stepdefs {
             this.driver = new ChromeDriver();
         } else {
             //this.driver = new ChromeDriver();
-            this.driver = new FirefoxDriver();
+            //this.driver = new FirefoxDriver();
+            this.driver = new HtmlUnitDriver();
         }
         baseUrl = "http://localhost:" + 8080 + "/";
         random = new Random();
@@ -103,6 +105,7 @@ public class Stepdefs {
     }
 
     private void clickLinkWithText(String text) {
+        boolean found = false;
         int trials = 0;
         while (trials++ < 10) {
             try {
@@ -110,13 +113,17 @@ public class Stepdefs {
                 WebElement element = driver.findElement(By.linkText(text));
                 if (element != null) {
                     element.click();
+                    found = true;
                     break;
                 }
             } catch (Exception e) {
                 System.out.println(e.getStackTrace());
             }
         }
-        System.out.println("Link " + text + " was never found....");
+        
+        if (!found) {
+            System.out.println("Link " + text + " was never found....");
+        }
     }
 
     private void clickLinkWithText(String text, String secondText) {
