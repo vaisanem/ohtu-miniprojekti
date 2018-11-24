@@ -10,7 +10,7 @@
     <body>
         <ul class = "nav">
             <li class="nav"><a href="/">Home</a></li>
-            <li class="nav"><a href="/books">View List</a></li>
+            <li class="nav"><a href="/items">View List</a></li>
             <li class="nav"><a href="/newItem">Add new item</a></li>
         </ul>
         
@@ -20,12 +20,12 @@
 		<h2> Title: </h2>
 			<p><span th:text="${video.title}"></span></p>
 		<h2> Author: </h2>
-			<p><span th:text="${video.author}"></span></p>
+			<p><span th:text="${video.poster}"></span></p>
 		<h2> URL: </h2>
-			<a><span th:text="http://www.youtube.com/watch?v=${video.URL}"></span></a>
+			
                 <br/>
                 
-                <iframe width="1280" height="720" th:src="@{http://www.youtube.com/embed/${video.URL}}"/>
+                <iframe width="1280" height="720" th:src="@{https://www.youtube.com/embed/{url} (url=${video.URL})}"/>
         </div>
     </body>
 </html>

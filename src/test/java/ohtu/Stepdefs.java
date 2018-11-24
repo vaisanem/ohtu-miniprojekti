@@ -8,9 +8,9 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
-import ohtu.db.BookManager;
-import ohtu.db.Database;
+import ohtu.db.ItemTypeManager;
 import ohtu.types.Book;
+import ohtu.types.Video;
 import static org.junit.Assert.assertTrue;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -18,6 +18,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 public class Stepdefs {
 
@@ -25,16 +26,12 @@ public class Stepdefs {
     private String baseUrl;
     private WebElement element;
     private Random random;
-    private Database db;
-    private BookManager bookMan;
+    private ItemTypeManager itemMan;
 
     public Stepdefs() throws ClassNotFoundException {
         File file;
-        String addr = "ohmipro.ddns.net";
-        String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMP;user=ohtuadm;password=hakimi1337";
-        db = new Database(url);
-        bookMan = new BookManager(db);
-        
+        itemMan = new ItemTypeManager();
+
         if (System.getProperty("os.name").matches("Mac OS X")) {
             file = new File("lib/macgeckodriver");
         } else {
@@ -47,7 +44,8 @@ public class Stepdefs {
             this.driver = new ChromeDriver();
         } else {
             //this.driver = new ChromeDriver();
-            this.driver = new FirefoxDriver();
+            //this.driver = new FirefoxDriver();
+            this.driver = new HtmlUnitDriver(true);
         }
         baseUrl = "http://localhost:" + 8080 + "/";
         random = new Random();
@@ -55,14 +53,31 @@ public class Stepdefs {
 
     @After
     public void tearDown() throws SQLException {
-        db.getConnection().close();
+        itemMan.closeConnection();
         driver.quit();
     }
 
+    // <editor-fold desc="generic methods">
     @Given("^user is at the main page$")
     public void user_is_at_the_main_page() throws Throwable {
         driver.get(baseUrl);
         Thread.sleep(1000);
+    }
+
+    @When("^user is redirected to \"([^\"]*)\"$")
+    public void user_is_redirected_to(String arg1) throws Throwable {
+        Thread.sleep(500);
+        System.out.println("Current url : " + driver.getCurrentUrl() + ", expected to find string :" + arg1);
+        boolean isRedirected = driver.getCurrentUrl().contains(arg1);
+        assertTrue(isRedirected);
+        Thread.sleep(500);
+    }
+
+    @When("^link for \"([^\"]*)\" named \"([^\"]*)\" is clicked$")
+    public void link_for_named_is_clicked(String arg1, String arg2) throws Throwable {
+        Thread.sleep(500);
+        clickLinkWithText(arg2, arg1);
+        Thread.sleep(500);
     }
 
     @When("^link \"([^\"]*)\" is clicked$")
@@ -71,12 +86,74 @@ public class Stepdefs {
         clickLinkWithText(link);
         Thread.sleep(1000);
     }
-    
+
+    @Then("^\"([^\"]*)\" is shown$")
+    public void is_shown(String content) throws Throwable {
+        Thread.sleep(500);
+        boolean isShown = false;
+        for (int i = 0; i < 5; i++) {
+            Thread.sleep(500);
+            if (driver.getPageSource().contains(content)) {
+                isShown = true;
+                break;
+            }
+        }
+        assertTrue(isShown);
+        Thread.sleep(500);
+    }
+
+    private void clickLinkWithText(String text) {
+        boolean found = false;
+        int trials = 0;
+        while (trials++ < 10) {
+            try {
+                Thread.sleep(500);
+                WebElement element = driver.findElement(By.linkText(text));
+                if (element != null) {
+                    element.click();
+                    found = true;
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
+        }
+
+        if (!found) {
+            System.out.println("Link " + text + " was never found....");
+        }
+    }
+
+    private void clickLinkWithText(String text, String secondText) {
+        int trials = 0;
+        while (trials++ < 10) {
+            try {
+                Thread.sleep(500);
+                List<WebElement> elements = driver.findElements(By.partialLinkText(text));
+                WebElement element = elements.stream().filter(elem -> elem.getText().contains(secondText)).findFirst().get();
+                if (element != null) {
+                    element.click();
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
+        }
+    }
+
+    private void findElementAndFill(String name, String value) {
+        element = driver.findElement(By.name(name));
+        element.sendKeys(value);
+    }
+
+    // </editor-fold>
+    //                  spacer
+    // <editor-fold desc="Book testing">
     @When("^link to book's page is clicked$")
     public void link_to_book_page_is_clicked() throws Throwable {
-        Book one = bookMan.findAll("default").get(0);
+        Book one = itemMan.getBookMan().findAll("default").get(0);
         Thread.sleep(1000);
-        clickLinkWithText(one.getTitle().trim());
+        clickLinkWithText(one.getTitle().trim(), "book");
         Thread.sleep(1000);
     }
 
@@ -101,22 +178,24 @@ public class Stepdefs {
         Thread.sleep(1000);
         //driver.get(baseUrl + "books");
     }
-    
-    @Then("^\"([^\"]*)\" is shown$")
-    public void is_shown(String content) throws Throwable {
-        boolean isShown = false;
-        for(int i =0;i<5;i++){
-            if(driver.getPageSource().contains(content)){
-                isShown = true;
-                break;
-            }
-        }
-        assertTrue(isShown);
+
+    @Then("^individual book is shown$")
+    public void individual_book_is_shown() throws Throwable {
+        //driver.get(baseUrl + "books/");
+        Book one = itemMan.getBookMan().findAll("default").get(0);
+        Thread.sleep(250);
+        is_shown(one.getTitle());
+        Thread.sleep(250);
+        is_shown(one.getIsbn());
+        Thread.sleep(250);
+        is_shown(one.getAuthor());
+        Thread.sleep(250);
+        is_shown(Integer.toString(one.getYear()));
     }
 
     @Then("^List of all books is shown$")
     public void list_of_all_books_is_shown() throws Throwable {
-        List<Book> Books = bookMan.findAll("default");
+        List<Book> Books = itemMan.getBookMan().findAll("default");
 
         // Debugging purposes, check which books were gotten
         for (Book book : Books) {
@@ -126,15 +205,15 @@ public class Stepdefs {
         Boolean EverythingIsThere = true;
         for (Book book : Books) {
             Boolean found = false;
-            Thread.sleep(150);
-            for (int i = 0; i < 4; i++) {
-                Thread.sleep(150);
+            Thread.sleep(500);
+            for (int i = 0; i < 10; i++) {
+                Thread.sleep(500);
                 if (driver.getPageSource().contains(book.getTitle())) {
                     found = true;
                     break;
                 }
             }
-            
+
             if (!found) {
                 EverythingIsThere = false;
             }
@@ -142,37 +221,55 @@ public class Stepdefs {
         }
         assertTrue(EverythingIsThere);
     }
-    
-    @Then("^individual book is shown$")
-    public void individual_book_is_shown() throws Throwable {
-        //driver.get(baseUrl + "books/");
-        Book one = bookMan.findAll("default").get(0);    
-        Thread.sleep(150);
-        is_shown(one.getTitle());
-        Thread.sleep(150);
-        is_shown(one.getIsbn());
-        Thread.sleep(150);
-        is_shown(one.getAuthor());
-        Thread.sleep(150);
-        is_shown(Integer.toString(one.getYear()));
-    }
 
-    private void clickLinkWithText(String text) {
-        int trials = 0;
-        while (trials++ < 5) {
-            try {
-                WebElement element = driver.findElement(By.linkText(text));
-                element.click();
-                break;
-            } catch (Exception e) {
-                System.out.println(e.getStackTrace());
-            }
+    // </editor-fold>
+    //                  spacer
+    // <editor-fold desc="video testing">
+    @Then("^List of all videos is shown$")
+    public void list_of_all_videos_is_shown() throws Throwable {
+        List<Video> videos = itemMan.getVideoMan().findAll("default");
+
+        // Debugging purposes, check which videos were gotten
+        for (Video video : videos) {
+            System.out.println(video.getTitle());
         }
+
+        Boolean EverythingIsThere = true;
+        for (Video video : videos) {
+            Boolean found = false;
+            Thread.sleep(500);
+            for (int i = 0; i < 4; i++) {
+                Thread.sleep(500);
+                if (driver.getPageSource().contains(video.getTitle())) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                EverythingIsThere = false;
+            }
+
+        }
+        assertTrue(EverythingIsThere);
     }
 
-    private void findElementAndFill(String name, String value) {
-        element = driver.findElement(By.name(name));
-        element.sendKeys(value);
+    @When("^link to video's page is clicked$")
+    public void link_to_video_s_page_is_clicked() throws Throwable {
+        Video one = itemMan.getVideoMan().findAll("default").get(0);
+        Thread.sleep(1000);
+        clickLinkWithText(one.getTitle().trim(), "video");
+        Thread.sleep(1000);
     }
 
+    @Then("^individual video is shown$")
+    public void individual_video_is_shown() throws Throwable {
+        Video one = itemMan.getVideoMan().findAll("default").get(0);
+        Thread.sleep(500);
+        is_shown(one.getTitle());
+        Thread.sleep(500);
+        is_shown(one.getPoster());
+    }
+
+    // </editor-fold>
 }

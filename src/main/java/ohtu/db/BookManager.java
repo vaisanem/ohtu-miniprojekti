@@ -8,11 +8,7 @@ package ohtu.db;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import ohtu.types.Book;
-
-import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
 /**
  *
@@ -25,8 +21,8 @@ public class BookManager implements sqlManager<Book, Integer> {
     public BookManager(Database database) {
         this.database = database;
     }
-    
-        public boolean add(Book book, String user) throws SQLException {
+
+    public boolean add(Book book, String user) throws SQLException {
         Connection connection = database.getConnection();
         CallableStatement stmt = connection.prepareCall("{call AddBookAndLink(?,?,?,?,?)}");
 
@@ -81,12 +77,12 @@ public class BookManager implements sqlManager<Book, Integer> {
 
         return books;
     }
-    
-        public List<Book> findAll(String user) throws SQLException {
+
+    public List<Book> findAll(String user) throws SQLException {
         Connection connection = database.getConnection();
         CallableStatement stmt = connection.prepareCall("{call getBooksForId(?)}");
         stmt.setObject(1, user);
-        
+
         ResultSet rs = stmt.executeQuery();
         List<Book> books = new ArrayList<>();
         while (rs.next()) {
@@ -102,12 +98,7 @@ public class BookManager implements sqlManager<Book, Integer> {
 
     @Override
     public void delete(Integer key) throws SQLException {
-        Connection con = database.getConnection();
-        PreparedStatement stmt = con.prepareStatement("DELETE FROM Book WHERE id = ?");
-        stmt.setInt(1, key);
-        stmt.executeUpdate();
-        stmt.close();
-        con.close();
+        throw new UnsupportedOperationException("Not supported."); 
     }
 
 }
