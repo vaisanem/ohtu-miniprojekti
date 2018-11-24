@@ -67,6 +67,7 @@ public class Stepdefs {
     @When("^user is redirected to \"([^\"]*)\"$")
     public void user_is_redirected_to(String arg1) throws Throwable {
         Thread.sleep(500);
+        System.out.println("Current url : " + driver.getCurrentUrl() + ", expected to find string :" + arg1);
         boolean isRedirected = driver.getCurrentUrl().contains(arg1);
         assertTrue(isRedirected);
         Thread.sleep(500);
@@ -103,12 +104,14 @@ public class Stepdefs {
 
     private void clickLinkWithText(String text) {
         int trials = 0;
-        while (trials++ < 5) {
+        while (trials++ < 10) {
             try {
                 Thread.sleep(500);
                 WebElement element = driver.findElement(By.linkText(text));
-                element.click();
-                break;
+                if (element != null) {
+                    element.click();
+                    break;
+                }
             } catch (Exception e) {
                 System.out.println(e.getStackTrace());
             }
@@ -117,13 +120,15 @@ public class Stepdefs {
 
     private void clickLinkWithText(String text, String secondText) {
         int trials = 0;
-        while (trials++ < 5) {
+        while (trials++ < 10) {
             try {
                 Thread.sleep(500);
                 List<WebElement> elements = driver.findElements(By.partialLinkText(text));
                 WebElement element = elements.stream().filter(elem -> elem.getText().contains(secondText)).findFirst().get();
-                element.click();
-                break;
+                if (element != null) {
+                    element.click();
+                    break;
+                }
             } catch (Exception e) {
                 System.out.println(e.getStackTrace());
             }
