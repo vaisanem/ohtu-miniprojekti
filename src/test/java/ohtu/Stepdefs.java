@@ -58,6 +58,31 @@ public class Stepdefs {
     }
 
     // <editor-fold desc="generic methods">
+    @Given("^user is at the main page$")
+    public void user_is_at_the_main_page() throws Throwable {
+        driver.get(baseUrl);
+        Thread.sleep(1000);
+    }
+
+    @When("^user is redirected to \"([^\"]*)\"$")
+    public void user_is_redirected_to(String arg1) throws Throwable {
+        Thread.sleep(250);
+        boolean isRedirected = driver.getCurrentUrl().contains(arg1);
+        assertTrue(isRedirected);
+    }
+
+    @When("^link for \"([^\"]*)\" named \"([^\"]*)\" is clicked$")
+    public void link_for_named_is_clicked(String arg1, String arg2) throws Throwable {
+        clickLinkWithText(arg2, arg1);
+    }
+
+    @When("^link \"([^\"]*)\" is clicked$")
+    public void link_is_clicked(String link) throws Throwable {
+        Thread.sleep(1000);
+        clickLinkWithText(link);
+        Thread.sleep(1000);
+    }
+
     @Then("^\"([^\"]*)\" is shown$")
     public void is_shown(String content) throws Throwable {
         Thread.sleep(250);
@@ -72,31 +97,15 @@ public class Stepdefs {
         Thread.sleep(250);
     }
 
-    @When("^link for \"([^\"]*)\" named \"([^\"]*)\" is clicked$")
-    public void link_for_named_is_clicked(String arg1, String arg2) throws Throwable {
-        clickLinkWithText(arg2, arg1);
-    }
-
-    @Given("^user is at the main page$")
-    public void user_is_at_the_main_page() throws Throwable {
-        driver.get(baseUrl);
-        Thread.sleep(1000);
-    }
-
-    @When("^link \"([^\"]*)\" is clicked$")
-    public void link_is_clicked(String link) throws Throwable {
-        Thread.sleep(1000);
-        clickLinkWithText(link);
-        Thread.sleep(1000);
-    }
-
     private void clickLinkWithText(String text) {
         int trials = 0;
         while (trials++ < 5) {
             try {
                 WebElement element = driver.findElement(By.linkText(text));
                 element.click();
-                break;
+                if (driver.getCurrentUrl().contains(text)) {
+                    break;
+                }
             } catch (Exception e) {
                 System.out.println(e.getStackTrace());
             }
@@ -181,9 +190,9 @@ public class Stepdefs {
         Boolean EverythingIsThere = true;
         for (Book book : Books) {
             Boolean found = false;
-            Thread.sleep(150);
-            for (int i = 0; i < 4; i++) {
-                Thread.sleep(150);
+            Thread.sleep(250);
+            for (int i = 0; i < 5; i++) {
+                Thread.sleep(250);
                 if (driver.getPageSource().contains(book.getTitle())) {
                     found = true;
                     break;
@@ -229,7 +238,6 @@ public class Stepdefs {
         }
         assertTrue(EverythingIsThere);
     }
-
 
     @When("^link to video's page is clicked$")
     public void link_to_video_s_page_is_clicked() throws Throwable {

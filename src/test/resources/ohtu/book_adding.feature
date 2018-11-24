@@ -5,6 +5,7 @@ Feature: user can add new book
     When link "Add new item" is clicked
     And book fields title "Cucumber", isbn "", author and year "2018" are filled and submitted
     And link for "book" named "Cucumber" is clicked
+    And user is redirected to "/book"
     Then "Cucumber" is shown
 
   Scenario: user cannot add book with already existing isbn
