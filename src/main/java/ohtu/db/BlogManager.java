@@ -25,6 +25,23 @@ public class BlogManager implements sqlManager<Blog, Integer> {
     public BlogManager(Database database) {
         this.database = database;
     }
+    
+        public boolean add(Blog blog, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call AddBlogAndLink(?,?,?,?)}");
+
+        stmt.setObject(1, blog.getTitle());
+        stmt.setObject(2, blog.getURL());
+        stmt.setObject(3, blog.getPoster());
+        stmt.setObject(4, user);
+
+        int diu = stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
+
+        return diu == 1;
+    }
 
     @Override
     public Blog findOne(Integer key) throws SQLException {
