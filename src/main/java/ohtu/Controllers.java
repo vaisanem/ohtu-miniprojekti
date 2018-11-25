@@ -2,6 +2,7 @@ package ohtu;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import ohtu.db.ItemTypeManager;
 import ohtu.types.*;
 import org.springframework.stereotype.Controller;
@@ -41,22 +42,25 @@ public class Controllers {
     }
 
     @PostMapping("/addItem")
-    public String addItem(ModelMap model, RedirectAttributes userAttribute, @RequestParam String type, @RequestParam String title, @RequestParam String isbn, @RequestParam String year, @RequestParam String author, @RequestParam String user) throws SQLException {
+    public String addItem(ModelMap model, RedirectAttributes userAttribute, @RequestParam String user, @RequestParam String type,
+            @RequestParam Optional<String> bookTitle, @RequestParam Optional<String> isbn, @RequestParam Optional<String> year, @RequestParam Optional<String> author, //book
+            @RequestParam Optional<String> videoTitle, @RequestParam Optional<String> videoURL, @RequestParam Optional<String> videoPoster //video 
+    ) throws SQLException {
 
         switch (type) {
             case "book": {
                 int intYear;
-                if (!year.matches("[0-9]+")) {
+                if (!year.get().matches("[0-9]+")) {
                     model.addAttribute("error", "year not numeric");
                     return "error";
                 } else {
-                    intYear = Integer.parseInt(year);
+                    intYear = Integer.parseInt(year.get());
                 }
-                
+
                 try {
                     userAttribute.addFlashAttribute("user", user);
                     System.out.println("Redirected user : " + user);
-                    Book book = new Book(isbn, title, author, intYear);
+                    Book book = new Book(isbn.get(), bookTitle.get(), author.get(), intYear);
                     itemMan.getBookMan().add(book, user);
                     return "redirect:/items";
                 } catch (Exception e) {
@@ -65,6 +69,21 @@ public class Controllers {
                     return "error";
                 }
             }
+
+            case "video": {
+                try {
+                    userAttribute.addFlashAttribute("user", user);
+                    System.out.println("Redirected user : " + user);
+                    Video vid = new Video(videoURL.get(), videoTitle.get(), videoPoster.get());
+                    itemMan.getVideoMan().add(vid, user);
+                    return "redirect:/items";
+                } catch (Exception e) {
+                    //model.addAttribute("error", e.getMessage());
+                    //return "newItem";
+                    return "error";
+                }
+            }
+
             default: {
                 return "error";
             }
