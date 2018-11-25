@@ -165,7 +165,7 @@ public class Stepdefs {
         if (isbn.isEmpty()) {
             isbn = Integer.toString(Math.abs(random.nextInt()));
         }
-        findElementAndFill("title", title);
+        findElementAndFill("bookTitle", title);
         findElementAndFill("isbn", isbn);
         findElementAndFill("author", "Testaaja");
         findElementAndFill("year", year);
