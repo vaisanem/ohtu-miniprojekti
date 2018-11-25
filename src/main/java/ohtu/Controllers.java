@@ -54,7 +54,7 @@ public class Controllers {
                     model.addAttribute("error", "year not numeric");
                     return "error";
                 } else {
-                    intYear = Integer.parseInt(year.toString());
+                    intYear = Integer.parseInt(year.get());
                 }
 
                 try {
