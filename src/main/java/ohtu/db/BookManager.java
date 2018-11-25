@@ -8,11 +8,7 @@ package ohtu.db;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import ohtu.types.Book;
-
-import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
 /**
  *

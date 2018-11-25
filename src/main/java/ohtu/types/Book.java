@@ -8,7 +8,6 @@ package ohtu.types;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.springframework.stereotype.Component;
 
 /**
  *
@@ -22,15 +21,16 @@ public class Book extends ItemType implements Serializable {
 
     public Book(int id, String isbn, String title, String author, int year) {
         super.setType(typeIdentifier.book);
+        super.setId(id);
+        super.setTitle(title);
         this.isbn = isbn;
         this.author = author;
         this.year = year;
-        super.setId(id);
-        super.setTitle(title);
     }
 
     public Book(String isbn, String title, String author, int year) {
         super.setType(typeIdentifier.book);
+        super.setTitle(title);
         this.isbn = isbn;
         this.author = author;
         this.year = year;
@@ -49,6 +49,7 @@ public class Book extends ItemType implements Serializable {
         return author;
     }
 
+
     public String getIsbn() {
         return isbn;
     }
@@ -65,10 +66,8 @@ public class Book extends ItemType implements Serializable {
         this.isbn = isbn;
     }
 
-
     public void setYear(int year) {
         this.year = year;
     }
-
 
 }

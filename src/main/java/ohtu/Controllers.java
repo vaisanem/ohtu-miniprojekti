@@ -1,19 +1,14 @@
 package ohtu;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import ohtu.db.BookManager;
-import ohtu.db.Database;
+import java.util.Optional;
 import ohtu.db.ItemTypeManager;
 import ohtu.types.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class Controllers {
 
-    private Database db;
-    private ItemTypeManager itemMan;
+    private final ItemTypeManager itemMan;
 
     public Controllers() throws ClassNotFoundException {
         itemMan = new ItemTypeManager();
@@ -48,18 +42,53 @@ public class Controllers {
     }
 
     @PostMapping("/addItem")
-    public String addItem(ModelMap model, RedirectAttributes userAttribute, @RequestParam String title, @RequestParam String isbn, @RequestParam Integer year, @RequestParam String author, @RequestParam String user) throws SQLException {
-        try {
-            userAttribute.addFlashAttribute("user", user);
-            System.out.println("Redirected user : " + user);
-            Book book = new Book(isbn, title, author, year);
-            boolean succeeded = itemMan.getBookMan().add(book, user);
-            return "redirect:/books";
-        } catch (Exception e) {
-            //model.addAttribute("error", e.getMessage());
-            //return "newItem";
-            return "error";
+    public String addItem(ModelMap model, RedirectAttributes userAttribute, @RequestParam String user, @RequestParam String type,
+            @RequestParam Optional<String> bookTitle, @RequestParam Optional<String> isbn, @RequestParam Optional<String> year, @RequestParam Optional<String> author, //book
+            @RequestParam Optional<String> videoTitle, @RequestParam Optional<String> videoURL, @RequestParam Optional<String> videoPoster //video 
+    ) throws SQLException {
+
+        switch (type) {
+            case "book": {
+                int intYear;
+                if (!year.get().matches("[0-9]+")) {
+                    model.addAttribute("error", "year not numeric");
+                    return "error";
+                } else {
+                    intYear = Integer.parseInt(year.get());
+                }
+
+                try {
+                    userAttribute.addFlashAttribute("user", user);
+                    System.out.println("Redirected user : " + user);
+                    Book book = new Book(isbn.get(), bookTitle.get(), author.get(), intYear);
+                    itemMan.getBookMan().add(book, user);
+                    return "redirect:/items";
+                } catch (Exception e) {
+                    //model.addAttribute("error", e.getMessage());
+                    //return "newItem";
+                    return "error";
+                }
+            }
+
+            case "video": {
+                try {
+                    userAttribute.addFlashAttribute("user", user);
+                    System.out.println("Redirected user : " + user);
+                    Video vid = new Video(videoURL.get(), videoTitle.get(), videoPoster.get());
+                    itemMan.getVideoMan().add(vid, user);
+                    return "redirect:/items";
+                } catch (Exception e) {
+                    //model.addAttribute("error", e.getMessage());
+                    //return "newItem";
+                    return "error";
+                }
+            }
+
+            default: {
+                return "error";
+            }
         }
+
     }
 
     @RequestMapping(value = "/book/{id}", method = RequestMethod.GET)

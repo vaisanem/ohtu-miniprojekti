@@ -39,8 +39,6 @@ public class ItemType {
         this.type = type;
     }
     
-    
-
     public void setId(int id) {
         this.id = id;
     }

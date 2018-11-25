@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import ohtu.types.Book;
 import ohtu.types.Video;
 
 /**

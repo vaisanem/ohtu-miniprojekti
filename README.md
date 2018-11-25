@@ -2,7 +2,9 @@
 
 https://ohmipro.herokuapp.com/
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f3e21f6b21154ec18ffdc3c606b8418d)](https://app.codacy.com/app/EssKayz/ohtu-miniprojekti?utm_source=github.com&utm_medium=referral&utm_content=EssKayz/ohtu-miniprojekti&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/vaisanem/ohtu-miniprojekti.svg?branch=master)](https://travis-ci.org/vaisanem/ohtu-miniprojekti)
+[![codecov](https://codecov.io/gh/EssKayz/ohtu-miniprojekti/branch/master/graph/badge.svg)](https://codecov.io/gh/EssKayz/ohtu-miniprojekti)
 
 Testit käyttävät _lib_-hakemistossa olevaa firefox Geckodriveriä
 
