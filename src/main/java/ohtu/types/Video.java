@@ -71,10 +71,6 @@ public class Video extends ItemType {
         return URL;
     }
 
-    public void setURL(String URL) {
-        this.URL = URL;
-    }
-
     public String getPoster() {
         return poster;
     }
