@@ -27,3 +27,9 @@ Feature: User can view all added Items
     And link to video's page is clicked
     And user is redirected to "/video"
     Then individual video is shown
+
+   Scenario: User is viewing listed blogs.
+    Given user is at the main page
+    When link "View List" is clicked
+    And user is redirected to "/items"
+    Then list of all blogs is shown

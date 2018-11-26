@@ -6,10 +6,13 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import ohtu.db.ItemTypeManager;
+import ohtu.types.Blog;
 import ohtu.types.Book;
+import ohtu.types.ItemType;
 import ohtu.types.Video;
 import static org.junit.Assert.assertTrue;
 import org.openqa.selenium.By;
@@ -94,7 +97,7 @@ public class Stepdefs {
         for (int i = 0; i < 5; i++) {
             Thread.sleep(500);
             System.out.println("Expected element : " + content.toString());
-            System.out.println("Page source : " + driver.getPageSource().toString());
+            //System.out.println("Page source : " + driver.getPageSource().toString());
             if (driver.getPageSource().contains(content)) {
                 isShown = true;
                 break;
@@ -102,6 +105,29 @@ public class Stepdefs {
         }
         assertTrue(isShown);
         Thread.sleep(500);
+    }
+    
+    private void listOfAllItemsIsShown(List<ItemType> items) throws Throwable {
+        
+        Boolean EverythingIsThere = true;
+        for (ItemType item : items) {
+            System.out.println(item.getTitle()); // Debugging purposes, check which videos were gotten
+            Boolean found = false;
+            Thread.sleep(500);
+            for (int i = 0; i < 4; i++) {
+                Thread.sleep(500);
+                if (driver.getPageSource().contains(item.getTitle())) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                EverythingIsThere = false;
+            }
+
+        }
+        assertTrue(EverythingIsThere);
     }
 
     private void clickLinkWithText(String text) {
@@ -197,65 +223,14 @@ public class Stepdefs {
 
     @Then("^List of all books is shown$")
     public void list_of_all_books_is_shown() throws Throwable {
-        List<Book> Books = itemMan.getBookMan().findAll("default");
-
-        // Debugging purposes, check which books were gotten
-        for (Book book : Books) {
-            System.out.println(book.getTitle());
-        }
-
-        Boolean EverythingIsThere = true;
-        for (Book book : Books) {
-            Boolean found = false;
-            Thread.sleep(500);
-            for (int i = 0; i < 10; i++) {
-                Thread.sleep(500);
-                if (driver.getPageSource().contains(book.getTitle())) {
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                EverythingIsThere = false;
-            }
-
-        }
-        assertTrue(EverythingIsThere);
+        List<ItemType> books = new ArrayList<>();
+        books.addAll(itemMan.getBookMan().findAll("default"));
+        listOfAllItemsIsShown(books);
     }
 
     // </editor-fold>
     //                  spacer
     // <editor-fold desc="video testing">
-    @Then("^List of all videos is shown$")
-    public void list_of_all_videos_is_shown() throws Throwable {
-        List<Video> videos = itemMan.getVideoMan().findAll("default");
-
-        // Debugging purposes, check which videos were gotten
-        for (Video video : videos) {
-            System.out.println(video.getTitle());
-        }
-
-        Boolean EverythingIsThere = true;
-        for (Video video : videos) {
-            Boolean found = false;
-            Thread.sleep(500);
-            for (int i = 0; i < 4; i++) {
-                Thread.sleep(500);
-                if (driver.getPageSource().contains(video.getTitle())) {
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                EverythingIsThere = false;
-            }
-
-        }
-        assertTrue(EverythingIsThere);
-    }
-
     @When("^link to video's page is clicked$")
     public void link_to_video_s_page_is_clicked() throws Throwable {
         Video one = itemMan.getVideoMan().findAll("default").get(0);
@@ -272,6 +247,41 @@ public class Stepdefs {
         Thread.sleep(500);
         is_shown(one.getPoster().trim());
     }
+    
+    @Then("^List of all videos is shown$")
+    public void list_of_all_videos_is_shown() throws Throwable {
+        List<ItemType> videos = new ArrayList<>();
+        videos.addAll(itemMan.getVideoMan().findAll("default"));
+        listOfAllItemsIsShown(videos);
+    }
 
+    // </editor-fold>
+    //                  spacer
+    // <editor-fold desc="blog testing">
+    
+    @When("^blog fields title \"([^\"]*)\" and others are filled and submitted$")
+    public void blog_fields_are_submitted(String title) throws Throwable {
+        driver.findElement(By.id("blog")).click();
+        Thread.sleep(150);
+        findElementAndFill("blogTitle", title);
+        findElementAndFill("blogPoster", "Testaaja");
+        findElementAndFill("blogURL", "https://protesters.com/blogs/1");
+
+        // Sets user to "testUser"
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        String strJS = "document.getElementById('user').value='testUser'";
+        jse.executeScript(strJS);
+
+        element = driver.findElement(By.name("Add new blog"));
+        element.submit();
+        //driver.get(baseUrl + "books");
+    }
+    
+    @Then("^list of all blogs is shown$")
+    public void list_of_all_blogs_is_shown() throws Throwable {
+        List<ItemType> blogs = new ArrayList<>();
+        blogs.addAll(itemMan.getBlogMan().findAll("default"));
+        listOfAllItemsIsShown(blogs);
+    }
     // </editor-fold>
 }

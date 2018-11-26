@@ -31,8 +31,8 @@ public class Controllers {
         if (user.length() < 1) {
             user = "default";
         }
-        List<ItemType> books = itemMan.findAll(user);
-        model.addAttribute("items", books);
+        List<ItemType> items = itemMan.findAll(user);
+        model.addAttribute("items", items);
         return "itemView";
     }
 
@@ -44,7 +44,8 @@ public class Controllers {
     @PostMapping("/addItem")
     public String addItem(ModelMap model, RedirectAttributes userAttribute, @RequestParam String user, @RequestParam String type,
             @RequestParam Optional<String> bookTitle, @RequestParam Optional<String> isbn, @RequestParam Optional<String> year, @RequestParam Optional<String> author, //book
-            @RequestParam Optional<String> videoTitle, @RequestParam Optional<String> videoURL, @RequestParam Optional<String> videoPoster //video 
+            @RequestParam Optional<String> videoTitle, @RequestParam Optional<String> videoURL, @RequestParam Optional<String> videoPoster, //video 
+            @RequestParam Optional<String> blogTitle, @RequestParam Optional<String> blogURL, @RequestParam Optional<String> blogPoster //blog 
     ) throws SQLException {
 
         switch (type) {
@@ -83,6 +84,20 @@ public class Controllers {
                     return "error";
                 }
             }
+            
+            case "blog": {
+                try {
+                    userAttribute.addFlashAttribute("user", user);
+                    System.out.println("Redirected user : " + user);
+                    Blog blog = new Blog(blogURL.get(), blogTitle.get(), blogPoster.get());
+                    itemMan.getBlogMan().add(blog, user);
+                    return "redirect:/items";
+                } catch (Exception e) {
+                    model.addAttribute("error", e.getMessage());
+                    return "newItem";
+                    //return "error";
+                }
+            }
 
             default: {
                 return "error";
@@ -100,7 +115,7 @@ public class Controllers {
 
     @RequestMapping(value = "/blog/{id}", method = RequestMethod.GET)
     public String blog(@PathVariable int id, ModelMap model) throws SQLException {
-        Blog blog = null;  // TODO -> missing manager.
+        Blog blog = itemMan.getBlogMan().findOne(id);
         model.addAttribute("blog", blog);
         return "blog";
     }
@@ -111,5 +126,5 @@ public class Controllers {
         model.addAttribute("video", video);
         return "video";
     }
-
+    
 }

@@ -92,4 +92,19 @@ public class ItemTypeManager {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    // <editor-fold desc="For JUnit testing">
+    public void setVideoMan(VideoManager videoMan) {
+        this.videoMan = videoMan;
+    }
+
+    public void setBookMan(BookManager bookMan) {
+        this.bookMan = bookMan;
+    }
+
+    public void setBlogMan(BlogManager blogMan) {
+        this.blogMan = blogMan;
+    }
+    // </editor-fold>
+    
+
 }
