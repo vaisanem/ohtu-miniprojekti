@@ -23,7 +23,7 @@ public class ItemTypeManager {
 
     public ItemTypeManager() throws ClassNotFoundException {
         this.database = database;
-        String addr = "192.168.1.8";
+        String addr = "ohmipro.ddns.net";
         String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMP;user=ohtuadm;password=hakimi1337";
 
         database = new Database(url);
