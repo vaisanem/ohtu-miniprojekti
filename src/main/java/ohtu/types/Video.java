@@ -45,27 +45,27 @@ public class Video extends ItemType {
         super.setTitle(title);
 
     }
-
-    public Video(String URL) {
-        super.setType(typeIdentifier.video);
-        if (URL.contains("=")) {
-            this.URL = URL.substring(URL.indexOf('=') + 1);
-        } else if (URL.contains("youtu.be")) {
-            this.URL = URL.substring(URL.indexOf('.') + 4);
-        } else {
-            this.URL = URL;
-        }
-        // TODO Fetch information from YouTubeAPI.
-    }
 // Waiting for implementation
-//    public Video(ResultSet rs) throws SQLException {
+//    public Video(String URL) {
 //        super.setType(typeIdentifier.video);
-//        super.setId(rs.getInt("id"));
-//        super.setTitle(rs.getString("title"));
-//        URL = rs.getString("URL");
-//        poster = rs.getString("Author");
-//
+//        if (URL.contains("=")) {
+//            this.URL = URL.substring(URL.indexOf('=') + 1);
+//        } else if (URL.contains("youtu.be")) {
+//            this.URL = URL.substring(URL.indexOf('.') + 4);
+//        } else {
+//            this.URL = URL;
+//        }
+//        // TODO Fetch information from YouTubeAPI.
 //    }
+
+    public Video(ResultSet rs) throws SQLException {
+        super.setType(typeIdentifier.video);
+        super.setId(rs.getInt("id"));
+        super.setTitle(rs.getString("title"));
+        URL = rs.getString("URL");
+        poster = rs.getString("Author");
+
+    }
 
     public String getURL() {
         return URL;
