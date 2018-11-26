@@ -4,7 +4,7 @@ Feature: user can add new book
     Given user is at the main page
     When link "Add new item" is clicked
     And book fields title "Cucumber", isbn "", author and year "2018" are filled and submitted
- And user is redirected to "/items"
+    And user is redirected to "/items"
     And link for "book" named "Cucumber" is clicked
     And user is redirected to "/book"
     Then "Cucumber" is shown
