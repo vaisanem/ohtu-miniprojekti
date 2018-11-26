@@ -25,6 +25,23 @@ public class BlogManager implements sqlManager<Blog, Integer> {
     public BlogManager(Database database) {
         this.database = database;
     }
+    
+    public boolean add(Blog blog, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call AddBlogAndLink(?,?,?,?)}");
+
+        stmt.setObject(1, blog.getTitle());
+        stmt.setObject(2, blog.getURL());
+        stmt.setObject(3, blog.getPoster());
+        stmt.setObject(4, user);
+
+        int diu = stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
+
+        return diu == 1;
+    }
 
     @Override
     public Blog findOne(Integer key) throws SQLException {
@@ -52,16 +69,16 @@ public class BlogManager implements sqlManager<Blog, Integer> {
         Connection connection = database.getConnection();
         PreparedStatement stmt = connection.prepareStatement("SELECT WebBlog.id, title, URL, Author.name as Author FROM WebBlog, Author AND WebBlog.fk_Writer_id = Author.id");
         ResultSet rs = stmt.executeQuery();
-        List<Blog> videos = new ArrayList<>();
+        List<Blog> blogs = new ArrayList<>();
         while (rs.next()) {
-            videos.add(new Blog(rs));
+            blogs.add(new Blog(rs));
         }
 
         rs.close();
         stmt.close();
         connection.close();
 
-        return videos;
+        return blogs;
     }
 
     public List<Blog> findAll(String user) throws SQLException {
@@ -70,16 +87,16 @@ public class BlogManager implements sqlManager<Blog, Integer> {
         stmt.setObject(1, user);
 
         ResultSet rs = stmt.executeQuery();
-        List<Blog> books = new ArrayList<>();
+        List<Blog> blogs = new ArrayList<>();
         while (rs.next()) {
-            books.add(new Blog(rs));
+            blogs.add(new Blog(rs));
         }
 
         rs.close();
         stmt.close();
         connection.close();
 
-        return books;
+        return blogs;
     }
 
     @Override

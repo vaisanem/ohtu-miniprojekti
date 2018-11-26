@@ -14,21 +14,21 @@ import java.sql.SQLException;
  */
 public class Blog extends ItemType {
 
-    private String author;
+    private String poster;
     private String URL;
 
-    public Blog(String URL, String title, String author) {
+    public Blog(String URL, String title, String poster) {
         super.setType(typeIdentifier.blog);
         super.setTitle(title);
-        this.author = author;
+        this.poster = poster;
         this.URL = URL;
     }
 
-    public Blog(int id, String URL, String title, String author) {
+    public Blog(int id, String URL, String title, String poster) {
         super.setType(typeIdentifier.blog);
         super.setId(id);
         super.setTitle(title);
-        this.author = author;
+        this.poster = poster;
         this.URL = URL;
     }
 
@@ -37,15 +37,15 @@ public class Blog extends ItemType {
         super.setId(rs.getInt("id"));
         super.setTitle(rs.getString("title"));
         URL = rs.getString("URL");
-        author = rs.getString("Author");
+        poster = rs.getString("Author");
     }
 
     public String getPoster() {
-        return author;
+        return poster;
     }
 
     public void setPoster(String poster) {
-        this.author = poster;
+        this.poster = poster;
     }
 
     public String getURL() {

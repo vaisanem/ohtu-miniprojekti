@@ -20,9 +20,9 @@
 		<h2> Title: </h2>
 			<p><span th:text="${blog.title}"></span></p>
 		<h2> Author: </h2>
-			<p><span th:text="${blog.author}"></span></p>	
+			<p><span th:text="${blog.poster}"></span></p>	
 		<h2>URL:</h2>
-			<a><span th:text="${blog.URL}"></span></a>
+			<a th:href="${blog.URL}"><span th:text="${blog.URL}"></span></a>
         </div>
     </body>
 </html>
