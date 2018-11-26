@@ -10,16 +10,16 @@ import static org.mockito.Mockito.*;
 
 public class ItemTypeManagerTest {
     
-    ItemTypeManager itemMan;
-    VideoManager videoMan;
-    BookManager bookMan;
-    BlogManager blogMan;
-    ArrayList<Video> videos;
-    ArrayList<Book> books;
-    ArrayList<Blog> blogs;
-    Video video;
-    Book book;
-    Blog blog;
+    private ItemTypeManager itemMan;
+    private VideoManager videoMan;
+    private BookManager bookMan;
+    private BlogManager blogMan;
+    private ArrayList<Video> videos;
+    private ArrayList<Book> books;
+    private ArrayList<Blog> blogs;
+    private Video video;
+    private Book book;
+    private Blog blog;
     
     @Before
     public void setUp() throws ClassNotFoundException, SQLException {

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import ohtu.db.ItemTypeManager;
-import ohtu.types.Blog;
 import ohtu.types.Book;
 import ohtu.types.ItemType;
 import ohtu.types.Video;
@@ -20,7 +19,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 public class Stepdefs {
@@ -96,7 +94,7 @@ public class Stepdefs {
         boolean isShown = false;
         for (int i = 0; i < 5; i++) {
             Thread.sleep(500);
-            System.out.println("Expected element : " + content.toString());
+            System.out.println("Expected element : " + content);
             //System.out.println("Page source : " + driver.getPageSource().toString());
             if (driver.getPageSource().contains(content)) {
                 isShown = true;
