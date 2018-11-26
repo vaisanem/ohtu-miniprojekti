@@ -58,16 +58,5 @@ public class Book extends ItemType implements Serializable {
         return year;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
 
 }

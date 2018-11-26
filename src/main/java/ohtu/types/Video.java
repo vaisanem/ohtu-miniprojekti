@@ -24,7 +24,7 @@ public class Video extends ItemType {
         } else if (URL.contains("youtu.be")) {
             this.URL = URL.substring(URL.indexOf('.') + 4);
         } else {
-            URL = URL;
+            this.URL = URL;
         }
         this.poster = poster;
         super.setTitle(title);
@@ -38,7 +38,7 @@ public class Video extends ItemType {
         } else if (URL.contains("youtu.be")) {
             this.URL = URL.substring(URL.indexOf('.') + 4);
         } else {
-            URL = URL;
+            this.URL = URL;
         }
         this.poster = poster;
         super.setId(id);
@@ -53,7 +53,7 @@ public class Video extends ItemType {
         } else if (URL.contains("youtu.be")) {
             this.URL = URL.substring(URL.indexOf('.') + 4);
         } else {
-            URL = URL;
+            this.URL = URL;
         }
         // TODO Fetch information from YouTubeAPI.
     }
@@ -79,7 +79,4 @@ public class Video extends ItemType {
         return poster;
     }
 
-    public void setPoster(String poster) {
-        this.poster = poster;
-    }
 }
