@@ -24,12 +24,6 @@ public class ItemType {
     public ItemType() {
     }
     
-    
-
-    public ItemType(int id, String title) {
-        this.id = id;
-        this.title = title;
-    }
 
     public typeIdentifier getType() {
         return type;

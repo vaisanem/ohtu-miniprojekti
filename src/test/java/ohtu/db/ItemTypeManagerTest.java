@@ -9,7 +9,7 @@ import org.junit.Before;
 import static org.mockito.Mockito.*;
 
 public class ItemTypeManagerTest {
-    
+
     private ItemTypeManager itemMan;
     private VideoManager videoMan;
     private BookManager bookMan;
@@ -20,40 +20,44 @@ public class ItemTypeManagerTest {
     private Video video;
     private Book book;
     private Blog blog;
-    
+
     @Before
     public void setUp() throws ClassNotFoundException, SQLException {
         itemMan = new ItemTypeManager();
         videoMan = mock(VideoManager.class);
         bookMan = mock(BookManager.class);
         blogMan = mock(BlogManager.class);
-        
+
         videos = new ArrayList<>();
+        video = new Video(2, "youtu.be/path/to/nowheres", "Cat videoShortUrl", "Catloverxx");
+        videos.add(video);
+        video = new Video(3, "youtube.com/watch?v=", "Cat video2", "Catloverx");
+        videos.add(video);
         video = new Video(1, "youtube.com/path/to/nowhere", "Cat video", "Catlover");
         videos.add(video);
         when(videoMan.findAll()).thenReturn(videos);
         when(videoMan.findAll("")).thenReturn(videos);
         when(videoMan.findOne(1)).thenReturn(video);
-        
+
         books = new ArrayList<>();
         book = new Book(1, "1234567891011", "Mockito", "Testaaja", 2018);
         books.add(book);
         when(bookMan.findAll()).thenReturn(books);
         when(bookMan.findAll("")).thenReturn(books);
         when(bookMan.findOne(1)).thenReturn(book);
-        
+
         blogs = new ArrayList<>();
         blog = new Blog(1, "bloggers.com/path/to/nowhere", "Cats", "Catlover");
         blogs.add(blog);
         when(blogMan.findAll()).thenReturn(blogs);
         when(blogMan.findAll("")).thenReturn(blogs);
         when(blogMan.findOne(1)).thenReturn(blog);
-        
+
         itemMan.setBlogMan(blogMan);
         itemMan.setBookMan(bookMan);
         itemMan.setVideoMan(videoMan);
     }
-    
+
     @Test
     public void findOneTypeBookReturnsBook() throws SQLException {
         Book book2 = (Book) itemMan.findOne(1, ItemType.typeIdentifier.book);
@@ -61,7 +65,7 @@ public class ItemTypeManagerTest {
         assertEquals(book.getTitle(), book2.getTitle());
         assertEquals(book.getIsbn(), book2.getIsbn());
     }
-    
+
     @Test
     public void findOneTypeBlogReturnsBlog() throws SQLException {
         Blog blog2 = (Blog) itemMan.findOne(1, ItemType.typeIdentifier.blog);
@@ -69,7 +73,7 @@ public class ItemTypeManagerTest {
         assertEquals(blog.getTitle(), blog2.getTitle());
         assertEquals(blog.getURL(), blog2.getURL());
     }
-    
+
     @Test
     public void findOneTypeVideoReturnsVideo() throws SQLException {
         Video video2 = (Video) itemMan.findOne(1, ItemType.typeIdentifier.video);
@@ -77,7 +81,7 @@ public class ItemTypeManagerTest {
         assertEquals(video.getTitle(), video2.getTitle());
         assertEquals(video.getURL(), video2.getURL());
     }
-    
+
     @Test
     public void findAllFindsAll() throws SQLException {
         ArrayList<ItemType> all = (ArrayList) itemMan.findAll();
@@ -85,6 +89,7 @@ public class ItemTypeManagerTest {
         assertTrue(all.containsAll(books));
         assertTrue(all.containsAll(blogs));
     }
+
     @Test
     public void findAllWithSpecifiedUserFindsAll() throws SQLException {
         ArrayList<ItemType> all = (ArrayList) itemMan.findAll("");
@@ -92,5 +97,5 @@ public class ItemTypeManagerTest {
         assertTrue(all.containsAll(books));
         assertTrue(all.containsAll(blogs));
     }
-    
+
 }
