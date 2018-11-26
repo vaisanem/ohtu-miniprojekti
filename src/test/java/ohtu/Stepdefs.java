@@ -198,7 +198,7 @@ public class Stepdefs {
 
         // Sets user to "testUser"
         JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('user').value='testUser'";
+        String strJS = "document.getElementById('userBook').value='testUser'";
         jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new book"));
@@ -262,14 +262,17 @@ public class Stepdefs {
     @When("^blog fields title \"([^\"]*)\" and others are filled and submitted$")
     public void blog_fields_are_submitted(String title) throws Throwable {
         driver.findElement(By.id("blog")).click();
+        System.out.println("Attempted to click blog radiobutton..");
         Thread.sleep(150);
         findElementAndFill("blogTitle", title);
+        Thread.sleep(150);
         findElementAndFill("blogPoster", "Testaaja");
+        Thread.sleep(150);
         findElementAndFill("blogURL", "https://protesters.com/blogs/1");
 
         // Sets user to "testUser"
         JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('user').value='testUser'";
+        String strJS = "document.getElementById('userBlog').value='testUser'";
         jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new blog"));
