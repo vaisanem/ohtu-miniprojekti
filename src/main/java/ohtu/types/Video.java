@@ -22,7 +22,7 @@ public class Video extends ItemType {
         if (URL.contains("watch?v=")) {
             this.URL = URL.substring(URL.indexOf('=') + 1);
         } else if (URL.contains("youtu.be")) {
-            this.URL = URL.substring(URL.indexOf('/') + 1);
+            this.URL = URL.substring(URL.indexOf('.') + 4);
         } else {
             URL = URL;
         }
