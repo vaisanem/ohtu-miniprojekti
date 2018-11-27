@@ -52,7 +52,7 @@ public class Controllers {
             case "book": {
                 int intYear;
                 if (!year.get().matches("[0-9]+")) {
-                    model.addAttribute("error", "year not numeric");
+                    model.addAttribute("error", "year not numeric or missing");
                     return "error";
                 } else {
                     intYear = Integer.parseInt(year.get());
@@ -70,11 +70,11 @@ public class Controllers {
                         return "error";
                     }
                     if (author.get().isEmpty()) {
-                        model.addAttribute("error", "Missing author");
+                        model.addAttribute("error", "Missing Author");
                         return "error";
                     }
                     if (year.get().isEmpty()) {
-                        model.addAttribute("error", "Missing year");
+                        model.addAttribute("error", "Missing Year");
                         return "error";
                     }
                     Book book = new Book(isbn.get(), bookTitle.get(), author.get(), intYear);
@@ -122,7 +122,7 @@ public class Controllers {
                         return "error";
                     }
                     if (blogTitle.get().isEmpty()) {
-                        model.addAttribute("error", "Missing title");
+                        model.addAttribute("error", "Missing Title");
                         return "error";
                     }
                     if (blogPoster.get().isEmpty()) {

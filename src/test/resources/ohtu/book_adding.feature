@@ -19,4 +19,28 @@ Feature: user can add new book
     Given user is at the main page
     When link "Add new item" is clicked
     And book fields title "Cucumber", isbn "", author and year "once upon a time" are filled and submitted
-    Then "Error occurred" is shown
+    Then "year not numeric or missing" is shown
+
+  Scenario: user cant  add new book without Title
+    Given user is at the main page
+    When link "Add new item" is clicked
+    And book fields isbn, author and year are filled and submitted
+    Then "Missing Title" is shown
+
+  Scenario: user cant add new book without ISBN
+    Given user is at the main page
+    When link "Add new item" is clicked
+    And book fields Title, author and year are filled and submitted
+    Then "Missing ISBN" is shown
+
+  Scenario: user cant add new book without Author
+    Given user is at the main page
+    When link "Add new item" is clicked
+    And book fields isbn, title and year are filled and submitted
+    Then "Missing Author" is shown
+
+  Scenario: user cant add new book without Year
+    Given user is at the main page
+    When link "Add new item" is clicked
+    And book fields isbn, author and Title are filled and submitted
+    Then "year not numeric or missing" is shown

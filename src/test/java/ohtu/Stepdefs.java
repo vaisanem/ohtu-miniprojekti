@@ -29,8 +29,8 @@ public class Stepdefs {
     private Random random;
     private ItemTypeManager itemMan;
     private final int SleepTime;
-    
-    public Stepdefs() throws ClassNotFoundException {        
+
+    public Stepdefs() throws ClassNotFoundException {
         File file;
         itemMan = new ItemTypeManager();
         SleepTime = 150;
@@ -229,6 +229,78 @@ public class Stepdefs {
         listOfAllItemsIsShown(books);
     }
 
+    @When("^book fields isbn, author and year are filled and submitted$")
+    public void book_fields_isbn_author_and_year_are_filled_and_submitted() throws Throwable {
+        Thread.sleep(SleepTime);
+        findElementAndFill("isbn", Integer.toString(Math.abs(random.nextInt())));
+        findElementAndFill("author", "Testaaja");
+        findElementAndFill("year", "2008");
+
+        // Sets user to "testUser"
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        String strJS = "document.getElementById('userBook').value='testUser'";
+        jse.executeScript(strJS);
+
+        element = driver.findElement(By.name("Add new book"));
+        element.submit();
+        Thread.sleep(SleepTime);
+        //driver.get(baseUrl + "books");
+    }
+
+    @When("^book fields Title, author and year are filled and submitted$")
+    public void book_fields_Title_author_and_year_are_filled_and_submitted() throws Throwable {
+        Thread.sleep(SleepTime);
+        findElementAndFill("bookTitle", "Test");
+        findElementAndFill("author", "Testaaja");
+        findElementAndFill("year", "2008");
+
+        // Sets user to "testUser"
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        String strJS = "document.getElementById('userBook').value='testUser'";
+        jse.executeScript(strJS);
+
+        element = driver.findElement(By.name("Add new book"));
+        element.submit();
+        Thread.sleep(SleepTime);
+        //driver.get(baseUrl + "books");
+    }
+
+    @When("^book fields isbn, title and year are filled and submitted$")
+    public void book_fields_isbn_title_and_year_are_filled_and_submitted() throws Throwable {
+        Thread.sleep(SleepTime);
+        findElementAndFill("bookTitle", "Test");
+        findElementAndFill("isbn", Integer.toString(Math.abs(random.nextInt())));
+        findElementAndFill("year", "2008");
+
+        // Sets user to "testUser"
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        String strJS = "document.getElementById('userBook').value='testUser'";
+        jse.executeScript(strJS);
+
+        element = driver.findElement(By.name("Add new book"));
+        element.submit();
+        Thread.sleep(SleepTime);
+        //driver.get(baseUrl + "books");
+    }
+
+    @When("^book fields isbn, author and Title are filled and submitted$")
+    public void book_fields_isbn_author_and_Title_are_filled_and_submitted() throws Throwable {
+        Thread.sleep(SleepTime);
+        findElementAndFill("bookTitle", "Test");
+        findElementAndFill("isbn", Integer.toString(Math.abs(random.nextInt())));
+        findElementAndFill("author", "Testaaja");
+
+        // Sets user to "testUser"
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        String strJS = "document.getElementById('userBook').value='testUser'";
+        jse.executeScript(strJS);
+
+        element = driver.findElement(By.name("Add new book"));
+        element.submit();
+        Thread.sleep(SleepTime);
+        //driver.get(baseUrl + "books");
+    }
+
     // </editor-fold>
     //                  spacer
     // <editor-fold desc="video testing">
@@ -265,7 +337,7 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoPoster", "Testaaja");
         Thread.sleep(SleepTime);
-        findElementAndFill("videoURL", "https://www.youtube.com/watch?v=WPvGqX-TXP0"); 
+        findElementAndFill("videoURL", "https://www.youtube.com/watch?v=WPvGqX-TXP0");
 
         // Sets user to "testUser"
         JavascriptExecutor jse = (JavascriptExecutor) driver;
@@ -402,6 +474,62 @@ public class Stepdefs {
         List<ItemType> blogs = new ArrayList<>();
         blogs.addAll(itemMan.getBlogMan().findAll("default"));
         listOfAllItemsIsShown(blogs);
+    }
+
+    @When("^blog fields title and poster are filled correctly and submitted\\.$")
+    public void blog_fields_title_and_poster_are_filled_correctly_and_submitted() throws Throwable {
+        driver.findElement(By.id("blog")).click();
+        System.out.println("Attempted to click blog radiobutton..");
+        Thread.sleep(SleepTime);
+        findElementAndFill("blogTitle", "TestTitle");
+        Thread.sleep(SleepTime);
+        findElementAndFill("blogPoster", "Testaaja");
+        // Sets user to "testUser"
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        String strJS = "document.getElementById('userBlog').value='testUser'";
+        jse.executeScript(strJS);
+
+        element = driver.findElement(By.name("Add new blog"));
+        element.submit();
+        //driver.get(baseUrl + "books");
+    }
+
+    @When("^blog fields URL and Poster are filled and submitted$")
+    public void blog_fields_URL_and_Poster_are_filled_and_submitted() throws Throwable {
+        driver.findElement(By.id("blog")).click();
+        System.out.println("Attempted to click blog radiobutton..");
+        Thread.sleep(SleepTime);
+        findElementAndFill("blogPoster", "Testaaja");
+        Thread.sleep(SleepTime);
+        findElementAndFill("blogURL", "https://protesters.com/blogs/1");
+
+        // Sets user to "testUser"
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        String strJS = "document.getElementById('userBlog').value='testUser'";
+        jse.executeScript(strJS);
+
+        element = driver.findElement(By.name("Add new blog"));
+        element.submit();
+        //driver.get(baseUrl + "books");
+    }
+
+    @When("^blog fields URL and Title are filled and submitted$")
+    public void blog_fields_URL_and_Title_are_filled_and_submitted() throws Throwable {
+        driver.findElement(By.id("blog")).click();
+        System.out.println("Attempted to click blog radiobutton..");
+        Thread.sleep(SleepTime);
+        findElementAndFill("blogTitle", "TestTitle");
+        Thread.sleep(SleepTime);
+        findElementAndFill("blogURL", "https://protesters.com/blogs/1");
+
+        // Sets user to "testUser"
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        String strJS = "document.getElementById('userBlog').value='testUser'";
+        jse.executeScript(strJS);
+
+        element = driver.findElement(By.name("Add new blog"));
+        element.submit();
+        //driver.get(baseUrl + "books");
     }
 
     // </editor-fold>
