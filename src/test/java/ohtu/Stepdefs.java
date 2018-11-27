@@ -43,8 +43,8 @@ public class Stepdefs {
         System.setProperty("webdriver.gecko.driver", absolutePath);
 
         if (System.getProperty("os.name").matches("Windows 10")) {
-            //this.driver = new ChromeDriver();
-            this.driver = new HtmlUnitDriver(true);
+           this.driver = new ChromeDriver();
+            //this.driver = new HtmlUnitDriver(true);
         } else {
             //this.driver = new ChromeDriver();
             //this.driver = new FirefoxDriver();
@@ -329,6 +329,9 @@ public class Stepdefs {
 
     @When("^video fields are filled correctly and submitted$")
     public void video_fields_are_filled_correctly_and_submitted() throws Throwable {
+        Random r = new Random();
+        int n = 100000 + r.nextInt(900000);
+
         driver.findElement(By.id("video")).click();
         System.out.println("Attempted to click video radiobutton..");
         Thread.sleep(SleepTime);
@@ -336,7 +339,7 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoPoster", "Testaaja");
         Thread.sleep(SleepTime);
-        findElementAndFill("videoURL", "https://www.youtube.com/watch?v=WPvGqX-TXP0");
+        findElementAndFill("videoURL", "https://www.youtube.com/watch?v=WPvGqX-TXP0" + n);
 
         // Sets user to "testUser"
         JavascriptExecutor jse = (JavascriptExecutor) driver;
@@ -349,6 +352,9 @@ public class Stepdefs {
 
     @When("^video fields are filled correctly with short URL and submitted$")
     public void video_fields_are_filled_correctly_with_short_URL_and_submitted() throws Throwable {
+        Random r = new Random();
+        int n = 100000 + r.nextInt(900000);
+
         driver.findElement(By.id("video")).click();
         System.out.println("Attempted to click video radiobutton..");
         Thread.sleep(SleepTime);
@@ -356,7 +362,7 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoPoster", "Testaaja");
         Thread.sleep(SleepTime);
-        findElementAndFill("videoURL", "https://youtu.be/XKu_SEDAykw");
+        findElementAndFill("videoURL", "https://youtu.be/XKu_SEDAykw" + n);
 
         // Sets user to "testUser"
         JavascriptExecutor jse = (JavascriptExecutor) driver;
@@ -370,6 +376,9 @@ public class Stepdefs {
 
     @When("^video fields are filled correctly with video ID and submitted$")
     public void video_fields_are_filled_correctly_with_video_ID_and_submitted() throws Throwable {
+        Random r = new Random();
+        int n = 100000 + r.nextInt(900000);
+
         driver.findElement(By.id("video")).click();
         System.out.println("Attempted to click video radiobutton..");
         Thread.sleep(SleepTime);
@@ -377,7 +386,7 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoPoster", "Testaaja");
         Thread.sleep(SleepTime);
-        findElementAndFill("videoURL", "uWzPe_S-RVE");
+        findElementAndFill("videoURL", "uWzPe_S-RVE" + n);
 
         // Sets user to "testUser"
         JavascriptExecutor jse = (JavascriptExecutor) driver;
@@ -398,6 +407,7 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoPoster", "Testaaja");
         Thread.sleep(SleepTime);
+
         // Sets user to "testUser"
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String strJS = "document.getElementById('userVideo').value='testUser'";
@@ -410,12 +420,15 @@ public class Stepdefs {
 
     @When("^video fields URL and Poster are filled and submitted$")
     public void video_fields_URL_and_Poster_are_filled_and_submitted() throws Throwable {
+        Random r = new Random();
+        int n = 100000 + r.nextInt(900000);
+
         driver.findElement(By.id("video")).click();
         System.out.println("Attempted to click video radiobutton..");
         Thread.sleep(SleepTime);
         findElementAndFill("videoPoster", "Testaaja");
         Thread.sleep(SleepTime);
-        findElementAndFill("videoURL", "WPvGqX-TXP0");
+        findElementAndFill("videoURL", "WPvGqX-TXP0" + n);
 
         // Sets user to "testUser"
         JavascriptExecutor jse = (JavascriptExecutor) driver;
@@ -428,12 +441,15 @@ public class Stepdefs {
 
     @When("^video fields URL and Title are filled and submitted$")
     public void video_fields_URL_and_Title_are_filled_and_submitted() throws Throwable {
+        Random r = new Random();
+        int n = 100000 + r.nextInt(900000);
+
         driver.findElement(By.id("video")).click();
         System.out.println("Attempted to click video radiobutton..");
         Thread.sleep(SleepTime);
         findElementAndFill("videoTitle", "videoCucumber3");
         Thread.sleep(SleepTime);
-        findElementAndFill("videoURL", "WPvGqX-TXP0");
+        findElementAndFill("videoURL", "WPvGqX-TXP0" + n);
 
         // Sets user to "testUser"
         JavascriptExecutor jse = (JavascriptExecutor) driver;

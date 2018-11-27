@@ -5,6 +5,10 @@
  */
 package ohtu.types;
 
+import java.util.ArrayList;
+import java.util.List;
+import ohtu.db.ItemTypeManager;
+
 /**
  *
  * @author ColdFish
@@ -13,6 +17,7 @@ public class ItemType {
 
     private int id;
     private String title;
+    private List<String> tags;
     private typeIdentifier type;
 
     public enum typeIdentifier {
@@ -23,7 +28,14 @@ public class ItemType {
 
     public ItemType() {
     }
-    
+
+    public List<String> getTags(ItemTypeManager manager) {
+        return tags;
+    }
+
+    public void setTags(List<String> newTags) {
+        this.tags = newTags;
+    }
 
     public typeIdentifier getType() {
         return type;
@@ -32,7 +44,7 @@ public class ItemType {
     public void setType(typeIdentifier type) {
         this.type = type;
     }
-    
+
     public void setId(int id) {
         this.id = id;
     }

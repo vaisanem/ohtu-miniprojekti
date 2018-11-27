@@ -43,7 +43,7 @@ public class BookManager implements sqlManager<Book, Integer> {
     @Override
     public Book findOne(Integer key) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT book.id, isbn as ISBN, title as Title, relYear as releaseYear, name as Author FROM Book, Author WHERE Book.id = ?  AND Book.fk_AuthorID = Author.id");
+        CallableStatement stmt = connection.prepareCall("{call getBookWithID(?)}");
         stmt.setObject(1, key);
 
         ResultSet rs = stmt.executeQuery();
@@ -98,7 +98,7 @@ public class BookManager implements sqlManager<Book, Integer> {
 
     @Override
     public void delete(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported."); 
+        throw new UnsupportedOperationException("Not supported.");
     }
 
 }
