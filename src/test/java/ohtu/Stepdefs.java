@@ -56,7 +56,6 @@ public class Stepdefs {
 
     @After
     public void tearDown() throws SQLException {
-        itemMan.getVideoMan().deleteALLTestGeneratedVideos();
         itemMan.closeConnection();
         driver.quit();
     }
@@ -443,6 +442,11 @@ public class Stepdefs {
 
         element = driver.findElement(By.name("Add new video"));
         element.submit();
+    }
+
+    @Then("^database is cleared$")
+    public void database_is_cleared() throws Throwable {
+        itemMan.getVideoMan().deleteALLTestGeneratedVideos();
     }
 
     // </editor-fold>
