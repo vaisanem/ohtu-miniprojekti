@@ -150,6 +150,7 @@ public class Controllers {
     public String book(@PathVariable int id, ModelMap model) throws SQLException {
         Book book = itemMan.getBookMan().findOne(id);
         model.addAttribute("book", book);
+        model.addAttribute("tags", itemMan.getTags(book.getId()));
         return "book";
     }
 
