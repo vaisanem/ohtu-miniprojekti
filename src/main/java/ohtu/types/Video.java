@@ -22,9 +22,9 @@ public class Video extends ItemType {
         if (URL.contains("watch?v=")) {
             this.URL = URL.substring(URL.indexOf('=') + 1);
         } else if (URL.contains("youtu.be")) {
-            this.URL = URL.substring(URL.indexOf('/') + 1);
+            this.URL = URL.substring(URL.indexOf('.') + 4);
         } else {
-            URL = URL;
+            this.URL = URL;
         }
         this.poster = poster;
         super.setTitle(title);
@@ -38,25 +38,25 @@ public class Video extends ItemType {
         } else if (URL.contains("youtu.be")) {
             this.URL = URL.substring(URL.indexOf('.') + 4);
         } else {
-            URL = URL;
+            this.URL = URL;
         }
         this.poster = poster;
         super.setId(id);
         super.setTitle(title);
 
     }
-
-    public Video(String URL) {
-        super.setType(typeIdentifier.video);
-        if (URL.contains("=")) {
-            this.URL = URL.substring(URL.indexOf('=') + 1);
-        } else if (URL.contains("youtu.be")) {
-            this.URL = URL.substring(URL.indexOf('.') + 4);
-        } else {
-            URL = URL;
-        }
-        // TODO Fetch information from YouTubeAPI.
-    }
+// Waiting for implementation
+//    public Video(String URL) {
+//        super.setType(typeIdentifier.video);
+//        if (URL.contains("=")) {
+//            this.URL = URL.substring(URL.indexOf('=') + 1);
+//        } else if (URL.contains("youtu.be")) {
+//            this.URL = URL.substring(URL.indexOf('.') + 4);
+//        } else {
+//            this.URL = URL;
+//        }
+//        // TODO Fetch information from YouTubeAPI.
+//    }
 
     public Video(ResultSet rs) throws SQLException {
         super.setType(typeIdentifier.video);
@@ -71,15 +71,8 @@ public class Video extends ItemType {
         return URL;
     }
 
-    public void setURL(String URL) {
-        this.URL = URL;
-    }
-
     public String getPoster() {
         return poster;
     }
 
-    public void setPoster(String poster) {
-        this.poster = poster;
-    }
 }

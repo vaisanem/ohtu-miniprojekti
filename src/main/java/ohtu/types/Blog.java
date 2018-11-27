@@ -44,16 +44,8 @@ public class Blog extends ItemType {
         return poster;
     }
 
-    public void setPoster(String poster) {
-        this.poster = poster;
-    }
-
     public String getURL() {
         return URL;
-    }
-
-    public void setURL(String URL) {
-        this.URL = URL;
     }
 
 }

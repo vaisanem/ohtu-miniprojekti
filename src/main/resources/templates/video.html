@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
     <head>
-        <title>Book</title>
+        <title>Video</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="stylesheet" href="/style.css"/>
     </head>
@@ -22,7 +22,8 @@
 		<h2> Author: </h2>
 			<p><span th:text="${video.poster}"></span></p>
 		<h2> URL: </h2>
-			
+                <a th:href="@{https://www.youtube.com/watch?v={url} (url=${video.URL})}" target="_blank"><span th:text="@{https://www.youtube.com/watch?v={url} (url=${video.URL})}"></span></a>
+                <br/>
                 <br/>
                 
                 <iframe width="1280" height="720" th:src="@{https://www.youtube.com/embed/{url} (url=${video.URL})}"/>

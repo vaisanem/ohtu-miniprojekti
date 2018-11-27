@@ -52,7 +52,7 @@ public class Controllers {
             case "book": {
                 int intYear;
                 if (!year.get().matches("[0-9]+")) {
-                    model.addAttribute("error", "year not numeric");
+                    model.addAttribute("error", "year not numeric or missing");
                     return "error";
                 } else {
                     intYear = Integer.parseInt(year.get());
@@ -61,6 +61,22 @@ public class Controllers {
                 try {
                     userAttribute.addFlashAttribute("user", user);
                     System.out.println("Redirected user : " + user);
+                    if (isbn.get().isEmpty()) {
+                        model.addAttribute("error", "Missing ISBN");
+                        return "error";
+                    }
+                    if (bookTitle.get().isEmpty()) {
+                        model.addAttribute("error", "Missing Title");
+                        return "error";
+                    }
+                    if (author.get().isEmpty()) {
+                        model.addAttribute("error", "Missing Author");
+                        return "error";
+                    }
+                    if (year.get().isEmpty()) {
+                        model.addAttribute("error", "Missing Year");
+                        return "error";
+                    }
                     Book book = new Book(isbn.get(), bookTitle.get(), author.get(), intYear);
                     itemMan.getBookMan().add(book, user);
                     return "redirect:/items";
@@ -75,6 +91,18 @@ public class Controllers {
                 try {
                     userAttribute.addFlashAttribute("user", user);
                     System.out.println("Redirected user : " + user);
+                    if (videoURL.get().isEmpty()) {
+                        model.addAttribute("error", "Missing URL");
+                        return "error";
+                    }
+                    if (videoTitle.get().isEmpty()) {
+                        model.addAttribute("error", "Missing Title");
+                        return "error";
+                    }
+                    if (videoPoster.get().isEmpty()) {
+                        model.addAttribute("error", "Missing Poster");
+                        return "error";
+                    }
                     Video vid = new Video(videoURL.get(), videoTitle.get(), videoPoster.get());
                     itemMan.getVideoMan().add(vid, user);
                     return "redirect:/items";
@@ -84,11 +112,23 @@ public class Controllers {
                     return "error";
                 }
             }
-            
+
             case "blog": {
                 try {
                     userAttribute.addFlashAttribute("user", user);
                     System.out.println("Redirected user : " + user);
+                    if (blogURL.get().isEmpty()) {
+                        model.addAttribute("error", "Missing URL");
+                        return "error";
+                    }
+                    if (blogTitle.get().isEmpty()) {
+                        model.addAttribute("error", "Missing Title");
+                        return "error";
+                    }
+                    if (blogPoster.get().isEmpty()) {
+                        model.addAttribute("error", "Missing Poster");
+                        return "error";
+                    }
                     Blog blog = new Blog(blogURL.get(), blogTitle.get(), blogPoster.get());
                     itemMan.getBlogMan().add(blog, user);
                     return "redirect:/items";
@@ -126,5 +166,5 @@ public class Controllers {
         model.addAttribute("video", video);
         return "video";
     }
-    
+
 }
