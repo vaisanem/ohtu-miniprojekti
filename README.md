@@ -2,7 +2,7 @@
 
 [Project Heroku Site](https://ohmipro.herokuapp.com/)
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5f3fcc811a084d13a3f71aac191e8701)](https://www.codacy.com/app/vaisanem/ohtu-miniprojekti?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vaisanem/ohtu-miniprojekti&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8205929bcc464b7ebfe86474acad9683)](https://www.codacy.com/app/Hakimi/ohtu-miniprojekti?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vaisanem/ohtu-miniprojekti&amp;utm_campaign=Badge_Grade)
 [![Build Status](https://travis-ci.org/vaisanem/ohtu-miniprojekti.svg?branch=master)](https://travis-ci.org/vaisanem/ohtu-miniprojekti)
 [![codecov](https://codecov.io/gh/vaisanem/ohtu-miniprojekti/branch/master/graph/badge.svg)](https://codecov.io/gh/vaisanem/ohtu-miniprojekti)
 
