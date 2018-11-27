@@ -1,6 +1,6 @@
 # ohtu-miniprojekti
 
-https://ohmipro.herokuapp.com/
+[Project Heroku Site](https://ohmipro.herokuapp.com/)
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5f3fcc811a084d13a3f71aac191e8701)](https://www.codacy.com/app/vaisanem/ohtu-miniprojekti?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vaisanem/ohtu-miniprojekti&amp;utm_campaign=Badge_Grade)
 [![Build Status](https://travis-ci.org/vaisanem/ohtu-miniprojekti.svg?branch=master)](https://travis-ci.org/vaisanem/ohtu-miniprojekti)
