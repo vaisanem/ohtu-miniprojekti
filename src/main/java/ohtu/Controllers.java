@@ -1,6 +1,7 @@
 package ohtu;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import ohtu.db.ItemTypeManager;
@@ -20,9 +21,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class Controllers {
 
     private final ItemTypeManager itemMan;
+    private List<String> errors;
 
     public Controllers() throws ClassNotFoundException {
         itemMan = new ItemTypeManager();
+        errors = new ArrayList<>();
     }
 
     @RequestMapping(value = "/items", method = RequestMethod.GET)
@@ -47,95 +50,97 @@ public class Controllers {
             @RequestParam Optional<String> videoTitle, @RequestParam Optional<String> videoURL, @RequestParam Optional<String> videoPoster, //video 
             @RequestParam Optional<String> blogTitle, @RequestParam Optional<String> blogURL, @RequestParam Optional<String> blogPoster //blog 
     ) throws SQLException {
-
+        
+        errors.clear();
+        
         switch (type) {
             case "book": {
-                int intYear;
-                if (!year.get().matches("[0-9]+")) {
-                    model.addAttribute("error", "year not numeric or missing");
-                    return "error";
-                } else {
-                    intYear = Integer.parseInt(year.get());
+                userAttribute.addFlashAttribute("user", user);
+                System.out.println("Redirected user : " + user);
+                if (!Book.checkNumericality(year.get())) {
+                    errors.add("Missing year or not numeric");
                 }
+                if (isbn.get().isEmpty()) {
+                    errors.add("Missing ISBN");
+                }
+                if (bookTitle.get().isEmpty()) {
+                    errors.add("Missing Title");
+                }
+                if (author.get().isEmpty()) {
+                    errors.add("Missing Author");
+                }
+                if (!errors.isEmpty()) {
+                    model.addAttribute("errors", errors);
+                    return "newItem";
+                }
+                int intYear = Integer.parseInt(year.get());
 
                 try {
-                    userAttribute.addFlashAttribute("user", user);
-                    System.out.println("Redirected user : " + user);
-                    if (isbn.get().isEmpty()) {
-                        model.addAttribute("error", "Missing ISBN");
-                        return "error";
-                    }
-                    if (bookTitle.get().isEmpty()) {
-                        model.addAttribute("error", "Missing Title");
-                        return "error";
-                    }
-                    if (author.get().isEmpty()) {
-                        model.addAttribute("error", "Missing Author");
-                        return "error";
-                    }
-                    if (year.get().isEmpty()) {
-                        model.addAttribute("error", "Missing Year");
-                        return "error";
-                    }
                     Book book = new Book(isbn.get(), bookTitle.get(), author.get(), intYear);
                     itemMan.getBookMan().add(book, user);
                     return "redirect:/items";
                 } catch (Exception e) {
-                    //model.addAttribute("error", e.getMessage());
-                    //return "newItem";
-                    return "error";
+                    if(e.toString().contains(isbn.get())) {
+                        errors.add("ISBN already in use");
+                    } else {
+                        errors.add(e.toString());
+                    }
+                    model.addAttribute("errors", errors);
+                    return "newItem";
                 }
             }
 
             case "video": {
+                userAttribute.addFlashAttribute("user", user);
+                System.out.println("Redirected user : " + user);
+                if (videoURL.get().isEmpty()) {
+                    errors.add("Missing URL");
+                }
+                if (videoTitle.get().isEmpty()) {
+                    errors.add("Missing Title");
+                }
+                if (videoPoster.get().isEmpty()) {
+                    errors.add("Missing Poster");
+                }
+                if (!errors.isEmpty()) {
+                    model.addAttribute("errors", errors);
+                    return "newItem";
+                }
                 try {
-                    userAttribute.addFlashAttribute("user", user);
-                    System.out.println("Redirected user : " + user);
-                    if (videoURL.get().isEmpty()) {
-                        model.addAttribute("error", "Missing URL");
-                        return "error";
-                    }
-                    if (videoTitle.get().isEmpty()) {
-                        model.addAttribute("error", "Missing Title");
-                        return "error";
-                    }
-                    if (videoPoster.get().isEmpty()) {
-                        model.addAttribute("error", "Missing Poster");
-                        return "error";
-                    }
                     Video vid = new Video(videoURL.get(), videoTitle.get(), videoPoster.get());
                     itemMan.getVideoMan().add(vid, user);
                     return "redirect:/items";
                 } catch (Exception e) {
-                    //model.addAttribute("error", e.getMessage());
-                    //return "newItem";
-                    return "error";
+                    errors.add(e.toString());
+                    model.addAttribute("errors", errors);
+                    return "newItem";
                 }
             }
 
             case "blog": {
+                userAttribute.addFlashAttribute("user", user);
+                System.out.println("Redirected user : " + user);
+                if (blogURL.get().isEmpty()) {
+                    errors.add("Missing URL");
+                }
+                if (blogTitle.get().isEmpty()) {
+                    errors.add("Missing Title");
+                }
+                if (blogPoster.get().isEmpty()) {
+                    errors.add("Missing Poster");
+                }
+                if (!errors.isEmpty()) {
+                    model.addAttribute("errors", errors);
+                    return "newItem";
+                }
                 try {
-                    userAttribute.addFlashAttribute("user", user);
-                    System.out.println("Redirected user : " + user);
-                    if (blogURL.get().isEmpty()) {
-                        model.addAttribute("error", "Missing URL");
-                        return "error";
-                    }
-                    if (blogTitle.get().isEmpty()) {
-                        model.addAttribute("error", "Missing Title");
-                        return "error";
-                    }
-                    if (blogPoster.get().isEmpty()) {
-                        model.addAttribute("error", "Missing Poster");
-                        return "error";
-                    }
                     Blog blog = new Blog(blogURL.get(), blogTitle.get(), blogPoster.get());
                     itemMan.getBlogMan().add(blog, user);
                     return "redirect:/items";
                 } catch (Exception e) {
-                    model.addAttribute("error", e.getMessage());
+                    errors.add(e.toString());
+                    model.addAttribute("errors", errors);
                     return "newItem";
-                    //return "error";
                 }
             }
 
