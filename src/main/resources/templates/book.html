@@ -16,7 +16,7 @@
         
         
         
-        <div>               
+        <div>      	
 		<h2> Title: </h2>
 			<p><span th:text="${book.title}"></span></p>
 		<h2> Author: </h2>
@@ -33,8 +33,13 @@
                         </ul>
                 <br/>
                 <br/>
-                <input type="submit" value="Mark as read" name="IsRead" />
-                <input type="submit" value="Mark as unread" name="UnRead" />
+				
+			<form  method="GET" name="markRead" action="markRead">
+				<input type="hidden" id="userBook" name="user" value ="default"/>
+				<input type="hidden" id="type" name="id" th:value ="${book.id}"  />	
+                <input type="submit" value="Mark as read" name="action" />
+                <input type="submit" value="Mark as unread" name="action" />
+			</form>
         </div>
     </body>
 </html>

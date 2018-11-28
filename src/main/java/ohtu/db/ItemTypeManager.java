@@ -134,6 +134,30 @@ public class ItemTypeManager {
         database.getConnection().close();
     }
 
+    public void markAsRead(int id, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call MarkItemAsReadForUser(?, ?)}");
+        stmt.setObject(1, id);
+        stmt.setObject(2, user);
+
+        int changes = stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
+    }
+    
+        public void markAsUnRead(int id, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call MarkItemAsUnReadForUser(?, ?)}");
+        stmt.setObject(1, id);
+        stmt.setObject(2, user);
+
+        int changes = stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
+    }
+
     public void delete(Integer key) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

@@ -3,6 +3,8 @@ package ohtu;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import ohtu.db.ItemTypeManager;
 import ohtu.types.*;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -144,6 +147,37 @@ public class Controllers {
             }
         }
 
+    }
+
+    @RequestMapping(value = "*/markRead", method = RequestMethod.GET)
+    public String markItemAsReadOrUnRead(ModelMap model, @RequestParam Integer id, @RequestParam String user, @RequestParam(value = "action", required = true) String action) {
+        switch (action) {
+            case "Mark as read": {
+                try {
+                    itemMan.markAsRead(id, user);
+                    return "redirect:/items";
+                } catch (SQLException ex) {
+                    model.addAttribute("error", "marking book as read failed... Error stack : " + ex.toString());
+                    return "error";
+                }
+            }
+
+            case "Mark as unread": {
+                try {
+                    itemMan.markAsUnRead(id, user);
+                    return "redirect:/items";
+                } catch (SQLException ex) {
+                    model.addAttribute("error", "marking book as unread failed... Error stack : " + ex.toString());
+                    return "error";
+                }
+            }
+
+            default: {
+                System.out.println(action);
+            }
+        }
+
+        return "items";
     }
 
     @RequestMapping(value = "/book/{id}", method = RequestMethod.GET)
