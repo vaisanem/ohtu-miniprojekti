@@ -199,6 +199,7 @@ public class Stepdefs {
         // Sets user to "testUser"
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String strJS = "document.getElementById('userBook').value='testUser'";
+        
         jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new book"));
@@ -460,10 +461,6 @@ public class Stepdefs {
         element.submit();
     }
 
-    @Then("^database is cleared$")
-    public void database_is_cleared() throws Throwable {
-        itemMan.getVideoMan().deleteALLTestGeneratedVideos();
-    }
 
     // </editor-fold>
     //                  spacer

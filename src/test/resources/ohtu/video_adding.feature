@@ -44,5 +44,3 @@ Feature: User can add a video to the database.
     When link "Add new item" is clicked
     And video fields URL and Title are filled and submitted
     Then "Missing Poster" is shown
-    Then database is cleared
-    
