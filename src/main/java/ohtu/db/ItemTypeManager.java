@@ -5,9 +5,14 @@
  */
 package ohtu.db;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import ohtu.types.ItemType;
 
 /**
@@ -24,7 +29,7 @@ public class ItemTypeManager {
     public ItemTypeManager() throws ClassNotFoundException {
         this.database = database;
         String addr = "ohmipro.ddns.net";
-        String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMP;user=ohtuadm;password=hakimi1337";
+        String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMPv2;user=ohtuadm;password=hakimi1337";
 
         database = new Database(url);
         bookMan = new BookManager(database);
@@ -42,6 +47,25 @@ public class ItemTypeManager {
 
     public VideoManager getVideoMan() {
         return videoMan;
+    }
+
+    public List<String> getTags(Integer key) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("SELECT Tag.Description as Tag FROM Tag_ItemEntry INNER JOIN Tag ON Tag.id = Tag_ItemEntry.fk_Tag_id WHERE Tag_ItemEntry.fk_ItemEntry_id = ?");
+        stmt.setObject(1, key);
+
+        List<String> tags = new ArrayList();
+
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            tags.add(rs.getString("Tag"));
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return tags;
     }
 
     public ItemType findOne(Integer key, ItemType.typeIdentifier type) throws SQLException {
@@ -71,6 +95,14 @@ public class ItemTypeManager {
         items.addAll(videoMan.findAll());
         items.addAll(blogMan.findAll());
 
+        items.forEach(item -> {
+            try {
+                item.setTags(getTags(item.getId()));
+            } catch (SQLException ex) {
+
+            }
+        });
+
         return items;
     }
 
@@ -80,6 +112,14 @@ public class ItemTypeManager {
         items.addAll(bookMan.findAll(user));
         items.addAll(videoMan.findAll(user));
         items.addAll(blogMan.findAll(user));
+
+        items.forEach(item -> {
+            try {
+                item.setTags(getTags(item.getId()));
+            } catch (SQLException ex) {
+
+            }
+        });
 
         return items;
     }
@@ -105,6 +145,5 @@ public class ItemTypeManager {
         this.blogMan = blogMan;
     }
     // </editor-fold>
-    
 
 }

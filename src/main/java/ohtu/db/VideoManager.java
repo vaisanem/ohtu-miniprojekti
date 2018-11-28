@@ -46,7 +46,7 @@ public class VideoManager implements sqlManager<Video, Integer> {
     @Override
     public Video findOne(Integer key) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT Video.id, title, URL, Author.name as Author FROM Video, Author WHERE Video.id = ?  AND Video.fk_Poster_id = Author.id");
+        CallableStatement stmt = connection.prepareCall("{call getVideoWithID(?)}");
         stmt.setObject(1, key);
 
         ResultSet rs = stmt.executeQuery();
