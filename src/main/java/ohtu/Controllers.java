@@ -1,7 +1,9 @@
 package ohtu;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,13 +31,17 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/items", method = RequestMethod.GET)
-    public String items(ModelMap model, @ModelAttribute("user") String user) throws SQLException {
+    public String items(ModelMap model, @ModelAttribute(value = "itemsList") ArrayList<ItemType> stuff, @ModelAttribute("user") String user) throws SQLException {
         System.out.println("Gotten redirect : " + user);
         if (user.length() < 1) {
             user = "default";
         }
-        List<ItemType> items = itemMan.findAll(user);
-        model.addAttribute("items", items);
+        if (stuff == null || stuff.isEmpty()) {
+            List<ItemType> items = itemMan.findAll(user);
+            model.addAttribute("items", items);
+        } else {
+            model.addAttribute("items", stuff);
+        }
         return "itemView";
     }
 
@@ -178,6 +184,31 @@ public class Controllers {
         }
 
         return "items";
+    }
+
+    @RequestMapping(value = "/SelectWhatTypesAreShown", method = RequestMethod.GET)
+    public String showSelectedItems(ModelMap model,RedirectAttributes itemsList, @RequestParam String user, @RequestParam(defaultValue = "false") boolean ViewBooks, @RequestParam(defaultValue = "false") boolean ViewBlogs, @RequestParam(defaultValue = "false") boolean ViewVideos) throws SQLException {
+        if (user.length() < 1) {
+            user = "default";
+        }
+
+        List<ItemType> items = new ArrayList<>();
+        
+        if (ViewBooks) {
+            items.addAll(itemMan.getBookMan().findAll(user));
+            
+        }
+        if (ViewBlogs) {
+            items.addAll(itemMan.getBlogMan().findAll(user));
+            
+        }
+        if (ViewVideos) {
+            items.addAll(itemMan.getVideoMan().findAll(user));
+        }
+        System.out.println("ADDING TO LIST WORKED");
+        itemsList.addFlashAttribute("itemsList", items);
+        System.out.println("POST WORKED");
+        return "redirect:/items";
     }
 
     @RequestMapping(value = "/book/{id}", method = RequestMethod.GET)

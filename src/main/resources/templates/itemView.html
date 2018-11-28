@@ -5,6 +5,7 @@
         <title>Mini Project</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="stylesheet" href="/style.css"/>
+        <script type="text/javascript" src="/newItemRadioButtonScript.js"></script>
     </head>
 
     <body>
@@ -13,17 +14,26 @@
             <li class="nav"><a href="/items" class="active">View List</a></li>
             <li class="nav"><a href="/newItem">Add new item</a></li>
         </ul>        
-        
+
         <div>
             <h1>The list of added items</h1>
-		
-            <ul class="items">
-                <li class="items" th:each="itemType: ${items}">
-                    <a class="items" th:href="${'/' + itemType.type +'/' + itemType.id}" th:text="${itemType.type + ' - ' + itemType.title}"></a>
-                </li>
-            </ul>
-		
+            <h2>Select showed items</h2>
             
-        </div>
+            <form  method="GET" name="SelectWhatTypesAreShown" action="SelectWhatTypesAreShown">
+                <input type="hidden" name="user" value ="default"/>            
+                <input type="checkbox" value="true" name="ViewBooks"> Books</input>
+                <input type="checkbox" value="true" name="ViewBlogs" > Blogs</input>
+                <input type="checkbox" value="true" name="ViewVideos" > Videos</input>
+                <input type="submit" value="Show" name="SelectWhatTypesAreShown"/> 
+            </form>
+                        
+                <ul class="items">
+                    <li class="items" th:each="itemType: ${items}">
+                        <a name="item" class="items" th:href="${'/' + itemType.type +'/' + itemType.id}" th:text="${itemType.type + ' - ' + itemType.title}"></a>
+                    </li>
+                </ul>
+
+
+            </div>
     </body>
 </html>
