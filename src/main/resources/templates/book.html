@@ -25,6 +25,12 @@
 			<p><span th:text="${book.year}"></span></p>
 		<h2> ISBN:</h2>
 			<p><span th:text="${book.isbn}"></span></p>
+		<h2> Tags:</h2>
+			<ul class="items">
+                <li class="tags" th:each="tag: ${tags}">
+                    <p><span th:text="${tag}"></span></p>
+                </li>
+            </ul>
         </div>
     </body>
 </html>

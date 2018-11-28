@@ -51,7 +51,7 @@ public class ItemTypeManager {
 
     public List<String> getTags(Integer key) throws SQLException {
         Connection connection = database.getConnection();
-        CallableStatement stmt = connection.prepareCall("SELECT Tag.Description as Tag FROM Tag_ItemEntry INNER JOIN Tag ON Tag.id = Tag_ItemEntry.fk_Tag_id");
+        CallableStatement stmt = connection.prepareCall("SELECT Tag.Description as Tag FROM Tag_ItemEntry INNER JOIN Tag ON Tag.id = Tag_ItemEntry.fk_Tag_id WHERE Tag_ItemEntry.fk_ItemEntry_id = ?");
         stmt.setObject(1, key);
 
         List<String> tags = new ArrayList();
