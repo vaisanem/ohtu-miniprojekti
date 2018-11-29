@@ -46,7 +46,7 @@ public class BlogManager implements sqlManager<Blog, Integer> {
     @Override
     public Blog findOne(Integer key) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT WebBlog.id, title, URL, Author.name as Author FROM WebBlog, Author WHERE WebBlog.id = ?  AND WebBlog.fk_Writer_id = Author.id");
+        CallableStatement stmt = connection.prepareCall("{call getBlogWithID(?)}");
         stmt.setObject(1, key);
 
         ResultSet rs = stmt.executeQuery();

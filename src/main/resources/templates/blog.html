@@ -16,13 +16,23 @@
         
         
         
-        <div>
+        <div>                             
 		<h2> Title: </h2>
 			<p><span th:text="${blog.title}"></span></p>
 		<h2> Author: </h2>
 			<p><span th:text="${blog.poster}"></span></p>	
 		<h2>URL:</h2>
 			<a th:href="${blog.URL}"><span th:text="${blog.URL}"></span></a>
+                
+                <br/>
+                <br/>
+			<form  method="GET" name="markRead" action="markRead">
+				<input type="hidden" id="userBook" name="user" value ="default"/>
+				<input type="hidden" id="type" name="id" th:value ="${blog.id}"  />	
+                <input type="submit" value="Mark as read" name="action" />
+                <input type="submit" value="Mark as unread" name="action" />
+			</form>
+                
         </div>
     </body>
 </html>

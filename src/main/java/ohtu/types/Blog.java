@@ -25,14 +25,18 @@ public class Blog extends ItemType {
     }
 
     public Blog(int id, String URL, String title, String poster) {
-        this(URL, title, poster);
+        super.setType(typeIdentifier.blog);
         super.setId(id);
+        super.setTitle(title);
+        this.poster = poster;
+        this.URL = URL;
     }
 
     public Blog(ResultSet rs) throws SQLException {
         super.setType(typeIdentifier.blog);
         super.setId(rs.getInt("id"));
         super.setTitle(rs.getString("title"));
+        super.setIsRead(rs.getInt("hasRead"));
         URL = rs.getString("URL");
         poster = rs.getString("Author");
     }
@@ -43,6 +47,6 @@ public class Blog extends ItemType {
 
     public String getURL() {
         return URL;
-    } 
+    }
 
 }

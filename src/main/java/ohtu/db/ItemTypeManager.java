@@ -5,10 +5,15 @@
  */
 package ohtu.db;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import ohtu.types.ItemType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import ohtu.types.*;
 
 /**
  *
@@ -24,7 +29,7 @@ public class ItemTypeManager {
     public ItemTypeManager() throws ClassNotFoundException {
         this.database = database;
         String addr = "ohmipro.ddns.net";
-        String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMP;user=ohtuadm;password=hakimi1337";
+        String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMPv2;user=ohtuadm;password=hakimi1337";
 
         database = new Database(url);
         bookMan = new BookManager(database);
@@ -44,19 +49,44 @@ public class ItemTypeManager {
         return videoMan;
     }
 
+    public List<String> getTags(Integer key) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("SELECT Tag.Description as Tag FROM Tag_ItemEntry INNER JOIN Tag ON Tag.id = Tag_ItemEntry.fk_Tag_id WHERE Tag_ItemEntry.fk_ItemEntry_id = ?");
+        stmt.setObject(1, key);
+
+        List<String> tags = new ArrayList();
+
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            tags.add(rs.getString("Tag"));
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return tags;
+    }
+
     public ItemType findOne(Integer key, ItemType.typeIdentifier type) throws SQLException {
         switch (type) {
 
             case blog: {
-                return blogMan.findOne(key);
+                Blog blog = blogMan.findOne(key);
+                blog.generateTags(this);
+                return blog;
             }
 
             case book: {
-                return bookMan.findOne(key);
+                Book book = bookMan.findOne(key);
+                book.generateTags(this);
+                return book;
             }
 
             case video: {
-                return videoMan.findOne(key);
+                Video video = videoMan.findOne(key);
+                video.generateTags(this);
+                return video;
             }
 
             default:
@@ -71,6 +101,14 @@ public class ItemTypeManager {
         items.addAll(videoMan.findAll());
         items.addAll(blogMan.findAll());
 
+        items.forEach(item -> {
+            try {
+                item.generateTags(this);
+            } catch (SQLException ex) {
+
+            }
+        });
+
         return items;
     }
 
@@ -81,11 +119,43 @@ public class ItemTypeManager {
         items.addAll(videoMan.findAll(user));
         items.addAll(blogMan.findAll(user));
 
+        items.forEach(item -> {
+            try {
+                item.generateTags(this);
+            } catch (SQLException ex) {
+
+            }
+        });
+
         return items;
     }
 
     public void closeConnection() throws SQLException {
         database.getConnection().close();
+    }
+
+    public void markAsRead(int id, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call MarkItemAsReadForUser(?, ?)}");
+        stmt.setObject(1, id);
+        stmt.setObject(2, user);
+
+        int changes = stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
+    }
+    
+        public void markAsUnRead(int id, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call MarkItemAsUnReadForUser(?, ?)}");
+        stmt.setObject(1, id);
+        stmt.setObject(2, user);
+
+        int changes = stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
     }
 
     public void delete(Integer key) throws SQLException {
@@ -105,6 +175,5 @@ public class ItemTypeManager {
         this.blogMan = blogMan;
     }
     // </editor-fold>
-    
 
 }

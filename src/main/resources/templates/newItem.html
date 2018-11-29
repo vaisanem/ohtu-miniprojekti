@@ -21,11 +21,7 @@ and open the template in the editor.
         </ul>
         <div>
             <h1>Add new item</h1>
-            
-            <li th:each="error: ${errors}">
-                <span th:text="${error}"></span>
-            </li>
-            
+            <p><span th:text="${error}"></span></p>
             <br/>
             <input type="radio" id="book" onclick="WhichCheck();" name="type" value="book" checked="checked"> Book </input>
             <input type="radio" id="blog" onclick="WhichCheck();" name="type" value="blog"> Blog </input>
