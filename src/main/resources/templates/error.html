@@ -16,7 +16,9 @@
                
         <div>
 		<h2> Error occurred </h2>
-		<p><span th:text="${error}"></span></p>
+                <li th:each="error: ${errors}">
+                    <span th:text="${error}"></span>
+                </li>
         </div>
     </body>
 </html>
