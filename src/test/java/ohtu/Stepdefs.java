@@ -97,7 +97,7 @@ public class Stepdefs {
         for (int i = 0; i < 5; i++) {
             Thread.sleep(SleepTime);
             System.out.println("Expected element : " + content);
-            System.out.println("Page source : " + driver.getPageSource().toString());
+            //System.out.println("Page source : " + driver.getPageSource().toString());
             if (driver.getPageSource().contains(content)) {
                 isShown = true;
                 break;
