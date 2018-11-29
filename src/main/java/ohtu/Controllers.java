@@ -90,6 +90,7 @@ public class Controllers {
                     itemMan.getBookMan().add(book, user);
                     return "redirect:/items";
                 } catch (Exception e) {
+                     System.out.println("Error occurred :" + e.getMessage());
                     //model.addAttribute("error", e.getMessage());
                     //return "newItem";
                     return "error";
@@ -116,6 +117,7 @@ public class Controllers {
                     itemMan.getVideoMan().add(vid, user);
                     return "redirect:/items";
                 } catch (Exception e) {
+                     System.out.println("Error occurred :" + e.getMessage());
                     //model.addAttribute("error", e.getMessage());
                     //return "newItem";
                     return "error";
@@ -142,6 +144,7 @@ public class Controllers {
                     itemMan.getBlogMan().add(blog, user);
                     return "redirect:/items";
                 } catch (Exception e) {
+                    System.out.println("Error occurred :" + e.getMessage());
                     model.addAttribute("error", e.getMessage());
                     return "newItem";
                     //return "error";
@@ -149,6 +152,7 @@ public class Controllers {
             }
 
             default: {
+                System.out.println("Something went wrong");
                 return "error";
             }
         }
