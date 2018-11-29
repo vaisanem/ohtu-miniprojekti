@@ -15,14 +15,14 @@ Feature: user can add new book
     When link "Add new item" is clicked
 And user is redirected to "/newItem"
     And book fields title "Cucumber", isbn "1234567891011", author and year "2018" are filled and submitted
-    Then "ISBN already in use" is shown
+    Then "Error occurred" is shown
 
   Scenario: user cannot add book with non-numerical year
     Given user is at the main page
     When link "Add new item" is clicked
     And user is redirected to "/newItem"
     And book fields title "Cucumber", isbn "", author and year "once upon a time" are filled and submitted
-    Then "Missing year or not numeric" is shown
+    Then "year not numeric or missing" is shown
 
   Scenario: user cant  add new book without Title
     Given user is at the main page
@@ -50,4 +50,4 @@ And user is redirected to "/newItem"
     When link "Add new item" is clicked
     And user is redirected to "/newItem"
     And book fields isbn, author and Title are filled and submitted
-    Then "Missing year or not numeric" is shown
+    Then "year not numeric or missing" is shown

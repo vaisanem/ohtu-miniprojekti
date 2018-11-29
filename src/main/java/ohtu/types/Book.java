@@ -20,8 +20,12 @@ public class Book extends ItemType implements Serializable {
     private int year;
 
     public Book(int id, String isbn, String title, String author, int year) {
-        this(isbn, title, author, year);
+        super.setType(typeIdentifier.book);
         super.setId(id);
+        super.setTitle(title);
+        this.isbn = isbn;
+        this.author = author;
+        this.year = year;
     }
 
     public Book(String isbn, String title, String author, int year) {
@@ -54,9 +58,6 @@ public class Book extends ItemType implements Serializable {
     public int getYear() {
         return year;
     }
-    
-    public static boolean checkNumericality(String year) {
-        return year.matches("[0-9]+");
-    }
+
 
 }
