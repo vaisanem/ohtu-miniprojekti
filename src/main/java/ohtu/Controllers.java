@@ -90,7 +90,7 @@ public class Controllers {
                     itemMan.getBookMan().add(book, user);
                     return "redirect:/items";
                 } catch (Exception e) {
-                     System.out.println("Error occurred :" + e.getMessage());
+                    System.out.println("Error occurred :" + e.getMessage());
                     //model.addAttribute("error", e.getMessage());
                     //return "newItem";
                     return "error";
@@ -117,7 +117,7 @@ public class Controllers {
                     itemMan.getVideoMan().add(vid, user);
                     return "redirect:/items";
                 } catch (Exception e) {
-                     System.out.println("Error occurred :" + e.getMessage());
+                    System.out.println("Error occurred :" + e.getMessage());
                     //model.addAttribute("error", e.getMessage());
                     //return "newItem";
                     return "error";
@@ -191,7 +191,10 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/SelectWhatTypesAreShown", method = RequestMethod.GET)
-    public String showSelectedItems(ModelMap model,RedirectAttributes itemsList, @RequestParam String user, @RequestParam(defaultValue = "false") boolean ViewBooks, @RequestParam(defaultValue = "false") boolean ViewBlogs, @RequestParam(defaultValue = "false") boolean ViewVideos) throws SQLException {
+    public String showSelectedItems(ModelMap model, RedirectAttributes itemsList, @RequestParam String user,
+            @RequestParam(defaultValue = "false") boolean ViewBooks, @RequestParam(defaultValue = "false") boolean ViewBlogs, @RequestParam(defaultValue = "false") boolean ViewVideos,
+            @RequestParam(defaultValue = "false") boolean ViewRead, @RequestParam(defaultValue = "false") boolean ViewUnread
+    ) throws SQLException {
         if (user.length() < 1) {
             user = "default";
         }
@@ -200,15 +203,27 @@ public class Controllers {
         
         if (ViewBooks) {
             items.addAll(itemMan.getBookMan().findAll(user));
-            
         }
         if (ViewBlogs) {
             items.addAll(itemMan.getBlogMan().findAll(user));
-            
+
         }
         if (ViewVideos) {
             items.addAll(itemMan.getVideoMan().findAll(user));
         }
+        if (ViewRead && !ViewUnread) {
+            items.removeIf(item -> item.getIsRead() == 0);
+        }
+
+        if (!ViewRead && ViewUnread) {
+            items.removeIf(item -> item.getIsRead() == 1);
+        }
+
+        if (items.isEmpty()) {
+            model.addAttribute("error", "No items match selection, please try again!");
+            return "error";
+        }
+
         System.out.println("ADDING TO LIST WORKED");
         itemsList.addFlashAttribute("itemsList", items);
         System.out.println("POST WORKED");
