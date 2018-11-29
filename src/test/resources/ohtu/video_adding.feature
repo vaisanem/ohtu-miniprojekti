@@ -27,22 +27,20 @@ Feature: User can add a video to the database.
     And user is redirected to "/video"
     Then "videoCucumber3" is shown
 
-  Scenario: user cant succesfully add new video without URL
+  Scenario: user cant add new video without URL
     Given user is at the main page
     When link "Add new item" is clicked
     And video fields title and poster are filled correctly and submitted.
     Then "Missing URL" is shown
 
-  Scenario: user cant succesfully add new video without Title
+  Scenario: user cant add new video without Title
     Given user is at the main page
     When link "Add new item" is clicked
     And video fields URL and Poster are filled and submitted
     Then "Missing Title" is shown
 
-  Scenario: user cant succesfully add new video without Poster
+  Scenario: user cant add new video without Poster
     Given user is at the main page
     When link "Add new item" is clicked
     And video fields URL and Title are filled and submitted
     Then "Missing Poster" is shown
-    Then database is cleared
-    

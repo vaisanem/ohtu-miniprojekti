@@ -1,8 +1,12 @@
 package ohtu;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import ohtu.db.ItemTypeManager;
 import ohtu.types.*;
 import org.springframework.stereotype.Controller;
@@ -10,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,13 +31,17 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/items", method = RequestMethod.GET)
-    public String items(ModelMap model, @ModelAttribute("user") String user) throws SQLException {
+    public String items(ModelMap model, @ModelAttribute(value = "itemsList") ArrayList<ItemType> stuff, @ModelAttribute("user") String user) throws SQLException {
         System.out.println("Gotten redirect : " + user);
         if (user.length() < 1) {
             user = "default";
         }
-        List<ItemType> items = itemMan.findAll(user);
-        model.addAttribute("items", items);
+        if (stuff == null || stuff.isEmpty()) {
+            List<ItemType> items = itemMan.findAll(user);
+            model.addAttribute("items", items);
+        } else {
+            model.addAttribute("items", stuff);
+        }
         return "itemView";
     }
 
@@ -146,11 +155,67 @@ public class Controllers {
 
     }
 
+    @RequestMapping(value = "*/markRead", method = RequestMethod.GET)
+    public String markItemAsReadOrUnRead(ModelMap model, @RequestParam Integer id, @RequestParam String user, @RequestParam(value = "action", required = true) String action) {
+        switch (action) {
+            case "Mark as read": {
+                try {
+                    itemMan.markAsRead(id, user);
+                    return "redirect:/items";
+                } catch (SQLException ex) {
+                    model.addAttribute("error", "marking book as read failed... Error stack : " + ex.toString());
+                    return "error";
+                }
+            }
+
+            case "Mark as unread": {
+                try {
+                    itemMan.markAsUnRead(id, user);
+                    return "redirect:/items";
+                } catch (SQLException ex) {
+                    model.addAttribute("error", "marking book as unread failed... Error stack : " + ex.toString());
+                    return "error";
+                }
+            }
+
+            default: {
+                System.out.println(action);
+            }
+        }
+
+        return "items";
+    }
+
+    @RequestMapping(value = "/SelectWhatTypesAreShown", method = RequestMethod.GET)
+    public String showSelectedItems(ModelMap model,RedirectAttributes itemsList, @RequestParam String user, @RequestParam(defaultValue = "false") boolean ViewBooks, @RequestParam(defaultValue = "false") boolean ViewBlogs, @RequestParam(defaultValue = "false") boolean ViewVideos) throws SQLException {
+        if (user.length() < 1) {
+            user = "default";
+        }
+
+        List<ItemType> items = new ArrayList<>();
+        
+        if (ViewBooks) {
+            items.addAll(itemMan.getBookMan().findAll(user));
+            
+        }
+        if (ViewBlogs) {
+            items.addAll(itemMan.getBlogMan().findAll(user));
+            
+        }
+        if (ViewVideos) {
+            items.addAll(itemMan.getVideoMan().findAll(user));
+        }
+        System.out.println("ADDING TO LIST WORKED");
+        itemsList.addFlashAttribute("itemsList", items);
+        System.out.println("POST WORKED");
+        return "redirect:/items";
+    }
+
     @RequestMapping(value = "/book/{id}", method = RequestMethod.GET)
     public String book(@PathVariable int id, ModelMap model) throws SQLException {
         Book book = itemMan.getBookMan().findOne(id);
         model.addAttribute("book", book);
-        model.addAttribute("tags", itemMan.getTags(book.getId()));
+        model.addAttribute("tags", book.getTags());
         return "book";
     }
 

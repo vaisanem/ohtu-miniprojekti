@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import ohtu.types.ItemType;
+import ohtu.types.*;
 
 /**
  *
@@ -72,15 +72,21 @@ public class ItemTypeManager {
         switch (type) {
 
             case blog: {
-                return blogMan.findOne(key);
+                Blog blog = blogMan.findOne(key);
+                blog.generateTags(this);
+                return blog;
             }
 
             case book: {
-                return bookMan.findOne(key);
+                Book book = bookMan.findOne(key);
+                book.generateTags(this);
+                return book;
             }
 
             case video: {
-                return videoMan.findOne(key);
+                Video video = videoMan.findOne(key);
+                video.generateTags(this);
+                return video;
             }
 
             default:
@@ -97,7 +103,7 @@ public class ItemTypeManager {
 
         items.forEach(item -> {
             try {
-                item.setTags(getTags(item.getId()));
+                item.generateTags(this);
             } catch (SQLException ex) {
 
             }
@@ -115,7 +121,7 @@ public class ItemTypeManager {
 
         items.forEach(item -> {
             try {
-                item.setTags(getTags(item.getId()));
+                item.generateTags(this);
             } catch (SQLException ex) {
 
             }
@@ -126,6 +132,30 @@ public class ItemTypeManager {
 
     public void closeConnection() throws SQLException {
         database.getConnection().close();
+    }
+
+    public void markAsRead(int id, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call MarkItemAsReadForUser(?, ?)}");
+        stmt.setObject(1, id);
+        stmt.setObject(2, user);
+
+        int changes = stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
+    }
+    
+        public void markAsUnRead(int id, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call MarkItemAsUnReadForUser(?, ?)}");
+        stmt.setObject(1, id);
+        stmt.setObject(2, user);
+
+        int changes = stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
     }
 
     public void delete(Integer key) throws SQLException {

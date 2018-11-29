@@ -103,16 +103,5 @@ public class VideoManager implements sqlManager<Video, Integer> {
     public void delete(Integer key) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    public void deleteALLTestGeneratedVideos() throws SQLException {
-        System.out.println("I AM DELETING STUFF");                
-        Connection connection = database.getConnection();
-        CallableStatement stmt = connection.prepareCall("{call deleteTestVideos}");
-        stmt.executeUpdate();
-        int diu = stmt.executeUpdate();
-        System.out.println("lines affected: " + diu);
-        System.out.println("DELETING SOUHLD BE DONE");
-        stmt.close();
-        connection.close();
-    }
 
 }

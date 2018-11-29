@@ -5,6 +5,7 @@
  */
 package ohtu.types;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import ohtu.db.ItemTypeManager;
@@ -19,6 +20,7 @@ public class ItemType {
     private String title;
     private List<String> tags;
     private typeIdentifier type;
+    private int isRead;
 
     public enum typeIdentifier {
         book,
@@ -29,7 +31,21 @@ public class ItemType {
     public ItemType() {
     }
 
-    public List<String> getTags(ItemTypeManager manager) {
+    public List<String> generateTags(ItemTypeManager manager) throws SQLException {
+        this.tags = manager.getTags(id);
+        return tags;
+    }
+
+    public void setIsRead(int isRead) {
+        this.isRead = isRead;
+    }
+
+    public int getIsRead() {
+        return isRead;
+    }
+    
+
+    public List<String> getTags() {
         return tags;
     }
 
