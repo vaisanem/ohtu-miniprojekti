@@ -62,6 +62,7 @@ public class Video extends ItemType {
         super.setType(typeIdentifier.video);
         super.setId(rs.getInt("id"));
         super.setTitle(rs.getString("title"));
+        super.setIsRead(rs.getInt("hasRead"));
         URL = rs.getString("URL");
         poster = rs.getString("Author");
 

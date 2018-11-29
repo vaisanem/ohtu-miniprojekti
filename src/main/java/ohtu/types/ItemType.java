@@ -36,6 +36,15 @@ public class ItemType {
         return tags;
     }
 
+    public void setIsRead(int isRead) {
+        this.isRead = isRead;
+    }
+
+    public int getIsRead() {
+        return isRead;
+    }
+    
+
     public List<String> getTags() {
         return tags;
     }

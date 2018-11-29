@@ -27,11 +27,12 @@
                 <input type="submit" id="Show" value="Show" name="SelectWhatTypesAreShown"/> 
             </form>
                         
-                <ul class="items">
-                    <li class="items" th:each="itemType: ${items}">
-                        <a name="item" class="items" th:href="${'/' + itemType.type +'/' + itemType.id}" th:text="${itemType.type + ' - ' + itemType.title}"></a>
-                    </li>
-                </ul>
+            <ul class="items">
+                <li class="items" th:each="itemType: ${items}">
+                    <a class="items" th:if="${itemType.isRead} == 0" th:href="${'/' + itemType.type +'/' + itemType.id}"  th:text="${itemType.type + ' - ' + itemType.title}"></a>
+					<a class="items" th:if="${itemType.isRead} == 1" th:href="${'/' + itemType.type +'/' + itemType.id}" th:style="${'color: DarkGray;'}" th:text="${itemType.type + ' - ' + itemType.title}"></a>
+                </li>
+            </ul>
 
 
             </div>
