@@ -33,7 +33,7 @@ public class Stepdefs {
     public Stepdefs() throws ClassNotFoundException {
         File file;
         itemMan = new ItemTypeManager();
-        SleepTime = 150;
+        SleepTime = 100;
         if (System.getProperty("os.name").matches("Mac OS X")) {
             file = new File("lib/macgeckodriver");
         } else {
