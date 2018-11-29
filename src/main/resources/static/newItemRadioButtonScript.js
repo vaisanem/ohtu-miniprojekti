@@ -17,31 +17,5 @@ function WhichCheck() {
     }
 }
 
-//function ItemViewContentCheck() {   //checkbox view implementation if ever needed. Shows all selected checkboxes.
-//    if (document.getElementById("books").checked) {
-//        document.getElementById("allBooks").style.display = "block";
-//        document.getElementById("allItems").style.display = "none";
-//    }else{
-//        document.getElementById("allBooks").style.display = "none";
-//    }
-//    if (document.getElementById("blogs").checked) {
-//        document.getElementById("allBlogs").style.display = "block";
-//        document.getElementById("allItems").style.display = "none";
-//    } else {
-//        document.getElementById("allBlogs").style.display = "none";
-//    }
-//    if (document.getElementById("videos").checked) {
-//        document.getElementById("allVideos").style.display = "block";
-//        document.getElementById("allItems").style.display = "none";
-//    } else{
-//        document.getElementById("allVideos").style.display = "none";
-//    }
-//    if (!document.getElementById("videos").checked && !document.getElementById("blogs").checked && !document.getElementById("books").checked){
-//        document.getElementById("allBooks").style.display = "none";
-//        document.getElementById("allVideos").style.display = "none";
-//        document.getElementById("allBlogs").style.display = "none";
-//        document.getElementById("allItems").style.display = "block";
-//    }
-//}
 
 
