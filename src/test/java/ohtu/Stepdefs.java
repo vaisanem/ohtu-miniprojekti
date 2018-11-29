@@ -304,8 +304,8 @@ public class Stepdefs {
         String strJS = "document.getElementById('userBook').value='testUser'";
         jse.executeScript(strJS);
 
-        element = driver.findElement(By.name("Add new book"));
-        element.submit();
+        driver.findElement(By.name("Add new book")).click();
+        
         Thread.sleep(SleepTime);
         //driver.get(baseUrl + "books");
     }
@@ -358,8 +358,8 @@ public class Stepdefs {
         String strJS = "document.getElementById('userBook').value='testUser'";
         jse.executeScript(strJS);
 
-        element = driver.findElement(By.name("Add new book"));
-        element.submit();
+        driver.findElement(By.name("Add new book")).click();
+        
         Thread.sleep(SleepTime);
         //driver.get(baseUrl + "books");
     }
@@ -535,10 +535,7 @@ public class Stepdefs {
         System.out.println("User has been set to testUser");
 
         System.out.println("Finding element for add new blog button");
-        element = driver.findElement(By.name("Add new blog"));
-        
-        System.out.println("Button found");
-        element.submit();
+        driver.findElement(By.name("Add new blog")).click();
         System.out.println("button clicked");
         //driver.get(baseUrl + "books");
     }
