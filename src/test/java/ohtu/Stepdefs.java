@@ -292,7 +292,6 @@ public class Stepdefs {
         is_shown(Integer.toString(one.getYear()));
     }
 
-
     @When("^book fields isbn, author and year are filled and submitted$")
     public void book_fields_isbn_author_and_year_are_filled_and_submitted() throws Throwable {
         Thread.sleep(SleepTime);
@@ -384,7 +383,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         is_shown(one.getPoster().trim());
     }
-
 
     @When("^video fields are filled correctly and submitted$")
     public void video_fields_are_filled_correctly_and_submitted() throws Throwable {
@@ -530,12 +528,18 @@ public class Stepdefs {
         findElementAndFill("blogURL", "https://protesters.com/blogs/1");
 
         // Sets user to "testUser"
+        System.out.println("Setting user to testuser");
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String strJS = "document.getElementById('userBlog').value='testUser'";
         jse.executeScript(strJS);
+        System.out.println("User has been set to testUser");
 
+        System.out.println("Finding element for add new blog button");
         element = driver.findElement(By.name("Add new blog"));
+        
+        System.out.println("Button found");
         element.submit();
+        System.out.println("button clicked");
         //driver.get(baseUrl + "books");
     }
 
