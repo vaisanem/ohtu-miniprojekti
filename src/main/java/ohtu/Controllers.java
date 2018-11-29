@@ -200,7 +200,7 @@ public class Controllers {
         }
 
         List<ItemType> items = new ArrayList<>();
-        
+
         if (ViewBooks) {
             items.addAll(itemMan.getBookMan().findAll(user));
         }
@@ -233,6 +233,7 @@ public class Controllers {
     @RequestMapping(value = "/book/{id}", method = RequestMethod.GET)
     public String book(@PathVariable int id, ModelMap model) throws SQLException {
         Book book = itemMan.getBookMan().findOne(id);
+        book.setTags(itemMan.getTags(book.getId()));
         model.addAttribute("book", book);
         model.addAttribute("tags", book.getTags());
         return "book";
