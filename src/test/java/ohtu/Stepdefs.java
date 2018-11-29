@@ -43,7 +43,7 @@ public class Stepdefs {
         System.setProperty("webdriver.gecko.driver", absolutePath);
 
         if (System.getProperty("os.name").matches("Windows 10")) {
-           this.driver = new ChromeDriver();
+            this.driver = new ChromeDriver();
             //this.driver = new HtmlUnitDriver(true);
         } else {
             //this.driver = new ChromeDriver();
@@ -174,6 +174,76 @@ public class Stepdefs {
         element.sendKeys(value);
     }
 
+    @Then("^List of all \"([^\"]*)\" is shown$")
+    public void list_of_all_is_shown(String WhatIsListed) throws Throwable {
+        if (WhatIsListed.contains("books")) {
+            List<ItemType> books = new ArrayList<>();
+            books.addAll(itemMan.getBookMan().findAll("default"));
+            listOfAllItemsIsShown(books);
+        } else if (WhatIsListed.contains("blogs")) {
+            List<ItemType> blogs = new ArrayList<>();
+            blogs.addAll(itemMan.getBlogMan().findAll("default"));
+            listOfAllItemsIsShown(blogs);
+        } else if (WhatIsListed.contains("videos")) {
+            List<ItemType> videos = new ArrayList<>();
+            videos.addAll(itemMan.getVideoMan().findAll("default"));
+            listOfAllItemsIsShown(videos);
+        } else {
+            List<ItemType> videos = new ArrayList<>();
+            videos.addAll(itemMan.findAll("default"));
+            listOfAllItemsIsShown(videos);
+        }
+    }
+
+    @When("^user chooses \"([^\"]*)\" and clicks Show$")
+    public void user_chooses_and_clicks_Show(String choise) throws Throwable {
+        if (choise.equals("ViewBooks")) {
+            driver.findElement(By.id("vBooks")).click();
+        }
+        if (choise.equals("ViewBlogs")) {
+            driver.findElement(By.id("vBlogs")).click();
+        }
+        if (choise.equals("ViewVideos")) {
+            driver.findElement(By.id("vVideos")).click();
+        }
+        driver.findElement(By.id("Show")).click();
+        Thread.sleep(SleepTime);
+    }
+
+    @When("^user chooses \"([^\"]*)\" and \"([^\"]*)\" and clicks Show$")
+    public void user_chooses_and_and_clicks_Show(String choiseOne, String choiseTwo) throws Throwable {
+        if (choiseOne.equals("ViewBooks") || choiseTwo.equals("ViewBooks")) {
+            driver.findElement(By.id("vBooks")).click();
+        }
+        if (choiseOne.equals("ViewBlogs") || choiseTwo.equals("ViewBlogs")) {
+            driver.findElement(By.id("vBlogs")).click();
+        }
+        if (choiseOne.equals("ViewVideos") || choiseTwo.equals("ViewVideos")) {
+            driver.findElement(By.id("vVideos")).click();
+        }
+        driver.findElement(By.id("Show")).click();
+        Thread.sleep(SleepTime);
+    }
+
+    @Then("^List of all \"([^\"]*)\" and \"([^\"]*)\" is shown$")
+    public void list_of_all_and_is_shown(String WhatIsListed, String WhatIsListed2) throws Throwable {
+        if (WhatIsListed.contains("books") || WhatIsListed2.contains("books")) {
+            List<ItemType> books = new ArrayList<>();
+            books.addAll(itemMan.getBookMan().findAll("default"));
+            listOfAllItemsIsShown(books);
+        }
+        if (WhatIsListed.contains("blogs") || WhatIsListed2.contains("blogs")) {
+            List<ItemType> blogs = new ArrayList<>();
+            blogs.addAll(itemMan.getBlogMan().findAll("default"));
+            listOfAllItemsIsShown(blogs);
+        }
+        if (WhatIsListed.contains("videos") || WhatIsListed2.contains("videos")) {
+            List<ItemType> videos = new ArrayList<>();
+            videos.addAll(itemMan.getVideoMan().findAll("default"));
+            listOfAllItemsIsShown(videos);
+        }
+    }
+
     // </editor-fold>
     //                  spacer
     // <editor-fold desc="Book testing">
@@ -199,7 +269,7 @@ public class Stepdefs {
         // Sets user to "testUser"
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String strJS = "document.getElementById('userBook').value='testUser'";
-        
+
         jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new book"));
@@ -222,12 +292,6 @@ public class Stepdefs {
         is_shown(Integer.toString(one.getYear()));
     }
 
-    @Then("^List of all books is shown$")
-    public void list_of_all_books_is_shown() throws Throwable {
-        List<ItemType> books = new ArrayList<>();
-        books.addAll(itemMan.getBookMan().findAll("default"));
-        listOfAllItemsIsShown(books);
-    }
 
     @When("^book fields isbn, author and year are filled and submitted$")
     public void book_fields_isbn_author_and_year_are_filled_and_submitted() throws Throwable {
@@ -321,17 +385,10 @@ public class Stepdefs {
         is_shown(one.getPoster().trim());
     }
 
-    @Then("^List of all videos is shown$")
-    public void list_of_all_videos_is_shown() throws Throwable {
-        List<ItemType> videos = new ArrayList<>();
-        videos.addAll(itemMan.getVideoMan().findAll("default"));
-        listOfAllItemsIsShown(videos);
-    }
 
     @When("^video fields are filled correctly and submitted$")
     public void video_fields_are_filled_correctly_and_submitted() throws Throwable {
-        Random r = new Random();
-        int n = 100000 + r.nextInt(900000);
+        int n = 100000 + random.nextInt(900000);
 
         driver.findElement(By.id("video")).click();
         System.out.println("Attempted to click video radiobutton..");
@@ -353,8 +410,7 @@ public class Stepdefs {
 
     @When("^video fields are filled correctly with short URL and submitted$")
     public void video_fields_are_filled_correctly_with_short_URL_and_submitted() throws Throwable {
-        Random r = new Random();
-        int n = 100000 + r.nextInt(900000);
+        int n = 100000 + random.nextInt(900000);
 
         driver.findElement(By.id("video")).click();
         System.out.println("Attempted to click video radiobutton..");
@@ -377,8 +433,7 @@ public class Stepdefs {
 
     @When("^video fields are filled correctly with video ID and submitted$")
     public void video_fields_are_filled_correctly_with_video_ID_and_submitted() throws Throwable {
-        Random r = new Random();
-        int n = 100000 + r.nextInt(900000);
+        int n = 100000 + random.nextInt(900000);
 
         driver.findElement(By.id("video")).click();
         System.out.println("Attempted to click video radiobutton..");
@@ -400,7 +455,7 @@ public class Stepdefs {
     }
 
     @When("^video fields title and poster are filled correctly and submitted\\.$")
-    public void video_fields_title_and_poster_are_filled_correctly_and_submitted() throws Throwable {
+    public void video_field_URL_is_missing() throws Throwable {
         driver.findElement(By.id("video")).click();
         System.out.println("Attempted to click video radiobutton..");
         Thread.sleep(SleepTime);
@@ -420,9 +475,9 @@ public class Stepdefs {
     }
 
     @When("^video fields URL and Poster are filled and submitted$")
-    public void video_fields_URL_and_Poster_are_filled_and_submitted() throws Throwable {
-        Random r = new Random();
-        int n = 100000 + r.nextInt(900000);
+    public void video_field_Title_is_missing() throws Throwable {
+
+        int n = 100000 + random.nextInt(900000);
 
         driver.findElement(By.id("video")).click();
         System.out.println("Attempted to click video radiobutton..");
@@ -441,9 +496,8 @@ public class Stepdefs {
     }
 
     @When("^video fields URL and Title are filled and submitted$")
-    public void video_fields_URL_and_Title_are_filled_and_submitted() throws Throwable {
-        Random r = new Random();
-        int n = 100000 + r.nextInt(900000);
+    public void video_field_poster_is_missing() throws Throwable {
+        int n = 100000 + random.nextInt(900000);
 
         driver.findElement(By.id("video")).click();
         System.out.println("Attempted to click video radiobutton..");
@@ -460,7 +514,6 @@ public class Stepdefs {
         element = driver.findElement(By.name("Add new video"));
         element.submit();
     }
-
 
     // </editor-fold>
     //                  spacer
@@ -484,13 +537,6 @@ public class Stepdefs {
         element = driver.findElement(By.name("Add new blog"));
         element.submit();
         //driver.get(baseUrl + "books");
-    }
-
-    @Then("^list of all blogs is shown$")
-    public void list_of_all_blogs_is_shown() throws Throwable {
-        List<ItemType> blogs = new ArrayList<>();
-        blogs.addAll(itemMan.getBlogMan().findAll("default"));
-        listOfAllItemsIsShown(blogs);
     }
 
     @When("^blog fields title and poster are filled correctly and submitted\\.$")
