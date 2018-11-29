@@ -10,7 +10,7 @@ Feature: User can view all added Items
     Given user is at the main page
     When link "View List" is clicked
     And user is redirected to "/items"
-    And user chooses "ViewBooks" and clicks Show
+    And user chooses "ViewVideos" and "ViewBlogs" and clicks Show
     Then List of all "books" is shown
 
   Scenario: user can view individual book
@@ -25,7 +25,7 @@ Feature: User can view all added Items
     Given user is at the main page
     When link "View List" is clicked
     And user is redirected to "/items"
-    And user chooses "ViewVideos" and clicks Show
+    And user chooses "ViewBooks" and "ViewBlogs" and clicks Show
     Then List of all "videos" is shown
 
   Scenario: user can view individual video
@@ -40,7 +40,7 @@ Feature: User can view all added Items
     Given user is at the main page
     When link "View List" is clicked
     And user is redirected to "/items"
-    And user chooses "ViewBlogs" and clicks Show
+    And user chooses "ViewBooks" and "ViewBooks" and clicks Show
     Then List of all "blogs" is shown
 
   Scenario: User is viewing listed books and blogs
