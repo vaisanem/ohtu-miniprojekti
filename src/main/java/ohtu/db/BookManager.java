@@ -64,11 +64,11 @@ public class BookManager implements sqlManager<Book, Integer> {
     @Override
     public List<Book> findAll() throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT book.id, isbn as ISBN, title as Title, relYear as releaseYear, name as Author FROM Book, Author WHERE Author.id = Book.fk_AuthorID");
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM BooksView");
         ResultSet rs = stmt.executeQuery();
         List<Book> books = new ArrayList<>();
         while (rs.next()) {
-            books.add(new Book(rs));
+            books.add(new Book(rs.getInt("id"), rs.getString("ISBN"), rs.getString("Title"), rs.getString("Author"), rs.getInt("releaseYear")));
         }
 
         rs.close();
