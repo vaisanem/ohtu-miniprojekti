@@ -2,6 +2,7 @@ package ohtu;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/items", method = RequestMethod.GET)
-    public String items(ModelMap model, @ModelAttribute(value = "itemsList") ArrayList<ItemType> stuff, @ModelAttribute("user") String user) throws SQLException {
+    public String items(ModelMap model, @ModelAttribute(value = "itemsList") ArrayList<ItemType> stuff, @ModelAttribute(value = "checkboxStates") HashMap<String, Boolean> checkboxStates, @ModelAttribute("user") String user) throws SQLException {
         System.out.println("Gotten redirect : " + user);
         if (user.length() < 1) {
             user = "default";
@@ -42,6 +43,11 @@ public class Controllers {
         } else {
             model.addAttribute("items", stuff);
         }
+
+        checkboxStates.entrySet().forEach(entry -> {
+            model.addAttribute(entry.getKey(), entry.getValue().toString());
+        });
+
         return "itemView";
     }
 
@@ -191,7 +197,7 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/SelectWhatTypesAreShown", method = RequestMethod.GET)
-    public String showSelectedItems(ModelMap model, RedirectAttributes itemsList, @RequestParam String user,
+    public String showSelectedItems(ModelMap model, RedirectAttributes redirects, @RequestParam String user,
             @RequestParam(defaultValue = "false") boolean ViewBooks, @RequestParam(defaultValue = "false") boolean ViewBlogs, @RequestParam(defaultValue = "false") boolean ViewVideos,
             @RequestParam(defaultValue = "false") boolean ViewRead, @RequestParam(defaultValue = "false") boolean ViewUnread
     ) throws SQLException {
@@ -200,17 +206,41 @@ public class Controllers {
         }
 
         List<ItemType> items = new ArrayList<>();
+        HashMap<String, Boolean> states = new HashMap<>();
 
         if (ViewBooks) {
             items.addAll(itemMan.getBookMan().findAll(user));
+            states.put("ViewBooks", true);
+        } else {
+            states.put("ViewBooks", false);
         }
+
         if (ViewBlogs) {
             items.addAll(itemMan.getBlogMan().findAll(user));
-
+            states.put("ViewBlogs", true);
+        } else {
+            states.put("ViewBlogs", false);
         }
+
         if (ViewVideos) {
             items.addAll(itemMan.getVideoMan().findAll(user));
+            states.put("ViewVideos", true);
+        } else {
+            states.put("ViewVideos", false);
         }
+
+        if (ViewRead) {
+            states.put("ViewRead", true);
+        } else {
+            states.put("ViewRead", false);
+        }
+
+        if (ViewUnread) {
+            states.put("ViewUnread", true);
+        } else {
+            states.put("ViewUnread", false);
+        }
+
         if (ViewRead && !ViewUnread) {
             items.removeIf(item -> item.getIsRead() == 0);
         }
@@ -224,9 +254,11 @@ public class Controllers {
             return "error";
         }
 
-        System.out.println("ADDING TO LIST WORKED");
-        itemsList.addFlashAttribute("itemsList", items);
-        System.out.println("POST WORKED");
+        redirects.addFlashAttribute("checkboxStates", states);
+
+        redirects.addFlashAttribute(
+                "itemsList", items);
+
         return "redirect:/items";
     }
 

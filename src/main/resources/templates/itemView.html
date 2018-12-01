@@ -21,13 +21,13 @@
             
             <form  method="GET" name="SelectWhatTypesAreShown" action="SelectWhatTypesAreShown">
                 <input type="hidden" name="user" value ="default"/>            
-                <input type="checkbox" id="vBooks" value="true" name="ViewBooks" checked="true"> Books</input>
-                <input type="checkbox" id="vBlogs" value="true" name="ViewBlogs" checked="true"> Blogs</input>
-                <input type="checkbox" id="vVideos" value="true" name="ViewVideos" checked="true"> Videos</input>
+                <input type="checkbox" id="vBooks" value="true" name="ViewBooks" th:checked="${ViewBooks} ?: 'true'"> Books</input>
+                <input type="checkbox" id="vBlogs" value="true" name="ViewBlogs" th:checked="${ViewBlogs} ?: 'true'"> Blogs</input>
+                <input type="checkbox" id="vVideos" value="true" name="ViewVideos" th:checked="${ViewVideos} ?: 'true'"> Videos</input>
 				<input type="submit" id="Show" value="Show" name="SelectWhatTypesAreShown"/> 
 				<br/>
-				<input type="checkbox" id="vRead" value="true" name="ViewRead" checked="true">Read</input>
-                <input type="checkbox" id="vUnread" value="true" name="ViewUnread" checked="true"> Unread</input>
+				<input type="checkbox" id="vRead" value="true" name="ViewRead" th:checked="${ViewRead} ?: 'true'">Read</input>
+                <input type="checkbox" id="vUnread" value="true" name="ViewUnread" th:checked="${ViewUnread} ?: 'true'"> Unread</input>
 
             </form>
                         
