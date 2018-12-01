@@ -255,7 +255,18 @@ public class Controllers {
         }
 
         redirects.addFlashAttribute("checkboxStates", states);
-
+        
+        /* This line of code will filter the items that were selected with checkboxes so that they are also filtered by TAGS.
+        TODO : Make UI implmementation to insert comma delimited tags that are split into a List of Strings, each string representing a Tag.
+        Works like > filterByTags method returns the items that match the tags defined in the Tags list.
+        
+        List<String> tags = new ArrayList<>();
+        itemMan.getAndApplyTags(items);
+        items = itemMan.filterByTags(items, tags );
+        */
+        
+        
+        
         redirects.addFlashAttribute(
                 "itemsList", items);
 

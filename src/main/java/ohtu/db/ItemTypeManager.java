@@ -125,13 +125,7 @@ public class ItemTypeManager {
         items.addAll(videoMan.findAll());
         items.addAll(blogMan.findAll());
 
-        HashMap<Integer, List<String>> tags = getAllTags();
-
-        items.forEach(item -> {
-            if (tags.containsKey(item.getId())) {
-                item.setTags(tags.get(item.getId()));
-            }
-        });
+        getAndApplyTags(items);
 
         return items;
     }
@@ -143,15 +137,33 @@ public class ItemTypeManager {
         items.addAll(videoMan.findAll(user));
         items.addAll(blogMan.findAll(user));
 
-        items.forEach(item -> {
-            try {
-                item.generateTags(this);
-            } catch (SQLException ex) {
+        getAndApplyTags(items);
 
+        return items;
+    }
+
+    public void applyTags(HashMap<Integer, List<String>> tags, List<ItemType> items) {
+        items.forEach(item -> {
+            if (tags.containsKey(item.getId())) {
+                item.setTags(tags.get(item.getId()));
+            }
+        });
+    }
+
+    public void getAndApplyTags(List<ItemType> items) throws SQLException {
+        HashMap<Integer, List<String>> tags = getAllTags();
+        applyTags(tags, items);
+    }
+
+    public List<ItemType> filterByTags(List<ItemType> items, List<String> tags) {
+        List<ItemType> filtered = new ArrayList<>();
+        items.forEach(item -> {
+            if (item.getTags().stream().anyMatch(tag -> tags.contains(tag))) {
+                filtered.add(item);
             }
         });
 
-        return items;
+        return filtered;
     }
 
     public void closeConnection() throws SQLException {
