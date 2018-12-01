@@ -25,7 +25,7 @@ public class BlogManager implements sqlManager<Blog, Integer> {
     public BlogManager(Database database) {
         this.database = database;
     }
-    
+
     public boolean add(Blog blog, String user) throws SQLException {
         Connection connection = database.getConnection();
         CallableStatement stmt = connection.prepareCall("{call AddBlogAndLink(?,?,?,?)}");
@@ -67,11 +67,11 @@ public class BlogManager implements sqlManager<Blog, Integer> {
     @Override
     public List<Blog> findAll() throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT WebBlog.id, title, URL, Author.name as Author FROM WebBlog, Author AND WebBlog.fk_Writer_id = Author.id");
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM BlogsView");
         ResultSet rs = stmt.executeQuery();
         List<Blog> blogs = new ArrayList<>();
         while (rs.next()) {
-            blogs.add(new Blog(rs));
+            blogs.add(new Blog(rs.getInt("id"), rs.getString("URL"), rs.getString("Title"), rs.getString("Author")));
         }
 
         rs.close();

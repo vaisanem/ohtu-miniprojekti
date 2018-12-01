@@ -22,6 +22,12 @@ public class ItemType {
     private typeIdentifier type;
     private int isRead;
 
+    @Override
+    public boolean equals(Object t) {
+        ItemType other = (ItemType) t;
+        return other.id == this.id;
+    }
+
     public enum typeIdentifier {
         book,
         video,
@@ -43,7 +49,6 @@ public class ItemType {
     public int getIsRead() {
         return isRead;
     }
-    
 
     public List<String> getTags() {
         return tags;
