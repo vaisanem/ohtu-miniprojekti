@@ -94,7 +94,7 @@ public class Controllers {
                     itemMan.getBookMan().add(book, user);
                     return "redirect:/items";
                 } catch (Exception e) {
-                    if(e.toString().contains(isbn.get())) {
+                    if(e.toString().contains("Violation of UNIQUE KEY constraint")) {
                         errors.add("ISBN already in use");
                     } else {
                         errors.add(e.toString());

@@ -261,6 +261,8 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         if (isbn.isEmpty()) {
             isbn = Integer.toString(Math.abs(random.nextInt()));
+        } else if (isbn.equals("Already-in-use")) {
+            isbn = itemMan.getBookMan().findAll("default").get(0).getIsbn();
         }
         findElementAndFill("bookTitle", title);
         findElementAndFill("isbn", isbn);
