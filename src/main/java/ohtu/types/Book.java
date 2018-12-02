@@ -59,5 +59,8 @@ public class Book extends ItemType implements Serializable {
         return year;
     }
 
+    public static boolean checkNumericality(String year) {
+        return year.matches("[0-9]+");
+    }
 
 }
