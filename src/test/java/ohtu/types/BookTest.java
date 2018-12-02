@@ -22,4 +22,11 @@ public class BookTest {
         assertEquals(2016, book.getYear());
     }
     
+    @Test
+    public void numericalityCheckWorks() {
+        assertTrue(!Book.checkNumericality(""));
+        assertTrue(!Book.checkNumericality(book.getAuthor()));
+        assertTrue(Book.checkNumericality("1"));
+    }
+    
 }
