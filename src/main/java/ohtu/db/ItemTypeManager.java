@@ -206,9 +206,10 @@ public class ItemTypeManager {
 
     public void addTagToItem(int id, String tag) throws SQLException {
         Connection connection = database.getConnection();
+        String lowerCaseTag = tag.toLowerCase();
         CallableStatement stmt = connection.prepareCall("{call AddTagToItemID(?, ?)}");
         stmt.setObject(1, id);
-        stmt.setObject(2, tag);
+        stmt.setObject(2, lowerCaseTag);
 
         stmt.executeUpdate();
 
