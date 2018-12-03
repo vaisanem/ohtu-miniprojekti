@@ -28,7 +28,6 @@ public class ItemTypeManager {
     private BlogManager blogMan;
 
     public ItemTypeManager() throws ClassNotFoundException {
-        this.database = database;
         String addr = "ohmipro.ddns.net";
         String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMPv2;user=ohtuadm;password=hakimi1337";
 
@@ -169,7 +168,7 @@ public class ItemTypeManager {
     public List<ItemType> filterByTags(List<ItemType> items, List<String> tags) {
         List<ItemType> filtered = new ArrayList<>();
         items.forEach(item -> {
-            if (item.getTags().stream().anyMatch(tag -> tags.contains(tag))) {
+            if (item.getTags().stream().anyMatch(tag -> tags.contains(tag.toLowerCase()))) {
                 filtered.add(item);
             }
         });
@@ -207,7 +206,7 @@ public class ItemTypeManager {
 
     public void addTagToItem(int id, String tag) throws SQLException {
         Connection connection = database.getConnection();
-        CallableStatement stmt = connection.prepareCall("{call AddTagToItem(?, ?)}");
+        CallableStatement stmt = connection.prepareCall("{call AddTagToItemID(?, ?)}");
         stmt.setObject(1, id);
         stmt.setObject(2, tag);
 

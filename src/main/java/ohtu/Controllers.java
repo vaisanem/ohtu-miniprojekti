@@ -2,6 +2,7 @@ package ohtu;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,9 +66,9 @@ public class Controllers {
             @RequestParam Optional<String> videoTitle, @RequestParam Optional<String> videoURL, @RequestParam Optional<String> videoPoster, //video 
             @RequestParam Optional<String> blogTitle, @RequestParam Optional<String> blogURL, @RequestParam Optional<String> blogPoster //blog 
     ) throws SQLException {
-        
+
         clearErrorsBeforeAdding();
-        
+
         switch (type) {
             case "book": {
                 userAttribute.addFlashAttribute("user", user);
@@ -95,7 +96,7 @@ public class Controllers {
                     itemMan.getBookMan().add(book, user);
                     return "redirect:/items";
                 } catch (Exception e) {
-                    if(e.toString().contains("Violation of UNIQUE KEY constraint")) {
+                    if (e.toString().contains("Violation of UNIQUE KEY constraint")) {
                         errors.add("ISBN already in use");
                     } else {
                         errors.add(e.toString());
@@ -158,7 +159,7 @@ public class Controllers {
                     return "newItem";
                 }
             }
-            
+
             default: {
                 System.out.println("Something went wrong");
                 return "error";
@@ -166,19 +167,19 @@ public class Controllers {
         }
 
     }
-    
+
     @PostMapping("/book/{id}/addTag")
     public String addTagForBook(@PathVariable int id, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
         Book book = itemMan.getBookMan().findOne(id);
         return addTagForItem(id, model, tag, book);
     }
-    
+
     @PostMapping("/blog/{id}/addTag")
     public String addTagForBlog(@PathVariable int id, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
         Blog blog = itemMan.getBlogMan().findOne(id);
         return addTagForItem(id, model, tag, blog);
     }
-    
+
     @PostMapping("/video/{id}/addTag")
     public String addTagForVideo(@PathVariable int id, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
         Video video = itemMan.getVideoMan().findOne(id);
@@ -219,7 +220,7 @@ public class Controllers {
     @RequestMapping(value = "/SelectWhatTypesAreShown", method = RequestMethod.GET)
     public String showSelectedItems(ModelMap model, RedirectAttributes redirects, @RequestParam String user,
             @RequestParam(defaultValue = "false") boolean ViewBooks, @RequestParam(defaultValue = "false") boolean ViewBlogs, @RequestParam(defaultValue = "false") boolean ViewVideos,
-            @RequestParam(defaultValue = "false") boolean ViewRead, @RequestParam(defaultValue = "false") boolean ViewUnread, @RequestParam(required = false) List<String> tags 
+            @RequestParam(defaultValue = "false") boolean ViewRead, @RequestParam(defaultValue = "false") boolean ViewUnread, @RequestParam(required = false) String tags
     ) throws SQLException {
         if (user.length() < 1) {
             user = "default";
@@ -275,16 +276,18 @@ public class Controllers {
         }
 
         redirects.addFlashAttribute("checkboxStates", states);
-        
+
         /* This line of code will filter the items that were selected with checkboxes so that they are also filtered by TAGS.
         TODO : Make UI implmementation to insert comma delimited tags that are split into a List of Strings, each string representing a Tag.
         Works like > filterByTags method returns the items that match the tags defined in the Tags list.
-        */
+         */
 
+        List<String> tagses = Arrays.asList(tags.split("\\s*,\\s*"));
+        tagses.replaceAll(String::toLowerCase);
         itemMan.getAndApplyTags(items);
-        items = itemMan.filterByTags(items, tags );
-        
-        
+
+        items = itemMan.filterByTags(items, tagses);
+
         redirects.addFlashAttribute(
                 "itemsList", items);
 
@@ -317,10 +320,10 @@ public class Controllers {
         model.addAttribute("tags", video.getTags());
         return "video";
     }
-    
+
     private String addTagForItem(int id, ModelMap model, String tag, ItemType item) throws SQLException {
         clearErrorsBeforeAdding();
-        
+
         if (tag.isEmpty()) {
             errors.add("Missing tag");
         } else {
@@ -329,14 +332,14 @@ public class Controllers {
             } catch (Exception e) {
                 errors.add(e.toString());
                 System.out.println(e.toString());
-            } 
+            }
         }
         model.addAttribute("errors", errors);
         model.addAttribute(item.getType().toString(), item);
         return item.getType().toString();
         //return "redirect:/" + type + '/' + id;
     }
-    
+
     private void clearErrorsBeforeAdding() {
         errors.clear();
     }
