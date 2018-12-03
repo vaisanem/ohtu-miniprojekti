@@ -45,7 +45,8 @@ public class Book extends ItemType implements Serializable {
         author = rs.getString("Author");
         year = rs.getInt("releaseYear");
     }
-
+    
+    @Override
     public String getAuthor() {
         return author;
     }
@@ -62,5 +63,7 @@ public class Book extends ItemType implements Serializable {
     public static boolean checkNumericality(String year) {
         return year.matches("[0-9]+");
     }
+    
+    
 
 }

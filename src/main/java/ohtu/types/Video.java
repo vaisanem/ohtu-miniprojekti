@@ -76,4 +76,9 @@ public class Video extends ItemType {
         return poster;
     }
 
+    @Override
+    public String getAuthor() {
+        return poster;
+    }
+
 }
