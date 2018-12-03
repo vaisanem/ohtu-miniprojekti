@@ -5,7 +5,6 @@
         <title>Mini Project</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="stylesheet" href="/style.css"/>
-        <script type="text/javascript" src="/newItemRadioButtonScript.js"></script>
     </head>
 
     <body>
@@ -18,28 +17,33 @@
         <div>
             <h1>The list of added items</h1>
             <h2>Select showed items</h2>
-            
+
             <form  method="GET" name="SelectWhatTypesAreShown" action="SelectWhatTypesAreShown" style='display:inline;'>
                 <input type="hidden" name="user" value ="default"/>            
                 <input type="checkbox" id="vBooks" value="true" name="ViewBooks" th:checked="${ViewBooks} ?: 'true'"> Books</input>
                 <input type="checkbox" id="vBlogs" value="true" name="ViewBlogs" th:checked="${ViewBlogs} ?: 'true'"> Blogs</input>
                 <input type="checkbox" id="vVideos" value="true" name="ViewVideos" th:checked="${ViewVideos} ?: 'true'"> Videos</input>
-				&ensp;|&ensp;
+                &ensp;|&ensp;
                 <input type="checkbox" id="vRead" value="true" name="ViewRead" th:checked="${ViewRead} ?: 'true'">Read</input>
                 <input type="checkbox" id="vUnread" value="true" name="ViewUnread" th:checked="${ViewUnread} ?: 'true'"> Unread</input>
                 &ensp;|&ensp;
-				
+                <select name="SortingSelect" id="sorter">
+                    <option id="SBType" value="SortByType" th:selected="${sortSelect=='SortByType'}">Sort By Type</option>
+                    <option id="SBTitle" value="SortByTitle" th:selected="${sortSelect=='SortByTitle'}">Sort By Title</option>
+                    <option id="SBAuthor" value="SortByAuthor" th:selected="${sortSelect=='SortByAuthor'}">Sort By Author</option>
+                </select>
+                &ensp;|&ensp;
+                Search Tags:
                 <input type="text" id="tags" name="tags"/>
-				
+
                 &emsp;
                 <input type="submit" id="Show" value="Show" name="SelectWhatTypesAreShown"/> 
-                
             </form>
-            
+
             <br/>
             <br/>
-         
-            <ul th:if="${items}" class="items">
+
+            <ul id="itemsToSort" th:if="${items}" class="items">
                 <li class="items" th:each="itemType: ${items}">
                     <a class="items" th:if="${itemType.isRead} == 0" th:href="${'/' + itemType.type +'/' + itemType.id}"  th:text="${itemType.type + ' - ' + itemType.title + ' - by: ' + itemType.getAuthor()}"></a>
                     <a class="items" th:if="${itemType.isRead} == 1" th:href="${'/' + itemType.type +'/' + itemType.id}" th:style="${'color: DarkGray;'}" th:text="${itemType.type + ' - ' + itemType.title + ' - by: ' + itemType.getAuthor()}"></a>
@@ -47,6 +51,6 @@
             </ul>
 
 
-            </div>
+        </div>
     </body>
 </html>

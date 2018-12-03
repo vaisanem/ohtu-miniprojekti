@@ -36,6 +36,30 @@ public class ManagerClassTestNoMock {
     }
 
     @Test
+    public void bookFindOneFindsOne() throws SQLException {
+        List<ItemType> data = itemMan.findAll();
+        int id = data.stream().filter(item -> item.getType() == ItemType.typeIdentifier.book).findAny().get().getId();
+        Book book = itemMan.getBookMan().findOne(id);
+        assertTrue(book != null);
+    }
+
+    @Test
+    public void videoFindOneFindsOne() throws SQLException {
+        List<ItemType> data = itemMan.findAll();
+        int id = data.stream().filter(item -> item.getType() == ItemType.typeIdentifier.video).findAny().get().getId();
+        Video vid = itemMan.getVideoMan().findOne(id);
+        assertTrue(vid != null);
+    }
+
+    @Test
+    public void blogFindOneFindsOne() throws SQLException {
+        List<ItemType> data = itemMan.findAll();
+        int id = data.stream().filter(item -> item.getType() == ItemType.typeIdentifier.blog).findAny().get().getId();
+        Blog blog = itemMan.getBlogMan().findOne(id);
+        assertTrue(blog != null);
+    }
+
+    @Test
     public void bookfindAllFindsAll() throws SQLException {
         List<Book> allBooks = itemMan.getBookMan().findAll();
         assertTrue(items.containsAll(allBooks));

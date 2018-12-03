@@ -130,10 +130,9 @@ public class ItemTypeManager {
 
     public List<ItemType> findAll() throws SQLException {
         List<ItemType> items = new ArrayList<>();
-
+        items.addAll(blogMan.findAll());
         items.addAll(bookMan.findAll());
         items.addAll(videoMan.findAll());
-        items.addAll(blogMan.findAll());
 
         getAndApplyTags(items);
 
@@ -142,11 +141,10 @@ public class ItemTypeManager {
 
     public List<ItemType> findAll(String user) throws SQLException {
         List<ItemType> items = new ArrayList<>();
-
+        items.addAll(blogMan.findAll(user));
         items.addAll(bookMan.findAll(user));
         items.addAll(videoMan.findAll(user));
-        items.addAll(blogMan.findAll(user));
-
+        
         getAndApplyTags(items);
 
         return items;
