@@ -24,15 +24,13 @@
                 <input type="checkbox" id="vBooks" value="true" name="ViewBooks" th:checked="${ViewBooks} ?: 'true'"> Books</input>
                 <input type="checkbox" id="vBlogs" value="true" name="ViewBlogs" th:checked="${ViewBlogs} ?: 'true'"> Blogs</input>
                 <input type="checkbox" id="vVideos" value="true" name="ViewVideos" th:checked="${ViewVideos} ?: 'true'"> Videos</input>
-		&ensp;|&ensp;
+				&ensp;|&ensp;
                 <input type="checkbox" id="vRead" value="true" name="ViewRead" th:checked="${ViewRead} ?: 'true'">Read</input>
                 <input type="checkbox" id="vUnread" value="true" name="ViewUnread" th:checked="${ViewUnread} ?: 'true'"> Unread</input>
                 &ensp;|&ensp;
-                <select name="tags" multiple="multiple">
-                    <ul th:each="tag: ${tags}">
-                        <option th:value="${tag}" th:selected="true"><span th:text="${tag}"></span></option>
-                    </ul>
-                </select>
+				
+                <input type="text" id="tags" name="tags"/>
+				
                 &emsp;
                 <input type="submit" id="Show" value="Show" name="SelectWhatTypesAreShown"/> 
                 
