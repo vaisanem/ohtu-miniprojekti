@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import ohtu.db.ItemTypeManager;
@@ -36,7 +37,7 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/items", method = RequestMethod.GET)
-    public String items(ModelMap model, HttpServletResponse response, @ModelAttribute(value = "itemsList") ArrayList<ItemType> stuff, @ModelAttribute(value = "checkboxStates") HashMap<String, Boolean> checkboxStates, @ModelAttribute("user") String user) throws SQLException {
+    public String items(ModelMap model, HttpServletResponse response, @ModelAttribute(value = "itemsList") ArrayList<ItemType> stuff, @ModelAttribute(value = "checkboxStates") HashMap<String, Boolean> checkboxStates, @ModelAttribute("user") String user, @ModelAttribute("Sorting") String Sort) throws SQLException {
         System.out.println("Gotten redirect : " + user);
         if (user.length() < 1) {
             user = "default";
@@ -53,7 +54,9 @@ public class Controllers {
             model.addAttribute("items", stuff);
         }
         model.addAttribute("tags", itemMan.getSetOfAllTags());
-
+        
+        model.addAttribute("sortSelect", Sort);
+        
         checkboxStates.entrySet().forEach(entry -> {
             model.addAttribute(entry.getKey(), entry.getValue().toString());
         });
@@ -226,7 +229,7 @@ public class Controllers {
     @RequestMapping(value = "/SelectWhatTypesAreShown", method = RequestMethod.GET)
     public String showSelectedItems(ModelMap model, RedirectAttributes redirects, @RequestParam String user,
             @RequestParam(defaultValue = "false") boolean ViewBooks, @RequestParam(defaultValue = "false") boolean ViewBlogs, @RequestParam(defaultValue = "false") boolean ViewVideos,
-            @RequestParam(defaultValue = "false") boolean ViewRead, @RequestParam(defaultValue = "false") boolean ViewUnread, @RequestParam(required = false) String tags
+            @RequestParam(defaultValue = "false") boolean ViewRead, @RequestParam(defaultValue = "false") boolean ViewUnread, @RequestParam(required = false) String tags, @RequestParam(required = true) String SortingSelect
     ) throws SQLException {
         if (user.length() < 1) {
             user = "default";
@@ -290,9 +293,32 @@ public class Controllers {
         List<String> tagses = Arrays.asList(tags.split("\\s*,\\s*"));
         tagses.replaceAll(String::toLowerCase);
         itemMan.getAndApplyTags(items);
+        
+        if (tagses.size() > 1) {
+            items = itemMan.filterByTags(items, tagses);
+        }
+        switch (SortingSelect) {
+            case "SortByAuthor": {
+                items = items.stream()
+                        .sorted((item1, item2) -> item1.getAuthor().compareTo(item2.getAuthor()))
+                        .collect(Collectors.toList());
+                break;
+            }
+            case "SortByTitle": {
+                items = items.stream()
+                        .sorted((item1, item2) -> item1.getTitle().compareTo(item2.getTitle()))
+                        .collect(Collectors.toList());
+                break;
+            }
 
-        items = itemMan.filterByTags(items, tagses);
-
+            default: {
+                items = items.stream()
+                        .sorted((item1, item2) -> item1.getType().name().compareTo(item2.getType().name()))
+                        .collect(Collectors.toList());
+                break;
+            }
+        }
+        redirects.addFlashAttribute("Sorting", SortingSelect);
         redirects.addFlashAttribute(
                 "itemsList", items);
 
@@ -300,7 +326,9 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/book/{id}", method = RequestMethod.GET)
-    public String book(HttpServletRequest request, @ModelAttribute(value = "errs") String errors, @PathVariable int id, ModelMap model) throws SQLException {
+    public String book(HttpServletRequest request,
+            @ModelAttribute(value = "errs") String errors,
+            @PathVariable int id, ModelMap model) throws SQLException {
         Cookie[] cookies = request.getCookies();
         String user = "default";
         if (cookies != null) {
@@ -315,7 +343,8 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/blog/{id}", method = RequestMethod.GET)
-    public String blog(HttpServletRequest request, @PathVariable int id, ModelMap model) throws SQLException {
+    public String blog(HttpServletRequest request,
+            @PathVariable int id, ModelMap model) throws SQLException {
         Cookie[] cookies = request.getCookies();
         String user = "default";
         if (cookies != null) {
@@ -330,7 +359,8 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/video/{id}", method = RequestMethod.GET)
-    public String video(HttpServletRequest request, @PathVariable int id, ModelMap model) throws SQLException {
+    public String video(HttpServletRequest request,
+            @PathVariable int id, ModelMap model) throws SQLException {
         Cookie[] cookies = request.getCookies();
         String user = "default";
         if (cookies != null) {
