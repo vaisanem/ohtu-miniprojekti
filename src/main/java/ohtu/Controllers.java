@@ -58,14 +58,14 @@ public class Controllers {
         return "newItem";
     }
 
-        @PostMapping("/addItem")
+    @PostMapping("/addItem")
     public String addItem(ModelMap model, RedirectAttributes userAttribute, @RequestParam String user, @RequestParam String type,
             @RequestParam Optional<String> bookTitle, @RequestParam Optional<String> isbn, @RequestParam Optional<String> year, @RequestParam Optional<String> author, //book
             @RequestParam Optional<String> videoTitle, @RequestParam Optional<String> videoURL, @RequestParam Optional<String> videoPoster, //video 
             @RequestParam Optional<String> blogTitle, @RequestParam Optional<String> blogURL, @RequestParam Optional<String> blogPoster //blog 
     ) throws SQLException {
         
-        errors.clear();
+        clearErrorsBeforeAdding();
         
         switch (type) {
             case "book": {
@@ -164,6 +164,24 @@ public class Controllers {
             }
         }
 
+    }
+    
+    @PostMapping("/book/{id}/addTag")
+    public String addTagForBook(@PathVariable int id, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
+        Book book = itemMan.getBookMan().findOne(id);
+        return addTagForItem(id, model, tag, book);
+    }
+    
+    @PostMapping("/blog/{id}/addTag")
+    public String addTagForBlog(@PathVariable int id, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
+        Blog blog = itemMan.getBlogMan().findOne(id);
+        return addTagForItem(id, model, tag, blog);
+    }
+    
+    @PostMapping("/video/{id}/addTag")
+    public String addTagForVideo(@PathVariable int id, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
+        Video video = itemMan.getVideoMan().findOne(id);
+        return addTagForItem(id, model, tag, video);
     }
 
     @RequestMapping(value = "*/markRead", method = RequestMethod.GET)
@@ -286,15 +304,42 @@ public class Controllers {
     @RequestMapping(value = "/blog/{id}", method = RequestMethod.GET)
     public String blog(@PathVariable int id, ModelMap model) throws SQLException {
         Blog blog = itemMan.getBlogMan().findOne(id);
+        blog.setTags(itemMan.getTags(id));
         model.addAttribute("blog", blog);
+        model.addAttribute("tags", blog.getTags());
         return "blog";
     }
 
     @RequestMapping(value = "/video/{id}", method = RequestMethod.GET)
     public String video(@PathVariable int id, ModelMap model) throws SQLException {
         Video video = itemMan.getVideoMan().findOne(id);
+        video.setTags(itemMan.getTags(id));
         model.addAttribute("video", video);
+        model.addAttribute("tags", video.getTags());
         return "video";
+    }
+    
+    private String addTagForItem(int id, ModelMap model, String tag, ItemType item) throws SQLException {
+        clearErrorsBeforeAdding();
+        
+        if (tag.isEmpty()) {
+            errors.add("Missing tag");
+        } else {
+            try {
+                itemMan.addTagToItem(id, tag);
+            } catch (Exception e) {
+                errors.add(e.toString());
+                System.out.println(e.toString());
+            } 
+        }
+        model.addAttribute("errors", errors);
+        model.addAttribute(item.getType().toString(), item);
+        return item.getType().toString();
+        //return "redirect:/" + type + '/' + id;
+    }
+    
+    private void clearErrorsBeforeAdding() {
+        errors.clear();
     }
 
 }

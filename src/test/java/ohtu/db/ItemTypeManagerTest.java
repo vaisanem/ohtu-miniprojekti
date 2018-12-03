@@ -11,9 +11,6 @@ import static org.mockito.Mockito.*;
 public class ItemTypeManagerTest {
 
     private ItemTypeManager itemMan;
-    private VideoManager videoMan;
-    private BookManager bookMan;
-    private BlogManager blogMan;
     private ArrayList<Video> videos;
     private ArrayList<Book> books;
     private ArrayList<Blog> blogs;
@@ -24,9 +21,9 @@ public class ItemTypeManagerTest {
     @Before
     public void setUp() throws ClassNotFoundException, SQLException {
         itemMan = new ItemTypeManager();
-        videoMan = mock(VideoManager.class);
-        bookMan = mock(BookManager.class);
-        blogMan = mock(BlogManager.class);
+        VideoManager videoMan = mock(VideoManager.class);
+        BookManager bookMan = mock(BookManager.class);
+        BlogManager blogMan = mock(BlogManager.class);
 
         videos = new ArrayList<>();
         video = new Video(2, "youtu.be/path/to/nowheres", "Cat videoShortUrl", "Catloverxx");

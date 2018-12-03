@@ -24,8 +24,8 @@ public class BookTest {
     
     @Test
     public void numericalityCheckWorks() {
-        assertTrue(!Book.checkNumericality(""));
-        assertTrue(!Book.checkNumericality(book.getAuthor()));
+        assertFalse(Book.checkNumericality(""));
+        assertFalse(Book.checkNumericality(book.getAuthor()));
         assertTrue(Book.checkNumericality("1"));
     }
     

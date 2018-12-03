@@ -16,7 +16,11 @@
         
         
         
-        <div>      	
+        <div>   
+                <li th:each="error: ${errors}">
+                    <span th:text="${error}"></span>
+                </li>
+            
 		<h2> Title: </h2>
 			<p><span th:text="${book.title}"></span></p>
 		<h2> Author: </h2>
@@ -34,12 +38,20 @@
                 <br/>
                 <br/>
 				
-			<form  method="GET" name="markRead" action="markRead">
-				<input type="hidden" id="userBook" name="user" value ="default"/>
-				<input type="hidden" id="type" name="id" th:value ="${book.id}"  />	
-                <input type="submit" value="Mark as read" name="action" />
-                <input type="submit" value="Mark as unread" name="action" />
-			</form>
+		<form  method="GET" name="markRead" action="markRead">
+                    <input type="hidden" id="userBook" name="user" value ="default"/>
+                    <input type="hidden" id="type" name="id" th:value ="${book.id}"  />	
+                    <input type="submit" value="Mark as read" name="action" />
+                    <input type="submit" value="Mark as unread" name="action" />
+		</form>
+                <br/>
+                <br/>
+                <form  method="POST" name="addTag" th:action="${book.id + '/addTag'}">
+                    <input type="hidden" id="userTag" name="user" value ="default"/>
+                    <input type="hidden" id="stringId" name="stringId" th:value="${book.id}"/>
+                    <input type="text" id="tag" name="tag"/>
+                    <input type="submit" value="Add tag" name="Add tag" />
+		</form>
         </div>
     </body>
 </html>

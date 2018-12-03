@@ -16,22 +16,41 @@
         
         
         
-        <div>                             
+        <div>   
+                <li th:each="error: ${errors}">
+                    <span th:text="${error}"></span>
+                </li>
+            
 		<h2> Title: </h2>
 			<p><span th:text="${blog.title}"></span></p>
 		<h2> Author: </h2>
 			<p><span th:text="${blog.poster}"></span></p>	
 		<h2>URL:</h2>
 			<a th:href="${blog.URL}"><span th:text="${blog.URL}"></span></a>
+                <h2> Tags:</h2>
+                    <ul class="items">
+                        <li class="tags" th:each="tag: ${tags}">
+                            <p><span th:text="${tag}"></span></p>
+                        </li>
+                    </ul>
+                <br/>
                 
                 <br/>
                 <br/>
-			<form  method="GET" name="markRead" action="markRead">
-				<input type="hidden" id="userBook" name="user" value ="default"/>
-				<input type="hidden" id="type" name="id" th:value ="${blog.id}"  />	
-                <input type="submit" value="Mark as read" name="action" />
-                <input type="submit" value="Mark as unread" name="action" />
-			</form>
+		<form  method="GET" name="markRead" action="markRead">
+                    <input type="hidden" id="userBook" name="user" value ="default"/>
+                    <input type="hidden" id="type" name="id" th:value ="${blog.id}"  />	
+                    <input type="submit" value="Mark as read" name="action" />
+                    <input type="submit" value="Mark as unread" name="action" />
+		</form>
+                <br/>
+                <br/>
+                <form  method="POST" name="addTag" th:action="${blog.id + '/addTag'}">
+                    <input type="hidden" id="userTag" name="user" value ="default"/>
+                    <input type="hidden" id="stringId" name="stringId" th:value="${blog.id}"/>
+                    <input type="text" id="tag" name="tag"/>
+                    <input type="submit" value="Add tag" name="Add tag" />
+		</form>
                 
         </div>
     </body>

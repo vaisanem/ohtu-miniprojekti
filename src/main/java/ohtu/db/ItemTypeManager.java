@@ -194,10 +194,10 @@ public class ItemTypeManager {
         connection.close();
     }
 
-    public void addTagToItem(ItemType item, String tag) throws SQLException {
+    public void addTagToItem(int id, String tag) throws SQLException {
         Connection connection = database.getConnection();
         CallableStatement stmt = connection.prepareCall("{call AddTagToItem(?, ?)}");
-        stmt.setObject(1, item.getId());
+        stmt.setObject(1, id);
         stmt.setObject(2, tag);
 
         stmt.executeUpdate();
