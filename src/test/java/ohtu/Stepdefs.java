@@ -616,4 +616,33 @@ public class Stepdefs {
     }
 
     // </editor-fold>
+    //                  spacer
+    // <editor-fold desc="tag testing">
+    @Given("^user is at book's page$")
+    public void user_is_at_book_page() throws Throwable {
+        Book book = itemMan.getBookMan().findAll("default").get(0);
+        String new_url = baseUrl + "book/" + book.getId();
+        System.out.println(new_url);
+        driver.get(baseUrl + "book/" + book.getId());
+    }
+    
+    @Given("^user is at blog's page$")
+    public void user_is_at_blog_page() throws Throwable {
+        Blog blog = itemMan.getBlogMan().findAll("default").get(0);
+        driver.get(baseUrl + "blog/" + blog.getId());
+    }
+    
+    @Given("^user is at video's page$")
+    public void user_is_at_video_page() throws Throwable {
+        Video video = itemMan.getVideoMan().findAll("default").get(0);
+        driver.get(baseUrl + "video/" + video.getId());
+    }
+    
+    @When("^tag field is filled with \"([^\"]*)\" and submitted$")
+    public void tag_field_filled_and_submitted(String tag) throws Throwable {
+        findElementAndFill("tag", tag);
+        element = driver.findElement(By.name("Add tag"));
+        element.submit();
+    }
+    // </editor-fold>
 }

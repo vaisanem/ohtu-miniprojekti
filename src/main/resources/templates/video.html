@@ -22,6 +22,7 @@
                 <li th:each="error: ${errors}">
                     <span th:text="${error}"></span>
                 </li>
+                <br/>
                 <form  method="GET" name="markRead" action="markRead">
                     <input type="hidden" id="userBook" name="user" value ="default"/>
                     <input type="hidden" id="type" name="id" th:value ="${video.id}"  />	

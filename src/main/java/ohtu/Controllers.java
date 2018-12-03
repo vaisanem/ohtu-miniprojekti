@@ -354,10 +354,13 @@ public class Controllers {
                 itemMan.addTagToItem(id, tag);
             } catch (Exception e) {
                 errors.add(e.toString());
-                System.out.println(e.toString());
             }
         }
-        model.addAttribute("errors", errors);
+        if (!errors.isEmpty()) {
+            model.addAttribute(item.getType().name(), item);
+            model.addAttribute("errors", errors);
+            return item.getType().name();
+        }
         return "redirect:/" + item.getType().name() + '/' + id;
     }
 
