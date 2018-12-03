@@ -104,6 +104,22 @@ public class Stepdefs {
         assertTrue(isShown);
         Thread.sleep(SleepTime);
     }
+    
+    private void is_not_shown(String content) throws Throwable {
+        Thread.sleep(SleepTime);
+        boolean isShown = false;
+        for (int i = 0; i < 5; i++) {
+            Thread.sleep(SleepTime);
+            System.out.println("Unwanted element : " + content);
+            //System.out.println("Page source : " + driver.getPageSource().toString());
+            if (driver.getPageSource().contains(content)) {
+                isShown = true;
+                break;
+            }
+        }
+        assertTrue(!isShown);
+        Thread.sleep(SleepTime);
+    }
 
     private void listOfAllItemsIsShown(List<ItemType> items) throws Throwable {
 
@@ -177,28 +193,39 @@ public class Stepdefs {
 
     @Then("^List of all \"([^\"]*)\" is shown$")
     public void list_of_all_is_shown(String WhatIsListed) throws Throwable {
+        List<ItemType> unread = new ArrayList<>();
+        unread.addAll(itemMan.findAll("default"));
+        unread.removeIf(u -> u.getIsRead() == 1);
+        List<ItemType> read = new ArrayList<>();
+        read.addAll(itemMan.findAll("default"));
+        read.removeIf(r -> r.getIsRead() == 0);
+        
         if (WhatIsListed.contains("books")) {
             List<ItemType> books = new ArrayList<>();
             books.addAll(itemMan.getBookMan().findAll("default"));
             listOfAllItemsIsShown(books);
+            
+            is_not_shown(itemMan.getBlogMan().findAll("default").get(0).getTitle());
         } else if (WhatIsListed.contains("blogs")) {
             List<ItemType> blogs = new ArrayList<>();
             blogs.addAll(itemMan.getBlogMan().findAll("default"));
             listOfAllItemsIsShown(blogs);
+            
+            is_not_shown(itemMan.getBookMan().findAll("default").get(0).getTitle());
         } else if (WhatIsListed.contains("videos")) {
             List<ItemType> videos = new ArrayList<>();
             videos.addAll(itemMan.getVideoMan().findAll("default"));
             listOfAllItemsIsShown(videos);
+            
+            is_not_shown(itemMan.getBlogMan().findAll("default").get(0).getTitle());
         } else if (WhatIsListed.contains("unread")) {
-            List<ItemType> unread = new ArrayList<>();
-            unread.addAll(itemMan.findAll("default"));
-            unread.removeIf(u -> u.getIsRead() == 1);
             listOfAllItemsIsShown(unread);
+            
+            is_not_shown(read.get(0).getTitle());
         } else if (WhatIsListed.contains("read")) {
-            List<ItemType> read = new ArrayList<>();
-            read.addAll(itemMan.findAll("default"));
-            read.removeIf(r -> r.getIsRead() == 0);
             listOfAllItemsIsShown(read);
+            
+            is_not_shown(unread.get(0).getTitle());
         } else {
             List<ItemType> items = new ArrayList<>();
             items.addAll(itemMan.findAll("default"));
@@ -223,6 +250,7 @@ public class Stepdefs {
         if (choise.equals("ViewUnread")) {
             driver.findElement(By.id("vUnread")).click();
         }
+        findElementAndFill("tags", "blog, book, video");
         driver.findElement(By.id("Show")).click();
         Thread.sleep(SleepTime);
     }
@@ -238,27 +266,33 @@ public class Stepdefs {
         if (choiseOne.equals("ViewVideos") || choiseTwo.equals("ViewVideos")) {
             driver.findElement(By.id("vVideos")).click();
         }
+        findElementAndFill("tags", "blog, book, video");
         driver.findElement(By.id("Show")).click();
         Thread.sleep(SleepTime);
     }
 
     @Then("^List of all \"([^\"]*)\" and \"([^\"]*)\" is shown$")
     public void list_of_all_and_is_shown(String WhatIsListed, String WhatIsListed2) throws Throwable {
+        List<ItemType> items = itemMan.findAll("default");
         if (WhatIsListed.contains("books") || WhatIsListed2.contains("books")) {
             List<ItemType> books = new ArrayList<>();
             books.addAll(itemMan.getBookMan().findAll("default"));
             listOfAllItemsIsShown(books);
+            items.removeAll(books);
         }
         if (WhatIsListed.contains("blogs") || WhatIsListed2.contains("blogs")) {
             List<ItemType> blogs = new ArrayList<>();
             blogs.addAll(itemMan.getBlogMan().findAll("default"));
             listOfAllItemsIsShown(blogs);
+            items.removeAll(blogs);
         }
         if (WhatIsListed.contains("videos") || WhatIsListed2.contains("videos")) {
             List<ItemType> videos = new ArrayList<>();
             videos.addAll(itemMan.getVideoMan().findAll("default"));
             listOfAllItemsIsShown(videos);
+            items.removeAll(videos);
         }
+        is_not_shown(items.get(0).getTitle());
     }
 
     // </editor-fold>
@@ -643,6 +677,13 @@ public class Stepdefs {
         findElementAndFill("tag", tag);
         element = driver.findElement(By.name("Add tag"));
         element.submit();
+    }
+    
+    @When("^tags field is filled with \"([^\"]*)\" and submitted$")
+    public void tags_field_filled_and_submitted(String tags) throws Throwable {
+        findElementAndFill("tags", tags);
+        element = driver.findElement(By.id("Show"));
+        element.click();
     }
     // </editor-fold>
 }
