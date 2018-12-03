@@ -44,9 +44,14 @@ public class Blog extends ItemType {
     public String getPoster() {
         return poster;
     }
-
+    
     public String getURL() {
         return URL;
+    }
+    
+    @Override
+    public String getAuthor() {
+        return poster;
     }
 
 }
