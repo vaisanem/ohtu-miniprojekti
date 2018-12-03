@@ -115,8 +115,10 @@ public class Stepdefs {
             for (int i = 0; i < 4; i++) {
                 Thread.sleep(SleepTime);
                 if (driver.getPageSource().contains(item.getTitle())) {
-                    found = true;
-                    break;
+                    if (driver.getPageSource().contains(item.getAuthor())) {
+                        found = true;
+                        break;
+                    }
                 }
             }
 
@@ -322,7 +324,7 @@ public class Stepdefs {
         jse.executeScript(strJS);
 
         driver.findElement(By.name("Add new book")).click();
-        
+
         Thread.sleep(SleepTime);
         //driver.get(baseUrl + "books");
     }
@@ -376,7 +378,7 @@ public class Stepdefs {
         jse.executeScript(strJS);
 
         driver.findElement(By.name("Add new book")).click();
-        
+
         Thread.sleep(SleepTime);
         //driver.get(baseUrl + "books");
     }
@@ -623,26 +625,26 @@ public class Stepdefs {
         System.out.println(new_url);
         driver.get(baseUrl + "book/" + book.getId());
     }
-    
+
     @Given("^user is at blog's page$")
     public void user_is_at_blog_page() throws Throwable {
         Blog blog = itemMan.getBlogMan().findAll("default").get(0);
         driver.get(baseUrl + "blog/" + blog.getId());
     }
-    
+
     @Given("^user is at video's page$")
     public void user_is_at_video_page() throws Throwable {
         Video video = itemMan.getVideoMan().findAll("default").get(0);
         driver.get(baseUrl + "video/" + video.getId());
     }
-    
+
     @When("^tag field is filled with \"([^\"]*)\" and submitted$")
     public void tag_field_filled_and_submitted(String tag) throws Throwable {
         findElementAndFill("tag", tag);
         element = driver.findElement(By.name("Add tag"));
         element.submit();
     }
-    
+
     @When("^tag field for video is filled with \"([^\"]*)\" and submitted$")
     public void tag_field_for_video_is_filled_and_submitted(String tag) throws Throwable {
         findElementAndFill("tag", tag);
