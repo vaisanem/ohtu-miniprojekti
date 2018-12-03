@@ -294,7 +294,7 @@ public class Controllers {
         tagses.replaceAll(String::toLowerCase);
         itemMan.getAndApplyTags(items);
         
-        if (tagses.size() > 1) {
+        if (tagses.size() > 0 && !tagses.get(0).equals("")) {
             items = itemMan.filterByTags(items, tagses);
         }
         switch (SortingSelect) {
