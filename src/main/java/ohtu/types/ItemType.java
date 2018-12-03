@@ -20,6 +20,7 @@ public class ItemType {
     private List<String> tags;
     private typeIdentifier type;
     private int isRead;
+    private String author;
 
     @Override
     public boolean equals(Object t) {
@@ -79,6 +80,10 @@ public class ItemType {
 
     public int getId() {
         return id;
+    }
+
+    public String getAuthor() {
+        return author;
     }
 
 }
