@@ -90,4 +90,14 @@ public class ManagerClassTestNoMock {
         filterTest = itemMan.filterByTags(all, filters);
         assertTrue(filterTest.stream().noneMatch(item -> item.getType() == ItemType.typeIdentifier.blog));
     }
+
+    @Test
+    public void canAddTag() throws SQLException {
+        assertTrue(itemMan.addTagToItem(2, "book"));
+    }
+
+    @Test
+    public void cannotAddEmptyTag() throws SQLException {
+        assertFalse(itemMan.addTagToItem(1, ""));
+    }
 }

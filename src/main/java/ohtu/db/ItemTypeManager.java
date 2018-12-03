@@ -28,7 +28,7 @@ public class ItemTypeManager {
     private BlogManager blogMan;
 
     public ItemTypeManager() throws ClassNotFoundException {
-        String addr = "192.168.1.8";
+        String addr = "ohmipro.ddns.net";
         String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMPv2;user=ohtuadm;password=hakimi1337";
 
         database = new Database(url);
@@ -92,7 +92,7 @@ public class ItemTypeManager {
 
         return tags;
     }
-    
+
     public Set<String> getSetOfAllTags() throws SQLException { //Sraight-forward SQL-implementaton perhaps better
         HashMap<Integer, List<String>> tagsById = getAllTags();
         Set<String> allTags = new HashSet<>();
@@ -204,17 +204,22 @@ public class ItemTypeManager {
         connection.close();
     }
 
-    public void addTagToItem(int id, String tag) throws SQLException {
-        Connection connection = database.getConnection();
-        String lowerCaseTag = tag.toLowerCase();
-        CallableStatement stmt = connection.prepareCall("{call AddTagToItemID(?, ?)}");
-        stmt.setObject(1, id);
-        stmt.setObject(2, lowerCaseTag);
+    public boolean addTagToItem(int id, String tag) throws SQLException {
+        if (tag.length() > 0) {
+            Connection connection = database.getConnection();
+            String lowerCaseTag = tag.toLowerCase();
+            CallableStatement stmt = connection.prepareCall("{call AddTagToItemID(?, ?)}");
+            stmt.setObject(1, id);
+            stmt.setObject(2, lowerCaseTag);
 
-        stmt.executeUpdate();
+            stmt.executeUpdate();
 
-        stmt.close();
-        connection.close();
+            stmt.close();
+            connection.close();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void delete(Integer key) throws SQLException {
