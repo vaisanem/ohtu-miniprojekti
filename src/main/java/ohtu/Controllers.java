@@ -335,9 +335,7 @@ public class Controllers {
             }
         }
         model.addAttribute("errors", errors);
-        model.addAttribute(item.getType().toString(), item);
-        return item.getType().toString();
-        //return "redirect:/" + type + '/' + id;
+        return "redirect:/" + item.getType().name() + '/' + id;
     }
 
     private void clearErrorsBeforeAdding() {
