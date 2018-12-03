@@ -17,12 +17,18 @@
         
         
         <div>   
+            <h3><span th:text="${video.title}"></span></h3>
+            
                 <li th:each="error: ${errors}">
                     <span th:text="${error}"></span>
                 </li>
-            
-		<h2> Title: </h2>
-			<p><span th:text="${video.title}"></span></p>
+                <form  method="GET" name="markRead" action="markRead">
+                    <input type="hidden" id="userBook" name="user" value ="default"/>
+                    <input type="hidden" id="type" name="id" th:value ="${video.id}"  />	
+                    <input th:if="${video.isRead} == '0'" type="submit" value="Mark as read" name="action" />
+                    <input th:if="${video.isRead} == '1'" type="submit" value="Mark as unread" name="action" />
+                </form>
+           
 		<h2> Author: </h2>
 			<p><span th:text="${video.poster}"></span></p>
 		<h2> URL: </h2>
@@ -34,15 +40,6 @@
                         </li>
                     </ul>
                 <br/>
-                
-                <br/>
-                <br/>	
-		<form  method="GET" name="markRead" action="markRead">
-                    <input type="hidden" id="userBook" name="user" value ="default"/>
-                    <input type="hidden" id="type" name="id" th:value ="${video.id}"  />	
-                    <input type="submit" value="Mark as read" name="action" />
-                    <input type="submit" value="Mark as unread" name="action" />
-		</form>
                 <br/>
                 <br/>
                 <form  method="POST" name="addTag" th:action="${video.id + '/addTag'}">

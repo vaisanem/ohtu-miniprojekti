@@ -11,7 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import ohtu.types.*;
 
 /**
@@ -90,6 +92,15 @@ public class ItemTypeManager {
         connection.close();
 
         return tags;
+    }
+    
+    public Set<String> getSetOfAllTags() throws SQLException { //Sraight-forward SQL-implementaton perhaps better
+        HashMap<Integer, List<String>> tagsById = getAllTags();
+        Set<String> allTags = new HashSet<>();
+        for (int key : tagsById.keySet()) {
+            allTags.addAll(tagsById.get(key));
+        }
+        return allTags;
     }
 
     public ItemType findOne(Integer key, ItemType.typeIdentifier type) throws SQLException {

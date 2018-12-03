@@ -45,6 +45,7 @@ public class Controllers {
         } else {
             model.addAttribute("items", stuff);
         }
+        model.addAttribute("tags", itemMan.getSetOfAllTags());
 
         checkboxStates.entrySet().forEach(entry -> {
             model.addAttribute(entry.getKey(), entry.getValue().toString());
@@ -218,7 +219,7 @@ public class Controllers {
     @RequestMapping(value = "/SelectWhatTypesAreShown", method = RequestMethod.GET)
     public String showSelectedItems(ModelMap model, RedirectAttributes redirects, @RequestParam String user,
             @RequestParam(defaultValue = "false") boolean ViewBooks, @RequestParam(defaultValue = "false") boolean ViewBlogs, @RequestParam(defaultValue = "false") boolean ViewVideos,
-            @RequestParam(defaultValue = "false") boolean ViewRead, @RequestParam(defaultValue = "false") boolean ViewUnread
+            @RequestParam(defaultValue = "false") boolean ViewRead, @RequestParam(defaultValue = "false") boolean ViewUnread, @RequestParam(required = false) List<String> tags 
     ) throws SQLException {
         if (user.length() < 1) {
             user = "default";
@@ -278,12 +279,10 @@ public class Controllers {
         /* This line of code will filter the items that were selected with checkboxes so that they are also filtered by TAGS.
         TODO : Make UI implmementation to insert comma delimited tags that are split into a List of Strings, each string representing a Tag.
         Works like > filterByTags method returns the items that match the tags defined in the Tags list.
-        
-        List<String> tags = new ArrayList<>();
+        */
+
         itemMan.getAndApplyTags(items);
         items = itemMan.filterByTags(items, tags );
-        */
-        
         
         
         redirects.addFlashAttribute(

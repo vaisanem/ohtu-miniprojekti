@@ -40,7 +40,7 @@ Feature: User can view all added Items
     Given user is at the main page
     When link "View List" is clicked
     And user is redirected to "/items"
-    And user chooses "ViewBooks" and "ViewBooks" and clicks Show
+    And user chooses "ViewBooks" and "ViewVideos" and clicks Show
     Then List of all "blogs" is shown
 
   Scenario: User is viewing listed books and blogs
@@ -54,5 +54,19 @@ Feature: User can view all added Items
     Given user is at the main page
     When link "View List" is clicked
     And user is redirected to "/items"
-    And user chooses "VievBooks" and clicks Show
+    And user chooses "ViewBooks" and clicks Show
     Then List of all "videos" and "blogs" is shown
+
+  Scenario: User is viewing read items
+    Given user is at the main page
+    When link "View List" is clicked
+    And user is redirected to "/items"
+    And user chooses "ViewUnread" and clicks Show
+    Then List of all "read items" is shown
+
+  Scenario: User is viewing unread items
+    Given user is at the main page
+    When link "View List" is clicked
+    And user is redirected to "/items"
+    And user chooses "ViewRead" and clicks Show
+    Then List of all "unread items" is shown

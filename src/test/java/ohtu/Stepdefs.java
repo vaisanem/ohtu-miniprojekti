@@ -187,10 +187,20 @@ public class Stepdefs {
             List<ItemType> videos = new ArrayList<>();
             videos.addAll(itemMan.getVideoMan().findAll("default"));
             listOfAllItemsIsShown(videos);
+        } else if (WhatIsListed.contains("unread")) {
+            List<ItemType> unread = new ArrayList<>();
+            unread.addAll(itemMan.findAll("default"));
+            unread.removeIf(u -> u.getIsRead() == 1);
+            listOfAllItemsIsShown(unread);
+        } else if (WhatIsListed.contains("read")) {
+            List<ItemType> read = new ArrayList<>();
+            read.addAll(itemMan.findAll("default"));
+            read.removeIf(r -> r.getIsRead() == 0);
+            listOfAllItemsIsShown(read);
         } else {
-            List<ItemType> videos = new ArrayList<>();
-            videos.addAll(itemMan.findAll("default"));
-            listOfAllItemsIsShown(videos);
+            List<ItemType> items = new ArrayList<>();
+            items.addAll(itemMan.findAll("default"));
+            listOfAllItemsIsShown(items);
         }
     }
 
@@ -204,6 +214,12 @@ public class Stepdefs {
         }
         if (choise.equals("ViewVideos")) {
             driver.findElement(By.id("vVideos")).click();
+        }
+        if (choise.equals("ViewRead")) {
+            driver.findElement(By.id("vRead")).click();
+        }
+        if (choise.equals("ViewUnread")) {
+            driver.findElement(By.id("vUnread")).click();
         }
         driver.findElement(By.id("Show")).click();
         Thread.sleep(SleepTime);

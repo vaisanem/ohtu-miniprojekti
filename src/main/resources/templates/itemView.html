@@ -19,22 +19,32 @@
             <h1>The list of added items</h1>
             <h2>Select showed items</h2>
             
-            <form  method="GET" name="SelectWhatTypesAreShown" action="SelectWhatTypesAreShown">
+            <form  method="GET" name="SelectWhatTypesAreShown" action="SelectWhatTypesAreShown" style='display:inline;'>
                 <input type="hidden" name="user" value ="default"/>            
                 <input type="checkbox" id="vBooks" value="true" name="ViewBooks" th:checked="${ViewBooks} ?: 'true'"> Books</input>
                 <input type="checkbox" id="vBlogs" value="true" name="ViewBlogs" th:checked="${ViewBlogs} ?: 'true'"> Blogs</input>
                 <input type="checkbox" id="vVideos" value="true" name="ViewVideos" th:checked="${ViewVideos} ?: 'true'"> Videos</input>
-				<input type="submit" id="Show" value="Show" name="SelectWhatTypesAreShown"/> 
-				<br/>
-				<input type="checkbox" id="vRead" value="true" name="ViewRead" th:checked="${ViewRead} ?: 'true'">Read</input>
+		&ensp;|&ensp;
+                <input type="checkbox" id="vRead" value="true" name="ViewRead" th:checked="${ViewRead} ?: 'true'">Read</input>
                 <input type="checkbox" id="vUnread" value="true" name="ViewUnread" th:checked="${ViewUnread} ?: 'true'"> Unread</input>
-
+                &ensp;|&ensp;
+                <select name="tags" multiple="multiple">
+                    <ul th:each="tag: ${tags}">
+                        <option th:value="${tag}" th:selected="true"><span th:text="${tag}"></span></option>
+                    </ul>
+                </select>
+                &emsp;
+                <input type="submit" id="Show" value="Show" name="SelectWhatTypesAreShown"/> 
+                
             </form>
-                        
-            <ul class="items">
+            
+            <br/>
+            <br/>
+         
+            <ul th:if="${items}" class="items">
                 <li class="items" th:each="itemType: ${items}">
                     <a class="items" th:if="${itemType.isRead} == 0" th:href="${'/' + itemType.type +'/' + itemType.id}"  th:text="${itemType.type + ' - ' + itemType.title}"></a>
-					<a class="items" th:if="${itemType.isRead} == 1" th:href="${'/' + itemType.type +'/' + itemType.id}" th:style="${'color: DarkGray;'}" th:text="${itemType.type + ' - ' + itemType.title}"></a>
+                    <a class="items" th:if="${itemType.isRead} == 1" th:href="${'/' + itemType.type +'/' + itemType.id}" th:style="${'color: DarkGray;'}" th:text="${itemType.type + ' - ' + itemType.title}"></a>
                 </li>
             </ul>
 
