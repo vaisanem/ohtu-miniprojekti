@@ -44,7 +44,6 @@
                 <br/>
                 <form  method="POST" name="addTag" th:action="${blog.id + '/addTag'}">
                     <input type="hidden" id="userTag" name="user" value ="default"/>
-                    <input type="hidden" id="stringId" name="stringId" th:value="${blog.id}"/>
                     <input type="text" id="tag" name="tag"/>
                     <input type="submit" value="Add tag" name="Add tag" />
 		</form>
