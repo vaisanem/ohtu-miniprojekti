@@ -5,23 +5,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import ohtu.db.ItemTypeManager;
 import ohtu.types.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class Controllers {
@@ -35,11 +36,16 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/items", method = RequestMethod.GET)
-    public String items(ModelMap model, @ModelAttribute(value = "itemsList") ArrayList<ItemType> stuff, @ModelAttribute(value = "checkboxStates") HashMap<String, Boolean> checkboxStates, @ModelAttribute("user") String user) throws SQLException {
+    public String items(ModelMap model, HttpServletResponse response, @ModelAttribute(value = "itemsList") ArrayList<ItemType> stuff, @ModelAttribute(value = "checkboxStates") HashMap<String, Boolean> checkboxStates, @ModelAttribute("user") String user) throws SQLException {
         System.out.println("Gotten redirect : " + user);
         if (user.length() < 1) {
             user = "default";
         }
+
+        Cookie cookie = new Cookie("user", user);
+        cookie.setValue(user);
+        response.addCookie(cookie);
+
         if (stuff == null || stuff.isEmpty()) {
             List<ItemType> items = itemMan.findAll(user);
             model.addAttribute("items", items);
@@ -169,19 +175,19 @@ public class Controllers {
     }
 
     @PostMapping("/book/{id}/addTag")
-    public String addTagForBook(@PathVariable int id, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
+    public String addTagForBook(@PathVariable int id, RedirectAttributes errs, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
         Book book = itemMan.getBookMan().findOne(id);
         return addTagForItem(id, model, tag, book);
     }
 
     @PostMapping("/blog/{id}/addTag")
-    public String addTagForBlog(@PathVariable int id, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
+    public String addTagForBlog(@PathVariable int id, RedirectAttributes errs, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
         Blog blog = itemMan.getBlogMan().findOne(id);
         return addTagForItem(id, model, tag, blog);
     }
 
     @PostMapping("/video/{id}/addTag")
-    public String addTagForVideo(@PathVariable int id, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
+    public String addTagForVideo(@PathVariable int id, RedirectAttributes errs, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
         Video video = itemMan.getVideoMan().findOne(id);
         return addTagForItem(id, model, tag, video);
     }
@@ -281,7 +287,6 @@ public class Controllers {
         TODO : Make UI implmementation to insert comma delimited tags that are split into a List of Strings, each string representing a Tag.
         Works like > filterByTags method returns the items that match the tags defined in the Tags list.
          */
-
         List<String> tagses = Arrays.asList(tags.split("\\s*,\\s*"));
         tagses.replaceAll(String::toLowerCase);
         itemMan.getAndApplyTags(items);
@@ -295,8 +300,14 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/book/{id}", method = RequestMethod.GET)
-    public String book(@PathVariable int id, ModelMap model) throws SQLException {
-        Book book = itemMan.getBookMan().findOne(id);
+    public String book(HttpServletRequest request, @ModelAttribute(value = "errs") String errors, @PathVariable int id, ModelMap model) throws SQLException {
+        Cookie[] cookies = request.getCookies();
+        String user = "default";
+        if (cookies != null) {
+            user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findFirst().get().getValue();
+        }
+
+        Book book = itemMan.getBookMan().findOne(id, user);
         book.setTags(itemMan.getTags(book.getId()));
         model.addAttribute("book", book);
         model.addAttribute("tags", book.getTags());
@@ -304,8 +315,14 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/blog/{id}", method = RequestMethod.GET)
-    public String blog(@PathVariable int id, ModelMap model) throws SQLException {
-        Blog blog = itemMan.getBlogMan().findOne(id);
+    public String blog(HttpServletRequest request, @PathVariable int id, ModelMap model) throws SQLException {
+        Cookie[] cookies = request.getCookies();
+        String user = "default";
+        if (cookies != null) {
+            user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findFirst().get().getValue();
+        }
+
+        Blog blog = itemMan.getBlogMan().findOne(id, user);
         blog.setTags(itemMan.getTags(id));
         model.addAttribute("blog", blog);
         model.addAttribute("tags", blog.getTags());
@@ -313,8 +330,14 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/video/{id}", method = RequestMethod.GET)
-    public String video(@PathVariable int id, ModelMap model) throws SQLException {
-        Video video = itemMan.getVideoMan().findOne(id);
+    public String video(HttpServletRequest request, @PathVariable int id, ModelMap model) throws SQLException {
+        Cookie[] cookies = request.getCookies();
+        String user = "default";
+        if (cookies != null) {
+            user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findFirst().get().getValue();
+        }
+
+        Video video = itemMan.getVideoMan().findOne(id, user);
         video.setTags(itemMan.getTags(id));
         model.addAttribute("video", video);
         model.addAttribute("tags", video.getTags());
@@ -335,9 +358,7 @@ public class Controllers {
             }
         }
         model.addAttribute("errors", errors);
-        model.addAttribute(item.getType().toString(), item);
-        return item.getType().toString();
-        //return "redirect:/" + type + '/' + id;
+        return "redirect:/" + item.getType().name() + '/' + id;
     }
 
     private void clearErrorsBeforeAdding() {

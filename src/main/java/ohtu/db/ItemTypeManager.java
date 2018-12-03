@@ -92,7 +92,7 @@ public class ItemTypeManager {
 
         return tags;
     }
-    
+
     public Set<String> getSetOfAllTags() throws SQLException { //Sraight-forward SQL-implementaton perhaps better
         HashMap<Integer, List<String>> tagsById = getAllTags();
         Set<String> allTags = new HashSet<>();
@@ -204,16 +204,22 @@ public class ItemTypeManager {
         connection.close();
     }
 
-    public void addTagToItem(int id, String tag) throws SQLException {
-        Connection connection = database.getConnection();
-        CallableStatement stmt = connection.prepareCall("{call AddTagToItemID(?, ?)}");
-        stmt.setObject(1, id);
-        stmt.setObject(2, tag);
+    public boolean addTagToItem(int id, String tag) throws SQLException {
+        if (tag.length() > 0) {
+            Connection connection = database.getConnection();
+            String lowerCaseTag = tag.toLowerCase();
+            CallableStatement stmt = connection.prepareCall("{call AddTagToItemID(?, ?)}");
+            stmt.setObject(1, id);
+            stmt.setObject(2, lowerCaseTag);
 
-        stmt.executeUpdate();
+            stmt.executeUpdate();
 
-        stmt.close();
-        connection.close();
+            stmt.close();
+            connection.close();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void delete(Integer key) throws SQLException {

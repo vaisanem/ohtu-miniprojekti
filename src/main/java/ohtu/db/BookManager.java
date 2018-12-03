@@ -61,6 +61,27 @@ public class BookManager implements sqlManager<Book, Integer> {
         return o;
     }
 
+    public Book findOne(Integer key, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call getBookWithIDandUser(?, ?)}");
+        stmt.setObject(1, key);
+        stmt.setObject(2, user);
+
+        ResultSet rs = stmt.executeQuery();
+        boolean hasOne = rs.next();
+        if (!hasOne) {
+            return null;
+        }
+
+        Book o = new Book(rs);
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return o;
+    }
+
     @Override
     public List<Book> findAll() throws SQLException {
         Connection connection = database.getConnection();
