@@ -64,6 +64,27 @@ public class BlogManager implements sqlManager<Blog, Integer> {
         return o;
     }
 
+    public Blog findOne(int id, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call getBlogWithIDandUser(?, ?)}");
+        stmt.setObject(1, id);
+        stmt.setObject(2, user);
+
+        ResultSet rs = stmt.executeQuery();
+        boolean hasOne = rs.next();
+        if (!hasOne) {
+            return null;
+        }
+
+        Blog o = new Blog(rs);
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return o;
+    }
+
     @Override
     public List<Blog> findAll() throws SQLException {
         Connection connection = database.getConnection();
@@ -103,5 +124,4 @@ public class BlogManager implements sqlManager<Blog, Integer> {
     public void delete(Integer key) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }

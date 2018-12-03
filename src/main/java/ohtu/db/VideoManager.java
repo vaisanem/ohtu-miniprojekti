@@ -64,6 +64,27 @@ public class VideoManager implements sqlManager<Video, Integer> {
         return o;
     }
 
+    public Video findOne(Integer key, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call getVideoWithIDandUser(?, ?)}");
+        stmt.setObject(1, key);
+        stmt.setObject(2, user);
+
+        ResultSet rs = stmt.executeQuery();
+        boolean hasOne = rs.next();
+        if (!hasOne) {
+            return null;
+        }
+
+        Video o = new Video(rs);
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return o;
+    }
+
     @Override
     public List<Video> findAll() throws SQLException {
         Connection connection = database.getConnection();
