@@ -28,7 +28,7 @@ public class ItemTypeManager {
     private BlogManager blogMan;
 
     public ItemTypeManager() throws ClassNotFoundException {
-        String addr = "192.168.1.8";
+        String addr = "ohmipro.ddns.net";
         String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMPv2;user=ohtuadm;password=hakimi1337";
 
         database = new Database(url);
