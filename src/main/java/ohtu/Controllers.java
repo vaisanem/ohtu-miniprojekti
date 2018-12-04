@@ -3,6 +3,7 @@ package ohtu;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -298,13 +299,13 @@ public class Controllers {
         switch (SortingSelect) {
             case "SortByAuthor": {
                 items = items.stream()
-                        .sorted((item1, item2) -> item1.getAuthor().compareTo(item2.getAuthor()))
+                        .sorted(Comparator.comparing(ItemType::getAuthor).thenComparing(ItemType::getTitle))
                         .collect(Collectors.toList());
                 break;
             }
             case "SortByTitle": {
                 items = items.stream()
-                        .sorted((item1, item2) -> item1.getTitle().compareTo(item2.getTitle()))
+                        .sorted(Comparator.comparing(ItemType::getTitle).thenComparing(ItemType::getType))
                         .collect(Collectors.toList());
                 break;
             }
