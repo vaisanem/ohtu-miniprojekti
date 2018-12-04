@@ -22,7 +22,7 @@
                 <li th:each="error: ${errors}">
                     <span th:text="${error}"></span>
                 </li>
-            
+                <br/>
                 <form  method="GET" name="markRead" action="markRead">
                     <input type="hidden" id="userBook" name="user" value ="default"/>
                     <input type="hidden" id="type" name="id" th:value ="${book.id}"  />	
@@ -47,7 +47,6 @@
                 <br/>
                 <form  method="POST" name="addTag" th:action="${book.id + '/addTag'}">
                     <input type="hidden" id="userTag" name="user" value ="default"/>
-                    <input type="hidden" id="stringId" name="stringId" th:value="${book.id}"/>
                     <input type="text" id="tag" name="tag"/>
                     <input type="submit" value="Add tag" name="Add tag" />
 		</form>
