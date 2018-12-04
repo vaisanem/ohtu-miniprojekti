@@ -124,4 +124,62 @@ public class ManagerClassTestNoMock {
     public void cannotAddEmptyTag() throws SQLException {
         assertFalse(itemMan.addTagToItem(1, ""));
     }
+
+    @Test
+    public void canMarkAsRead() throws SQLException {
+        List<ItemType> data = itemMan.findAll("testUser");
+        ItemType oitem = data.stream().findAny().get();
+        switch (oitem.getIsRead()) {
+            case 0: {
+                itemMan.markAsRead(oitem.getId(), "testUser");
+                break;
+            }
+
+            case 1: {
+                // If element is already read, mark it as unread, and then as read.
+                itemMan.markAsUnRead(oitem.getId(), "testUser");
+                itemMan.markAsRead(oitem.getId(), "testUser");
+                break;
+            }
+
+            default: {
+                System.out.println("Something went wrong, item : " + oitem.getTitle() + " isread property value is : " + oitem.getIsRead());
+                break;
+            }
+        }
+        // Finally, get the same Item from the DB and check that it is now read.
+        data = itemMan.findAll("testUser");
+        ItemType sameItem = data.stream().filter(item -> item.getId() == oitem.getId()).findFirst().get();
+        assertTrue(sameItem.getIsRead() == 1);
+    }
+
+    public void canMarkAsUnread() throws SQLException {
+        List<ItemType> data = itemMan.findAll("testUser");
+        ItemType oitem = data.stream().findAny().get();
+        switch (oitem.getIsRead()) {
+            case 0: {
+                // If element is already unread, mark it as read, and then as unread.
+                itemMan.markAsRead(oitem.getId(), "testUser");
+                itemMan.markAsUnRead(oitem.getId(), "testUser");
+                break;
+            }
+
+            case 1: {
+                itemMan.markAsUnRead(oitem.getId(), "testUser");
+                break;
+            }
+
+            default: {
+                System.out.println("Something went wrong, item : " + oitem.getTitle() + " isread property value is : " + oitem.getIsRead());
+                break;
+            }
+
+        }
+
+        // Finally, get the same Item from the DB and check that it is now unread.
+        data = itemMan.findAll("testUser");
+        ItemType sameItem = data.stream().filter(item -> item.getId() == oitem.getId()).findFirst().get();
+        assertTrue(sameItem.getIsRead() == 0);
+    }
+
 }
