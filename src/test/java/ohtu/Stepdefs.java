@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import ohtu.db.ItemTypeManager;
 import ohtu.types.*;
 import static org.junit.Assert.assertTrue;
@@ -41,8 +42,8 @@ public class Stepdefs {
         System.setProperty("webdriver.gecko.driver", absolutePath);
 
         if (System.getProperty("os.name").matches("Windows 10")) {
-            this.driver = new ChromeDriver();
-            //this.driver = new HtmlUnitDriver(true);
+            //this.driver = new ChromeDriver();
+            this.driver = new HtmlUnitDriver(true);
         } else {
             //this.driver = new ChromeDriver();
             //this.driver = new FirefoxDriver();
@@ -177,10 +178,12 @@ public class Stepdefs {
                 List<WebElement> elements = driver.findElements(By.partialLinkText(text));
                 WebElement element = elements.stream().filter(elem -> elem.getText().contains(secondText)).findFirst().get();
                 if (element != null) {
+                    
                     element.click();
                     break;
                 }
             } catch (Exception e) {
+                System.out.println("COULD NOT FIND LINK");
                 System.out.println(e.getStackTrace());
             }
         }
@@ -651,6 +654,114 @@ public class Stepdefs {
 
     // </editor-fold>
     //                  spacer
+    // <editor-fold desc="sorting testing">
+    @Then("^List of items is in \"([^\"]*)\" order$")
+    public void list_of_items_is_in_order(String orderedBy) throws Throwable {
+        List<ItemType> things = itemMan.findAll("default");
+        switch (orderedBy) {
+            case "author": {
+                things = things.stream()
+                        .sorted((item1, item2) -> item1.getAuthor().compareTo(item2.getAuthor()))
+                        .collect(Collectors.toList());
+                break;
+            }
+            case "title": {
+                things = things.stream()
+                        .sorted((item1, item2) -> item1.getTitle().compareTo(item2.getTitle()))
+                        .collect(Collectors.toList());
+                break;
+            }
+            default: {
+                break;
+            }
+
+        }
+        Boolean doesMatch = true;
+        List<WebElement> elements = driver.findElements(By.xpath("//*[@id][@class='items']"));
+        for (int i = 0; i < elements.size() - 1; i++) {
+            //debugging prints.
+            System.out.println("///");
+            System.out.println(elements.get(i + 1).getText().trim());
+            System.out.println(things.get(i).getTitle().trim());
+            System.out.println("///");
+            if (!elements.get(i + 1).getText().trim().contains(things.get(i).getTitle().trim())) {
+                doesMatch = false;
+            }
+        }
+        assertTrue(doesMatch);
+    }
+
+    @When("^Sorting by \"([^\"]*)\" is chosen$")
+    public void sorting_by_is_chosen(String option) throws Throwable {
+        driver.findElement(By.id(option)).click();
+        Thread.sleep(SleepTime);
+    }
+
+    @When("^Button \"([^\"]*)\" is clicked$")
+    public void button_is_clicked(String buttonName) throws Throwable {
+        driver.findElement(By.id(buttonName)).click();
+        Thread.sleep(SleepTime);
+    }
+
+    // </editor-fold>
+    //                  spacer
+    //<editor-fold desc="marking item as read/unread">
+    @When("^user clicks \"([^\"]*)\" item$")
+    public void user_clicks_item(String tag) throws Throwable {
+        String title = "NOT FOUND";
+        List<ItemType> items = itemMan.findAll("default");
+        switch (tag) {
+            case "read": {
+                itemMan.markAsRead(items.get(0).getId(), "default");
+                title = items.get(0).getTitle().trim();
+                break;
+            }
+            //case "unread": {   <-- is default for now, waiting for more options.
+            default: {
+                itemMan.markAsUnRead(items.get(0).getId(), "default");
+                title = items.get(0).getTitle().trim();
+                break;
+            }
+        }
+        clickLinkWithText(title, title);
+    }
+
+    @When("^user marks item \"([^\"]*)\"$")
+    public void user_marks_item(String tag) throws Throwable {
+        Thread.sleep(SleepTime);
+        switch (tag) {
+            case "Mark as unread": {
+                driver.findElement(By.id("unread")).click();
+                break;
+            }
+            //case "Mark as read": {   <-- is default for now, waiting for more options.
+            default: {
+                driver.findElement(By.id("read")).click();
+                break;
+            }
+        }
+        Thread.sleep(SleepTime);
+    }
+
+    @Then("^item is \"([^\"]*)\"$")
+    public void item_is(String tag) throws Throwable {
+        List<ItemType> list = itemMan.findAll("default");
+
+        switch (tag) {
+            case "unread": {
+                assertTrue(list.get(0).getIsRead() == 0);
+                break;
+            }
+            //case "read": {   <-- is default for now, waiting for more options.
+            default: {
+                assertTrue(list.get(0).getIsRead() == 1);
+                break;
+            }
+        }
+
+    }
+    //</editor-fold>
+
     // <editor-fold desc="tag testing">
     @Given("^user is at book's page$")
     public void user_is_at_book_page() throws Throwable {
@@ -686,4 +797,5 @@ public class Stepdefs {
         element.click();
     }
     // </editor-fold>
+
 }

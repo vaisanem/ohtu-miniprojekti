@@ -26,8 +26,8 @@
                 <form  method="GET" name="markRead" action="markRead">
                     <input type="hidden" id="userBook" name="user" value ="default"/>
                     <input type="hidden" id="type" name="id" th:value ="${blog.id}"  />	
-                    <input th:if="${blog.isRead} == '0'" type="submit" value="Mark as read" name="action" />
-                    <input th:if="${blog.isRead} == '1'" type="submit" value="Mark as unread" name="action" />
+                    <input th:if="${blog.isRead} == '0'" type="submit" value="Mark as read" name="action" id="read"/>
+                    <input th:if="${blog.isRead} == '1'" type="submit" value="Mark as unread" name="action" id="unread"/>
 		</form>
             
 		<h2> Author: </h2>
