@@ -7,6 +7,7 @@ import cucumber.api.java.en.When;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -105,7 +106,7 @@ public class Stepdefs {
         assertTrue(isShown);
         Thread.sleep(SleepTime);
     }
-    
+
     private void is_not_shown(String content) throws Throwable {
         Thread.sleep(SleepTime);
         boolean isShown = false;
@@ -178,7 +179,7 @@ public class Stepdefs {
                 List<WebElement> elements = driver.findElements(By.partialLinkText(text));
                 WebElement element = elements.stream().filter(elem -> elem.getText().contains(secondText)).findFirst().get();
                 if (element != null) {
-                    
+
                     element.click();
                     break;
                 }
@@ -202,32 +203,32 @@ public class Stepdefs {
         List<ItemType> read = new ArrayList<>();
         read.addAll(itemMan.findAll("default"));
         read.removeIf(r -> r.getIsRead() == 0);
-        
+
         if (WhatIsListed.contains("books")) {
             List<ItemType> books = new ArrayList<>();
             books.addAll(itemMan.getBookMan().findAll("default"));
             listOfAllItemsIsShown(books);
-            
+
             is_not_shown(itemMan.getBlogMan().findAll("default").get(0).getTitle());
         } else if (WhatIsListed.contains("blogs")) {
             List<ItemType> blogs = new ArrayList<>();
             blogs.addAll(itemMan.getBlogMan().findAll("default"));
             listOfAllItemsIsShown(blogs);
-            
+
             is_not_shown(itemMan.getBookMan().findAll("default").get(0).getTitle());
         } else if (WhatIsListed.contains("videos")) {
             List<ItemType> videos = new ArrayList<>();
             videos.addAll(itemMan.getVideoMan().findAll("default"));
             listOfAllItemsIsShown(videos);
-            
+
             is_not_shown(itemMan.getBlogMan().findAll("default").get(0).getTitle());
         } else if (WhatIsListed.contains("unread")) {
             listOfAllItemsIsShown(unread);
-            
+
             is_not_shown(read.get(0).getTitle());
         } else if (WhatIsListed.contains("read")) {
             listOfAllItemsIsShown(read);
-            
+
             is_not_shown(unread.get(0).getTitle());
         } else {
             List<ItemType> items = new ArrayList<>();
@@ -661,13 +662,13 @@ public class Stepdefs {
         switch (orderedBy) {
             case "author": {
                 things = things.stream()
-                        .sorted((item1, item2) -> item1.getAuthor().compareTo(item2.getAuthor()))
+                        .sorted(Comparator.comparing(ItemType::getAuthor).thenComparing(ItemType::getTitle))
                         .collect(Collectors.toList());
                 break;
             }
             case "title": {
                 things = things.stream()
-                        .sorted((item1, item2) -> item1.getTitle().compareTo(item2.getTitle()))
+                        .sorted(Comparator.comparing(ItemType::getTitle).thenComparing(ItemType::getType))
                         .collect(Collectors.toList());
                 break;
             }
@@ -770,26 +771,26 @@ public class Stepdefs {
         System.out.println(new_url);
         driver.get(baseUrl + "book/" + book.getId());
     }
-    
+
     @Given("^user is at blog's page$")
     public void user_is_at_blog_page() throws Throwable {
         Blog blog = itemMan.getBlogMan().findAll("default").get(0);
         driver.get(baseUrl + "blog/" + blog.getId());
     }
-    
+
     @Given("^user is at video's page$")
     public void user_is_at_video_page() throws Throwable {
         Video video = itemMan.getVideoMan().findAll("default").get(0);
         driver.get(baseUrl + "video/" + video.getId());
     }
-    
+
     @When("^tag field is filled with \"([^\"]*)\" and submitted$")
     public void tag_field_filled_and_submitted(String tag) throws Throwable {
         findElementAndFill("tag", tag);
         element = driver.findElement(By.name("Add tag"));
         element.submit();
     }
-    
+
     @When("^tags field is filled with \"([^\"]*)\" and submitted$")
     public void tags_field_filled_and_submitted(String tags) throws Throwable {
         findElementAndFill("tags", tags);

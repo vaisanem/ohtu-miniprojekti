@@ -3,6 +3,7 @@ package ohtu;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -54,9 +55,9 @@ public class Controllers {
             model.addAttribute("items", stuff);
         }
         model.addAttribute("tags", itemMan.getSetOfAllTags());
-        
+
         model.addAttribute("sortSelect", Sort);
-        
+
         checkboxStates.entrySet().forEach(entry -> {
             model.addAttribute(entry.getKey(), entry.getValue().toString());
         });
@@ -238,20 +239,18 @@ public class Controllers {
         List<ItemType> items = new ArrayList<>();
         HashMap<String, Boolean> states = new HashMap<>();
 
-        if (ViewBooks) {
-            items.addAll(itemMan.getBookMan().findAll(user));
-            states.put("ViewBooks", true);
-        } else {
-            states.put("ViewBooks", false);
-        }
-
         if (ViewBlogs) {
             items.addAll(itemMan.getBlogMan().findAll(user));
             states.put("ViewBlogs", true);
         } else {
             states.put("ViewBlogs", false);
         }
-
+        if (ViewBooks) {
+            items.addAll(itemMan.getBookMan().findAll(user));
+            states.put("ViewBooks", true);
+        } else {
+            states.put("ViewBooks", false);
+        }
         if (ViewVideos) {
             items.addAll(itemMan.getVideoMan().findAll(user));
             states.put("ViewVideos", true);
@@ -293,20 +292,20 @@ public class Controllers {
         List<String> tagses = Arrays.asList(tags.split("\\s*,\\s*"));
         tagses.replaceAll(String::toLowerCase);
         itemMan.getAndApplyTags(items);
-        
+
         if (tagses.size() > 0 && !tagses.get(0).equals("")) {
             items = itemMan.filterByTags(items, tagses);
         }
         switch (SortingSelect) {
             case "SortByAuthor": {
                 items = items.stream()
-                        .sorted((item1, item2) -> item1.getAuthor().compareTo(item2.getAuthor()))
+                        .sorted(Comparator.comparing(ItemType::getAuthor).thenComparing(ItemType::getTitle))
                         .collect(Collectors.toList());
                 break;
             }
             case "SortByTitle": {
                 items = items.stream()
-                        .sorted((item1, item2) -> item1.getTitle().compareTo(item2.getTitle()))
+                        .sorted(Comparator.comparing(ItemType::getTitle).thenComparing(ItemType::getType))
                         .collect(Collectors.toList());
                 break;
             }
