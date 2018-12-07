@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import ohtu.db.ItemTypeManager;
+import ohtu.db.*;
 import ohtu.types.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,11 +30,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class Controllers {
 
     private final ItemTypeManager itemMan;
+    private LoginManager loginMan;
     private List<String> errors;
 
     public Controllers() throws ClassNotFoundException {
         itemMan = new ItemTypeManager();
         errors = new ArrayList<>();
+        loginMan = new LoginManager();
     }
 
     @PostMapping("/login")
@@ -45,7 +47,14 @@ public class Controllers {
             response.addCookie(cookie);
             return "redirect:/" + target;
         } else {
-            return "redirect:/error";
+            if (loginMan.login(username, password)) {
+                Cookie cookie = new Cookie("user", username);
+                cookie.setValue(username);
+                response.addCookie(cookie);
+                return "redirect:/" + target;
+            } else {
+                return "redirect:/error";
+            }
         }
     }
 
