@@ -7,8 +7,10 @@ import cucumber.api.java.en.When;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import ohtu.db.ItemTypeManager;
 import ohtu.types.*;
 import static org.junit.Assert.assertTrue;
@@ -41,8 +43,8 @@ public class Stepdefs {
         System.setProperty("webdriver.gecko.driver", absolutePath);
 
         if (System.getProperty("os.name").matches("Windows 10")) {
-            this.driver = new ChromeDriver();
-            //this.driver = new HtmlUnitDriver(true);
+            //this.driver = new ChromeDriver();
+            this.driver = new HtmlUnitDriver(true);
         } else {
             //this.driver = new ChromeDriver();
             //this.driver = new FirefoxDriver();
@@ -55,6 +57,7 @@ public class Stepdefs {
     @After
     public void tearDown() throws SQLException {
         itemMan.closeConnection();
+        driver.manage().deleteAllCookies();
         driver.quit();
     }
 
@@ -104,7 +107,35 @@ public class Stepdefs {
         assertTrue(isShown);
         Thread.sleep(SleepTime);
     }
-    
+
+    @When("^field \"([^\"]*)\" is filled with \"([^\"]*)\"$")
+    public void field_is_filled_with(String fieldName, String fieldInput) throws Throwable {
+        findElementAndFill(fieldName, fieldInput);
+    }
+
+    @When("^user clicks button \"([^\"]*)\"$")
+    public void user_clicks_button(String buttonID) throws Throwable {
+        boolean found = false;
+        int trials = 0;
+        while (trials++ < 10) {
+            try {
+                Thread.sleep(SleepTime);
+                WebElement element = driver.findElement(By.id(buttonID));
+                if (element != null) {
+                    element.click();
+                    found = true;
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
+        }
+
+        if (!found) {
+            System.out.println("Link " + buttonID + " was never found....");
+        }
+    }
+
     private void is_not_shown(String content) throws Throwable {
         Thread.sleep(SleepTime);
         boolean isShown = false;
@@ -177,18 +208,32 @@ public class Stepdefs {
                 List<WebElement> elements = driver.findElements(By.partialLinkText(text));
                 WebElement element = elements.stream().filter(elem -> elem.getText().contains(secondText)).findFirst().get();
                 if (element != null) {
+
                     element.click();
                     break;
                 }
             } catch (Exception e) {
+                System.out.println("COULD NOT FIND LINK");
                 System.out.println(e.getStackTrace());
             }
         }
     }
 
     private void findElementAndFill(String name, String value) {
-        element = driver.findElement(By.name(name));
-        element.sendKeys(value);
+        int retryCount = 0;
+        while (retryCount < 10) {
+            try {
+                element = driver.findElement(By.name(name));
+                if (element != null) {
+                    element.sendKeys(value);
+                    break;
+                }
+                Thread.sleep(SleepTime);
+            } catch (InterruptedException e) {
+                System.out.println("Couldnt find element :" + name);
+            }
+            retryCount++;
+        }
     }
 
     @Then("^List of all \"([^\"]*)\" is shown$")
@@ -199,32 +244,32 @@ public class Stepdefs {
         List<ItemType> read = new ArrayList<>();
         read.addAll(itemMan.findAll("default"));
         read.removeIf(r -> r.getIsRead() == 0);
-        
+
         if (WhatIsListed.contains("books")) {
             List<ItemType> books = new ArrayList<>();
             books.addAll(itemMan.getBookMan().findAll("default"));
             listOfAllItemsIsShown(books);
-            
+
             is_not_shown(itemMan.getBlogMan().findAll("default").get(0).getTitle());
         } else if (WhatIsListed.contains("blogs")) {
             List<ItemType> blogs = new ArrayList<>();
             blogs.addAll(itemMan.getBlogMan().findAll("default"));
             listOfAllItemsIsShown(blogs);
-            
+
             is_not_shown(itemMan.getBookMan().findAll("default").get(0).getTitle());
         } else if (WhatIsListed.contains("videos")) {
             List<ItemType> videos = new ArrayList<>();
             videos.addAll(itemMan.getVideoMan().findAll("default"));
             listOfAllItemsIsShown(videos);
-            
+
             is_not_shown(itemMan.getBlogMan().findAll("default").get(0).getTitle());
         } else if (WhatIsListed.contains("unread")) {
             listOfAllItemsIsShown(unread);
-            
+
             is_not_shown(read.get(0).getTitle());
         } else if (WhatIsListed.contains("read")) {
             listOfAllItemsIsShown(read);
-            
+
             is_not_shown(unread.get(0).getTitle());
         } else {
             List<ItemType> items = new ArrayList<>();
@@ -651,6 +696,114 @@ public class Stepdefs {
 
     // </editor-fold>
     //                  spacer
+    // <editor-fold desc="sorting testing">
+    @Then("^List of items is in \"([^\"]*)\" order$")
+    public void list_of_items_is_in_order(String orderedBy) throws Throwable {
+        List<ItemType> things = itemMan.findAll("default");
+        switch (orderedBy) {
+            case "author": {
+                things = things.stream()
+                        .sorted(Comparator.comparing(ItemType::getAuthor).thenComparing(ItemType::getTitle))
+                        .collect(Collectors.toList());
+                break;
+            }
+            case "title": {
+                things = things.stream()
+                        .sorted(Comparator.comparing(ItemType::getTitle).thenComparing(ItemType::getType))
+                        .collect(Collectors.toList());
+                break;
+            }
+            default: {
+                break;
+            }
+
+        }
+        Boolean doesMatch = true;
+        List<WebElement> elements = driver.findElements(By.xpath("//*[@id][@class='items']"));
+        for (int i = 0; i < elements.size() - 1; i++) {
+            //debugging prints.
+            System.out.println("///");
+            System.out.println(elements.get(i + 1).getText().trim());
+            System.out.println(things.get(i).getTitle().trim());
+            System.out.println("///");
+            if (!elements.get(i + 1).getText().trim().contains(things.get(i).getTitle().trim())) {
+                doesMatch = false;
+            }
+        }
+        assertTrue(doesMatch);
+    }
+
+    @When("^Sorting by \"([^\"]*)\" is chosen$")
+    public void sorting_by_is_chosen(String option) throws Throwable {
+        driver.findElement(By.id(option)).click();
+        Thread.sleep(SleepTime);
+    }
+
+    @When("^Button \"([^\"]*)\" is clicked$")
+    public void button_is_clicked(String buttonName) throws Throwable {
+        driver.findElement(By.id(buttonName)).click();
+        Thread.sleep(SleepTime);
+    }
+
+    // </editor-fold>
+    //                  spacer
+    //<editor-fold desc="marking item as read/unread">
+    @When("^user clicks \"([^\"]*)\" item$")
+    public void user_clicks_item(String tag) throws Throwable {
+        String title = "NOT FOUND";
+        List<ItemType> items = itemMan.findAll("default");
+        switch (tag) {
+            case "read": {
+                itemMan.markAsRead(items.get(0).getId(), "default");
+                title = items.get(0).getTitle().trim();
+                break;
+            }
+            //case "unread": {   <-- is default for now, waiting for more options.
+            default: {
+                itemMan.markAsUnRead(items.get(0).getId(), "default");
+                title = items.get(0).getTitle().trim();
+                break;
+            }
+        }
+        clickLinkWithText(title, title);
+    }
+
+    @When("^user marks item \"([^\"]*)\"$")
+    public void user_marks_item(String tag) throws Throwable {
+        Thread.sleep(SleepTime);
+        switch (tag) {
+            case "Mark as unread": {
+                driver.findElement(By.id("unread")).click();
+                break;
+            }
+            //case "Mark as read": {   <-- is default for now, waiting for more options.
+            default: {
+                driver.findElement(By.id("read")).click();
+                break;
+            }
+        }
+        Thread.sleep(SleepTime);
+    }
+
+    @Then("^item is \"([^\"]*)\"$")
+    public void item_is(String tag) throws Throwable {
+        List<ItemType> list = itemMan.findAll("default");
+
+        switch (tag) {
+            case "unread": {
+                assertTrue(list.get(0).getIsRead() == 0);
+                break;
+            }
+            //case "read": {   <-- is default for now, waiting for more options.
+            default: {
+                assertTrue(list.get(0).getIsRead() == 1);
+                break;
+            }
+        }
+
+    }
+    //</editor-fold>
+
     // <editor-fold desc="tag testing">
     @Given("^user is at book's page$")
     public void user_is_at_book_page() throws Throwable {
@@ -659,26 +812,26 @@ public class Stepdefs {
         System.out.println(new_url);
         driver.get(baseUrl + "book/" + book.getId());
     }
-    
+
     @Given("^user is at blog's page$")
     public void user_is_at_blog_page() throws Throwable {
         Blog blog = itemMan.getBlogMan().findAll("default").get(0);
         driver.get(baseUrl + "blog/" + blog.getId());
     }
-    
+
     @Given("^user is at video's page$")
     public void user_is_at_video_page() throws Throwable {
         Video video = itemMan.getVideoMan().findAll("default").get(0);
         driver.get(baseUrl + "video/" + video.getId());
     }
-    
+
     @When("^tag field is filled with \"([^\"]*)\" and submitted$")
     public void tag_field_filled_and_submitted(String tag) throws Throwable {
         findElementAndFill("tag", tag);
         element = driver.findElement(By.name("Add tag"));
         element.submit();
     }
-    
+
     @When("^tags field is filled with \"([^\"]*)\" and submitted$")
     public void tags_field_filled_and_submitted(String tags) throws Throwable {
         findElementAndFill("tags", tags);
@@ -686,4 +839,5 @@ public class Stepdefs {
         element.click();
     }
     // </editor-fold>
+
 }

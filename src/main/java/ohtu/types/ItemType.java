@@ -21,6 +21,7 @@ public class ItemType {
     private typeIdentifier type;
     private int isRead;
     private String author;
+    private double rating;
 
     @Override
     public boolean equals(Object t) {
@@ -85,5 +86,15 @@ public class ItemType {
     public String getAuthor() {
         return author;
     }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+    
+    
 
 }

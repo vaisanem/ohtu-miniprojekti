@@ -26,15 +26,17 @@
                 <form  method="GET" name="markRead" action="markRead">
                     <input type="hidden" id="userBook" name="user" value ="default"/>
                     <input type="hidden" id="type" name="id" th:value ="${video.id}"  />	
-                    <input th:if="${video.isRead} == '0'" type="submit" value="Mark as read" name="action" text="Mark as watched" />
-                    <input th:if="${video.isRead} == '1'" type="submit" value="Mark as unread" name="action" text="Mark as unwatched" />
+                    <input th:if="${video.isRead} == '0'" type="submit" value="Mark as read" name="action" id="read"/>
+                    <input th:if="${video.isRead} == '1'" type="submit" value="Mark as unread" name="action" id="unread"/>
                 </form>
            
 		<h2> Author: </h2>
 			<p><span th:text="${video.poster}"></span></p>
 		<h2> URL: </h2>
                 <a th:href="@{https://www.youtube.com/watch?v={url} (url=${video.URL})}" target="_blank"><span th:text="@{https://www.youtube.com/watch?v={url} (url=${video.URL})}"></span></a>
-                <h2> Tags:</h2>
+        <h2> Rating : </h2>
+			<p><span th:text="${video.rating}"></span></p>
+				<h2> Tags:</h2>
                     <ul class="items">
                         <li class="tags" th:each="tag: ${tags}">
                             <p><span th:text="${tag}"></span></p>

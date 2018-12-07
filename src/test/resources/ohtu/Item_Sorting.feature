@@ -1,6 +1,6 @@
-Feature: User can view all added Items
+Feature: User can sort items in the list
 
-  Scenario: User can view listed items
+  Scenario: User is viewing listed items
     Given user is at the main page
     When link "View List" is clicked
     And user is redirected to "/login"
@@ -8,10 +8,10 @@ Feature: User can view all added Items
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And user is redirected to "/items"
-    Then List of all "items" is shown
+    And List of all "items" is shown
+    Then List of items is in "type" order
 
- 
-  Scenario: user can view individual book
+  Scenario: User is viewing listed items, ordered by author
     Given user is at the main page
     When link "View List" is clicked
     And user is redirected to "/login"
@@ -19,11 +19,12 @@ Feature: User can view all added Items
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And user is redirected to "/items"
-    And link to book's page is clicked
-    And user is redirected to "/book"
-    Then individual book is shown
+    And List of all "items" is shown
+    And Sorting by "SBAuthor" is chosen
+    And Button "Show" is clicked
+    Then List of items is in "author" order
 
-  Scenario: user can view individual video
+  Scenario: User is viewing listed items, ordered by author
     Given user is at the main page
     When link "View List" is clicked
     And user is redirected to "/login"
@@ -31,6 +32,7 @@ Feature: User can view all added Items
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And user is redirected to "/items"
-    And link to video's page is clicked
-    And user is redirected to "/video"
-    Then individual video is shown
+    And List of all "items" is shown
+    And Sorting by "SBTitle" is chosen
+    And Button "Show" is clicked
+    Then List of items is in "title" order

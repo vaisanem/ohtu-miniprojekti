@@ -6,7 +6,7 @@
 [![Build Status](https://travis-ci.org/vaisanem/ohtu-miniprojekti.svg?branch=master)](https://travis-ci.org/vaisanem/ohtu-miniprojekti)
 [![codecov](https://codecov.io/gh/vaisanem/ohtu-miniprojekti/branch/master/graph/badge.svg)](https://codecov.io/gh/vaisanem/ohtu-miniprojekti)
 
-Testit käyttävät _lib_-hakemistossa olevaa firefox Geckodriveriä
+Testit käyttävät htmlunitdriveriä.
 
 Konfiguraatiosta on kiittäminen kevään 2017 [TKT-FUBAR](https://github.com/TKT-FUBAR/Ohtu-miniprojekti)-miniprojektiryhmää.
 
@@ -14,7 +14,10 @@ Konfiguraatiosta on kiittäminen kevään 2017 [TKT-FUBAR](https://github.com/TK
 
 [First Sprint](https://docs.google.com/spreadsheets/d/1ImM3rdsm4RPNh8BDvbMcLxRbnVOARmnco10cEbbXApI/edit?usp=sharing)
 
-[Second Sprint](https://docs.google.com/spreadsheets/d/1Xu1ig0rCxu1gXpYKWknRI-xM2RVYmvBYSLnWqSSbdas/edit?usp=sharing)
+[Second Sprint](https://docs.google.com/spreadsheets/d/1buq7sBb_nRdBZMHKWHFA3ipxtxQ8gRC5szWM1WUgi8A/edit#gid=437469062)
+
+[Third Sprint](https://docs.google.com/spreadsheets/d/1buq7sBb_nRdBZMHKWHFA3ipxtxQ8gRC5szWM1WUgi8A/edit#gid=522436371)
+
 
 ## Definition of Done
  * Toiminnallisuus integroitu
