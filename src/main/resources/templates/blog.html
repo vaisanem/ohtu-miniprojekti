@@ -35,7 +35,7 @@
 		<h2>URL:</h2>
 			<a th:href="${blog.URL}"><span th:text="${blog.URL}"></span></a>
 		<h2> Rating : </h2>
-			<p><span th:text="${book.rating}"></span></p>
+			<p><span th:text="${blog.rating}"></span></p>
                 <h2> Tags:</h2>
                     <ul class="items">
                         <li class="tags" th:each="tag: ${tags}">
