@@ -57,6 +57,7 @@ public class Stepdefs {
     @After
     public void tearDown() throws SQLException {
         itemMan.closeConnection();
+        driver.manage().deleteAllCookies();
         driver.quit();
     }
 
@@ -105,6 +106,34 @@ public class Stepdefs {
         }
         assertTrue(isShown);
         Thread.sleep(SleepTime);
+    }
+
+    @When("^field \"([^\"]*)\" is filled with \"([^\"]*)\"$")
+    public void field_is_filled_with(String fieldName, String fieldInput) throws Throwable {
+        findElementAndFill(fieldName, fieldInput);
+    }
+
+    @When("^user clicks button \"([^\"]*)\"$")
+    public void user_clicks_button(String buttonID) throws Throwable {
+        boolean found = false;
+        int trials = 0;
+        while (trials++ < 10) {
+            try {
+                Thread.sleep(SleepTime);
+                WebElement element = driver.findElement(By.id(buttonID));
+                if (element != null) {
+                    element.click();
+                    found = true;
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
+        }
+
+        if (!found) {
+            System.out.println("Link " + buttonID + " was never found....");
+        }
     }
 
     private void is_not_shown(String content) throws Throwable {
@@ -191,8 +220,20 @@ public class Stepdefs {
     }
 
     private void findElementAndFill(String name, String value) {
-        element = driver.findElement(By.name(name));
-        element.sendKeys(value);
+        int retryCount = 0;
+        while (retryCount < 10) {
+            try {
+                element = driver.findElement(By.name(name));
+                if (element != null) {
+                    element.sendKeys(value);
+                    break;
+                }
+                Thread.sleep(SleepTime);
+            } catch (InterruptedException e) {
+                System.out.println("Couldnt find element :" + name);
+            }
+            retryCount++;
+        }
     }
 
     @Then("^List of all \"([^\"]*)\" is shown$")

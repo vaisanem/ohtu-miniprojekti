@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Login page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" href="/style.css"/>
+    </head>
+
+    <body>
+        <ul class = "nav">
+            <li class="nav"><a href="/">Home</a></li>
+        </ul>
+        
+        <div>   
+		<form  method="POST" name="login" action="login">
+		<input type="hidden" id="targetURL" th:value="${targetURL}" name="targetURL"/><br/>
+		Username:<br/>
+			<input type="text" id="username" name="username"/><br/>
+		Password:<br/>
+			<input type="password" id="password" name="password"/><br/>
+			<input type="submit" value="Login" id="loginButton" name="loginButton"/>
+		</form>
+		<h2> Enter 'default' as username with any password to access the default list of items. </h2>
+        </div>
+    </body>
+</html>

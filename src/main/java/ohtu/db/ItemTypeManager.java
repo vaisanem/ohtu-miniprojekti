@@ -144,7 +144,7 @@ public class ItemTypeManager {
         items.addAll(blogMan.findAll(user));
         items.addAll(bookMan.findAll(user));
         items.addAll(videoMan.findAll(user));
-        
+
         getAndApplyTags(items);
 
         return items;
@@ -220,8 +220,16 @@ public class ItemTypeManager {
         }
     }
 
-    public void delete(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void delete(Integer id, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call RemoveUserItemLink(?, ?)}");
+        stmt.setObject(1, id);
+        stmt.setObject(2, user);
+
+        stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
     }
 
     // <editor-fold desc="For JUnit testing">

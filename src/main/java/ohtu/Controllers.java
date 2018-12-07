@@ -37,16 +37,33 @@ public class Controllers {
         errors = new ArrayList<>();
     }
 
-    @RequestMapping(value = "/items", method = RequestMethod.GET)
-    public String items(ModelMap model, HttpServletResponse response, @ModelAttribute(value = "itemsList") ArrayList<ItemType> stuff, @ModelAttribute(value = "checkboxStates") HashMap<String, Boolean> checkboxStates, @ModelAttribute("user") String user, @ModelAttribute("Sorting") String Sort) throws SQLException {
-        System.out.println("Gotten redirect : " + user);
-        if (user.length() < 1) {
-            user = "default";
+    @PostMapping("/login")
+    public String login(ModelMap model, HttpServletRequest request, HttpServletResponse response, @RequestParam String username, @RequestParam String password, @RequestParam("targetURL") String target) {
+        if (username.equals("default") || username.equals("testUser")) {
+            Cookie cookie = new Cookie("user", username);
+            cookie.setValue(username);
+            response.addCookie(cookie);
+            return "redirect:/" + target;
+        } else {
+            return "redirect:/error";
         }
+    }
 
-        Cookie cookie = new Cookie("user", user);
-        cookie.setValue(user);
-        response.addCookie(cookie);
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login(ModelMap model, @ModelAttribute(value = "targetURL") String target) {
+        model.addAttribute("targetURL", target);
+        return "login";
+    }
+
+    @RequestMapping(value = "/items", method = RequestMethod.GET)
+    public String items(ModelMap model, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirects,
+            @ModelAttribute(value = "itemsList") ArrayList<ItemType> stuff, @ModelAttribute(value = "checkboxStates") HashMap<String, Boolean> checkboxStates, @ModelAttribute("Sorting") String Sort) throws SQLException {
+        String user = getUserFromCookie(request);
+
+        if (user == null || user.equals("NOT LOGGED IN")) {
+            redirects.addFlashAttribute("targetURL", "items");
+            return "redirect:/login";
+        }
 
         if (stuff == null || stuff.isEmpty()) {
             List<ItemType> items = itemMan.findAll(user);
@@ -66,22 +83,46 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/newItem", method = RequestMethod.GET)
-    public String itemAdd(ModelMap model) throws SQLException {
-        return "newItem";
+    public String itemAdd(ModelMap model, HttpServletRequest request, RedirectAttributes redirects) throws SQLException {
+        String user = getUserFromCookie(request);
+
+        if (user == null || user.equals("NOT LOGGED IN")) {
+            redirects.addAttribute("targetURL", "newItem");
+            return "redirect:/login";
+        } else {
+            return "newItem";
+        }
+    }
+
+    @PostMapping("/removeItem")
+    public String removeItem(ModelMap model, HttpServletRequest request, @RequestParam Integer itemID) throws SQLException {
+        String user = getUserFromCookie(request);
+
+        if (!user.equals("NOT LOGGED IN")) {
+            itemMan.delete(itemID, user);
+            return "redirect:/items";
+        }
+
+        model.addAttribute("error", "Not logged in, cannot delete");
+        return "redirect:/error";
     }
 
     @PostMapping("/addItem")
-    public String addItem(ModelMap model, RedirectAttributes userAttribute, @RequestParam String user, @RequestParam String type,
+    public String addItem(ModelMap model, @RequestParam String type, HttpServletRequest request,
             @RequestParam Optional<String> bookTitle, @RequestParam Optional<String> isbn, @RequestParam Optional<String> year, @RequestParam Optional<String> author, //book
             @RequestParam Optional<String> videoTitle, @RequestParam Optional<String> videoURL, @RequestParam Optional<String> videoPoster, //video 
             @RequestParam Optional<String> blogTitle, @RequestParam Optional<String> blogURL, @RequestParam Optional<String> blogPoster //blog 
     ) throws SQLException {
-
         clearErrorsBeforeAdding();
+
+        String user = getUserFromCookie(request);
+
+        if (user == null || user.equals("NOT LOGGED IN")) {
+            return "redirect:/login";
+        }
 
         switch (type) {
             case "book": {
-                userAttribute.addFlashAttribute("user", user);
                 System.out.println("Redirected user : " + user);
                 if (!Book.checkNumericality(year.get())) {
                     errors.add("Missing year or not numeric");
@@ -117,7 +158,6 @@ public class Controllers {
             }
 
             case "video": {
-                userAttribute.addFlashAttribute("user", user);
                 System.out.println("Redirected user : " + user);
                 if (videoURL.get().isEmpty()) {
                     errors.add("Missing URL");
@@ -144,7 +184,6 @@ public class Controllers {
             }
 
             case "blog": {
-                userAttribute.addFlashAttribute("user", user);
                 System.out.println("Redirected user : " + user);
                 if (blogURL.get().isEmpty()) {
                     errors.add("Missing URL");
@@ -179,26 +218,33 @@ public class Controllers {
     }
 
     @PostMapping("/book/{id}/addTag")
-    public String addTagForBook(@PathVariable int id, RedirectAttributes errs, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
+    public String addTagForBook(@PathVariable int id, RedirectAttributes errs, ModelMap model, @RequestParam String tag) throws SQLException {
         Book book = itemMan.getBookMan().findOne(id);
         return addTagForItem(id, model, tag, book);
     }
 
     @PostMapping("/blog/{id}/addTag")
-    public String addTagForBlog(@PathVariable int id, RedirectAttributes errs, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
+    public String addTagForBlog(@PathVariable int id, RedirectAttributes errs, ModelMap model, @RequestParam String tag) throws SQLException {
         Blog blog = itemMan.getBlogMan().findOne(id);
         return addTagForItem(id, model, tag, blog);
     }
 
     @PostMapping("/video/{id}/addTag")
-    public String addTagForVideo(@PathVariable int id, RedirectAttributes errs, ModelMap model, @RequestParam String user, @RequestParam String tag) throws SQLException {
+    public String addTagForVideo(@PathVariable int id, RedirectAttributes errs, ModelMap model, @RequestParam String tag) throws SQLException {
         Video video = itemMan.getVideoMan().findOne(id);
         return addTagForItem(id, model, tag, video);
     }
 
     @RequestMapping(value = "*/markRead", method = RequestMethod.GET)
-    public String markItemAsReadOrUnRead(ModelMap model, @RequestParam Integer id, @RequestParam String user, @RequestParam(value = "action", required = true) String action) {
+    public String markItemAsReadOrUnRead(ModelMap model, HttpServletRequest request, @RequestParam Integer id, @RequestParam(value = "action", required = true) String action) {
+        String user = getUserFromCookie(request);
+
+        if (user == null || user.equals("NOT LOGGED IN")) {
+            return "error";
+        }
+
         switch (action) {
+
             case "Mark as read": {
                 try {
                     itemMan.markAsRead(id, user);
@@ -228,13 +274,11 @@ public class Controllers {
     }
 
     @RequestMapping(value = "/SelectWhatTypesAreShown", method = RequestMethod.GET)
-    public String showSelectedItems(ModelMap model, RedirectAttributes redirects, @RequestParam String user,
+    public String showSelectedItems(ModelMap model, RedirectAttributes redirects, HttpServletRequest request,
             @RequestParam(defaultValue = "false") boolean ViewBooks, @RequestParam(defaultValue = "false") boolean ViewBlogs, @RequestParam(defaultValue = "false") boolean ViewVideos,
             @RequestParam(defaultValue = "false") boolean ViewRead, @RequestParam(defaultValue = "false") boolean ViewUnread, @RequestParam(required = false) String tags, @RequestParam(required = true) String SortingSelect
     ) throws SQLException {
-        if (user.length() < 1) {
-            user = "default";
-        }
+        String user = getUserFromCookie(request);
 
         List<ItemType> items = new ArrayList<>();
         HashMap<String, Boolean> states = new HashMap<>();
@@ -324,14 +368,31 @@ public class Controllers {
         return "redirect:/items";
     }
 
+    public String getUserFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        String user = "NOT LOGGED IN";
+        if (cookies != null) {
+            Optional<Cookie> cooki = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findFirst();
+            if (cooki.isPresent()) {
+                user = cooki.get().getValue();
+            }
+        }
+        return user;
+    }
+
     @RequestMapping(value = "/book/{id}", method = RequestMethod.GET)
     public String book(HttpServletRequest request,
             @ModelAttribute(value = "errs") String errors,
             @PathVariable int id, ModelMap model) throws SQLException {
-        Cookie[] cookies = request.getCookies();
-        String user = "default";
-        if (cookies != null) {
-            user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findFirst().get().getValue();
+
+        String user = getUserFromCookie(request);
+
+        if (user == null || user.equals("NOT LOGGED IN")) {
+            Book book = itemMan.getBookMan().findOne(id);
+            book.setTags(itemMan.getTags(book.getId()));
+            model.addAttribute("book", book);
+            model.addAttribute("tags", book.getTags());
+            return "book";
         }
 
         Book book = itemMan.getBookMan().findOne(id, user);
@@ -344,10 +405,19 @@ public class Controllers {
     @RequestMapping(value = "/blog/{id}", method = RequestMethod.GET)
     public String blog(HttpServletRequest request,
             @PathVariable int id, ModelMap model) throws SQLException {
+
         Cookie[] cookies = request.getCookies();
-        String user = "default";
+        String user = "NOT LOGGED IN";
         if (cookies != null) {
             user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findFirst().get().getValue();
+        }
+
+        if (user == null || user.equals("NOT LOGGED IN")) {
+            Blog blog = itemMan.getBlogMan().findOne(id);
+            blog.setTags(itemMan.getTags(id));
+            model.addAttribute("blog", blog);
+            model.addAttribute("tags", blog.getTags());
+            return "blog";
         }
 
         Blog blog = itemMan.getBlogMan().findOne(id, user);
@@ -360,10 +430,19 @@ public class Controllers {
     @RequestMapping(value = "/video/{id}", method = RequestMethod.GET)
     public String video(HttpServletRequest request,
             @PathVariable int id, ModelMap model) throws SQLException {
+
         Cookie[] cookies = request.getCookies();
-        String user = "default";
+        String user = "NOT LOGGED IN";
         if (cookies != null) {
             user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findFirst().get().getValue();
+        }
+
+        if (user == null || user.equals("NOT LOGGED IN")) {
+            Video video = itemMan.getVideoMan().findOne(id);
+            video.setTags(itemMan.getTags(id));
+            model.addAttribute("video", video);
+            model.addAttribute("tags", video.getTags());
+            return "video";
         }
 
         Video video = itemMan.getVideoMan().findOne(id, user);
