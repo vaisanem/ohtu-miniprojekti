@@ -38,6 +38,29 @@ public class ItemType {
     public ItemType() {
     }
 
+    public ItemType(int id, String title, String author, String type) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        switch (type) {
+            case "book": {
+                this.type = typeIdentifier.book;
+                break;
+            }
+            case "blog": {
+                this.type = typeIdentifier.blog;
+                break;
+            }
+            case "video": {
+                this.type = typeIdentifier.video;
+                break;
+            }
+            default: {
+                System.out.println("Item type unidentifiable");
+            }
+        }
+    }
+
     public List<String> generateTags(ItemTypeManager manager) throws SQLException {
         this.tags = manager.getTags(id);
         return tags;
@@ -94,7 +117,5 @@ public class ItemType {
     public void setRating(double rating) {
         this.rating = rating;
     }
-    
-    
 
 }

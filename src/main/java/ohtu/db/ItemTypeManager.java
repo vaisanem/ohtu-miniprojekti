@@ -147,6 +147,25 @@ public class ItemTypeManager {
         return items;
     }
 
+    public List<ItemType> getItemsByAuthor(String authorName) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call getItemsForAuthor(?)}");
+        stmt.setObject(1, authorName);
+
+        List<ItemType> items = new ArrayList();
+
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            items.add(new ItemType(rs.getInt("ItemID"), rs.getString("Title"), rs.getString("Author"), rs.getString("ItemIdentifier")));
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return items;
+    }
+
     public void applyTags(HashMap<Integer, List<String>> tags, List<ItemType> items) {
         items.forEach(item -> {
             if (tags.containsKey(item.getId())) {
