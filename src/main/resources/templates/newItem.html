@@ -22,6 +22,12 @@ and open the template in the editor.
         <div>
             <h1>Add new item</h1>
             
+			<div align="right">
+				<form  method="POST" name="logout" action="logout">
+					<input type="submit" id="logoutButton" value="Logout" name="logout"/> 
+				</form>
+			</div>
+			
             <li th:each="error: ${errors}">
             	<span th:text="${error}"></span>
             </li>

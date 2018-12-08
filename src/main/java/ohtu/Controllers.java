@@ -58,6 +58,14 @@ public class Controllers {
         }
     }
 
+    @PostMapping("/logout")
+    public String logout(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+        Cookie cookie = new Cookie("user", "");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(ModelMap model, @ModelAttribute(value = "targetURL") String target) {
         model.addAttribute("targetURL", target);
