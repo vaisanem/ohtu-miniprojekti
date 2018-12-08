@@ -58,6 +58,12 @@ public class Controllers {
         }
     }
 
+    @PostMapping("/createUser")
+    public String createUser(ModelMap model, @RequestParam String username, @RequestParam String password) {
+        loginMan.createUser(username, password);
+        return "redirect:/";
+    }
+
     @PostMapping("/logout")
     public String logout(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
         Cookie cookie = new Cookie("user", "");
@@ -70,6 +76,11 @@ public class Controllers {
     public String login(ModelMap model, @ModelAttribute(value = "targetURL") String target) {
         model.addAttribute("targetURL", target);
         return "login";
+    }
+
+    @RequestMapping(value = "/createUser", method = RequestMethod.GET)
+    public String createUser(ModelMap model) {
+        return "createUser";
     }
 
     @RequestMapping(value = "/items", method = RequestMethod.GET)

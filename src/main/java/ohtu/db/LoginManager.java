@@ -33,7 +33,7 @@ public class LoginManager {
             Connection connection = database.getConnection();
             CallableStatement stmt = connection.prepareCall("INSERT INTO EndUser (name, password) VALUES (?, ?)");
             stmt.setObject(1, user);
-            stmt.setObject(1, encrypted);
+            stmt.setObject(2, encrypted);
 
             stmt.executeUpdate();
 

@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Login page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" href="/style.css"/>
+    </head>
+
+    <body>
+        <ul class = "nav">
+            <li class="nav"><a href="/">Home</a></li>
+        </ul>
+	
+		
+        <div>   
+		
+		<h2>New user creation</h2>
+		
+		<form  method="POST" name="createUser" action="createUser">
+		Username:<br/>
+			<input type="text" id="username" name="username"/><br/>
+		Password:<br/>
+			<input type="password" id="password" name="password"/><br/>
+			<input type="submit" value="Create user" id="loginButton" name="loginButton"/>
+		</form>
+        </div>
+    </body>
+</html>
