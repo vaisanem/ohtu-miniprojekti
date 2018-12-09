@@ -200,11 +200,11 @@ public class Controllers {
     public String markItemAsReadOrUnRead(ModelMap model, @RequestParam Integer id, @RequestParam String user, @RequestParam(value = "action", required = true) String action) {
         switch (action) {
             case "Mark as read": {
-                markItemAsRead(id, user, model);
+                return markItemAsRead(id, user, model);
             }
 
             case "Mark as unread": {
-                markItemAsUnread(id, user, model);
+                return markItemAsUnread(id, user, model);
             }
 
             default: {
