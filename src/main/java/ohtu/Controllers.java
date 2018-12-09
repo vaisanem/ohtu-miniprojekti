@@ -200,23 +200,11 @@ public class Controllers {
     public String markItemAsReadOrUnRead(ModelMap model, @RequestParam Integer id, @RequestParam String user, @RequestParam(value = "action", required = true) String action) {
         switch (action) {
             case "Mark as read": {
-                try {
-                    itemMan.markAsRead(id, user);
-                    return "redirect:/items";
-                } catch (SQLException ex) {
-                    model.addAttribute("error", "marking book as read failed... Error stack : " + ex.toString());
-                    return "error";
-                }
+                markItemAsRead(id, user, model);
             }
 
             case "Mark as unread": {
-                try {
-                    itemMan.markAsUnRead(id, user);
-                    return "redirect:/items";
-                } catch (SQLException ex) {
-                    model.addAttribute("error", "marking book as unread failed... Error stack : " + ex.toString());
-                    return "error";
-                }
+                markItemAsUnread(id, user, model);
             }
 
             default: {
@@ -395,6 +383,29 @@ public class Controllers {
 
     private void clearErrorsBeforeAdding() {
         errors.clear();
+    }
+    
+    
+    // Assisting methods:
+    
+    private String markItemAsRead(Integer id, String user, ModelMap model) {
+        try {
+            itemMan.markAsRead(id, user);
+            return "redirect:/items";
+        } catch (SQLException ex) {
+            model.addAttribute("error", "marking book as read failed... Error stack : " + ex.toString());
+            return "error";
+        }    
+    }
+    
+    private String markItemAsUnread(Integer id, String user, ModelMap model) {
+        try {
+            itemMan.markAsUnRead(id, user);
+            return "redirect:/items";
+        } catch (SQLException ex) {
+            model.addAttribute("error", "marking book as unread failed... Error stack : " + ex.toString());
+            return "error";
+        } 
     }
 
 }
