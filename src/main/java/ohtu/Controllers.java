@@ -60,6 +60,16 @@ public class Controllers {
 
     @PostMapping("/createUser")
     public String createUser(ModelMap model, @RequestParam String username, @RequestParam String password) {
+        if (username.length() < 4) {
+            model.addAttribute("error", "Username too short (min 4 length)");
+            return "error";
+        }
+        
+        if (password.length() < 6) {
+            model.addAttribute("error", "password too short (min 6 length)");
+            return "error";
+        }
+
         loginMan.createUser(username, password);
         return "redirect:/";
     }
