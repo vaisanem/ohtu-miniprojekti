@@ -13,44 +13,54 @@
             <li class="nav"><a href="/items">View List</a></li>
             <li class="nav"><a href="/newItem">Add new item</a></li>
         </ul>
-        
-        
-        
+
+
+
         <div>   
             <h3><span th:text="${blog.title}"></span></h3>
-            
-                <li th:each="error: ${errors}">
-                    <span th:text="${error}"></span>
+
+            <li th:each="error: ${errors}">
+                <span th:text="${error}"></span>
+            </li>
+            <br/>
+            <form  method="GET" name="markRead" action="markRead">
+                <input type="hidden" id="userBook" name="user" value ="default"/>
+                <input type="hidden" id="type" name="id" th:value ="${blog.id}"  />	
+                <input th:if="${blog.isRead} == '0'" type="submit" value="Mark as read" name="action" id="read"/>
+                <input th:if="${blog.isRead} == '1'" type="submit" value="Mark as unread" name="action" id="unread"/>
+            </form>
+
+            <h2> Author: </h2>
+            <p><span th:text="${blog.poster}"></span></p>	
+            <h2>URL:</h2>
+            <a th:href="${blog.URL}"><span th:text="${blog.URL}"></span></a>
+            <h2> Rating : </h2>
+            <p><span th:text="${blog.rating}"></span></p>
+            <h2> Tags:</h2>
+            <ul class="items">
+                <li class="tags" th:each="tag: ${tags}">
+                    <p><span th:text="${tag}"></span></p>
                 </li>
-                <br/>
-                <form  method="GET" name="markRead" action="markRead">
-                    <input type="hidden" id="userBook" name="user" value ="default"/>
-                    <input type="hidden" id="type" name="id" th:value ="${blog.id}"  />	
-                    <input th:if="${blog.isRead} == '0'" type="submit" value="Mark as read" name="action" id="read"/>
-                    <input th:if="${blog.isRead} == '1'" type="submit" value="Mark as unread" name="action" id="unread"/>
-		</form>
-            
-		<h2> Author: </h2>
-			<p><span th:text="${blog.poster}"></span></p>	
-		<h2>URL:</h2>
-			<a th:href="${blog.URL}"><span th:text="${blog.URL}"></span></a>
-		<h2> Rating : </h2>
-			<p><span th:text="${blog.rating}"></span></p>
-                <h2> Tags:</h2>
-                    <ul class="items">
-                        <li class="tags" th:each="tag: ${tags}">
-                            <p><span th:text="${tag}"></span></p>
-                        </li>
-                    </ul>
-                <br/>
-                <br/>
-                <br/>
-                <form  method="POST" name="addTag" th:action="${blog.id + '/addTag'}">
-                    <input type="hidden" id="userTag" name="user" value ="default"/>
-                    <input type="text" id="tag" name="tag"/>
-                    <input type="submit" value="Add tag" name="Add tag" />
-		</form>
-                
+            </ul>
+            <br/>
+            <br/>
+            <form method="POST" name="GiveRating" th:action="${blog.id + '/Rate'}">  <!-- TODO IMPLEMENT IN Controllers !-->
+                <select name="RatingSelect" id="Rater">
+                    <option id="RateOne" value="RatedOne" th:selected="${RateSelect=='RatedOne'}">1 (worst)</option>
+                    <option id="RateTwo" value="RatedTwo" th:selected="${RateSelect=='RatedTwo'}">2</option>
+                    <option id="RateThree" value="RatedThree" th:selected="${RateSelect=='RatedThree'}">3</option>
+                    <option id="RateFour" value="RatedFour" th:selected="${RateSelect=='RatedFour'}">4</option>
+                    <option id="RateFive" value="RatedFive" th:selected="${RateSelect=='RatedFive'}">5 (best)</option>
+                </select>
+                <input type="submit" value="Rate" name="Rate"/>
+            </form>
+            <br/>
+            <form  method="POST" name="addTag" th:action="${blog.id + '/addTag'}">
+                <input type="hidden" id="userTag" name="user" value ="default"/>
+                <input type="text" id="tag" name="tag"/>
+                <input type="submit" value="Add tag" name="Add tag" />
+            </form>
+
         </div>
     </body>
 </html>
