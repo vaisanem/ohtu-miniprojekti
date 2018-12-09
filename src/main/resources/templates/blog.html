@@ -52,7 +52,7 @@
                     <option id="RateFour" value="RatedFour" th:selected="${RateSelect=='RatedFour'}">4</option>
                     <option id="RateFive" value="RatedFive" th:selected="${RateSelect=='RatedFive'}">5 (best)</option>
                 </select>
-				<input type="hidden" id="type" name="id" th:value ="${blog.id}"/>	
+                <input type="hidden" id="type" name="id" th:value ="${blog.id}"/>	
                 <input type="submit" value="Rate" name="Rate"/>
             </form>
             <br/>
@@ -61,7 +61,14 @@
                 <input type="text" id="tag" name="tag"/>
                 <input type="submit" value="Add tag" name="Add tag" />
             </form>
-
+            <br/>
+            <br/>
+            <h2>Comments</h2>
+            <ul class="items">
+                <li class="comments" th:each="comment: ${comments}">
+                    <p><span th:text="${comment.userName + ' at: ' + comment.timeStamp + ' <br/>' + comment.text}"></span></p>
+                </li>
+            </ul>
         </div>
     </body>
 </html>
