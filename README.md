@@ -23,3 +23,5 @@ Konfiguraatiosta on kiittäminen kevään 2017 [TKT-FUBAR](https://github.com/TK
  * Toiminnallisuus integroitu
  * Toiminnallisuus testattu onnistuneesti ja vakuuttavasti, myös Travisissa
  * Toiminnallisuus vaaditusti dokumentoitu
+
+
