@@ -34,7 +34,7 @@ h3 {
 body {
     margin: 0;
 }
-div {
+div.all {
     margin-left: 10%;
     padding: 1px 16px;
     height: 100%
@@ -108,7 +108,7 @@ li.items a {
 }
 li.items {
     text-align: left;
-    border-bottom: 1px solid black;    
+    border-bottom: 1px solid black;
 }
 li.items:last-child{
     border-bottom: none;
@@ -124,5 +124,21 @@ div.formthings {
     margin-left: 10px;
 }
 
+/* divs for displaying comments on the side*/
 
+div.left {
+  float: left;
+  width: 50%;
+}
 
+div.right {
+  float: left;
+  width: 50%;
+  margin-top: 100px;
+}
+
+div.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}

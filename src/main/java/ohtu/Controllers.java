@@ -99,7 +99,6 @@ public class Controllers {
         } else {
             model.addAttribute("items", stuff);
         }
-        model.addAttribute("tags", itemMan.getSetOfAllTags());
 
         model.addAttribute("sortSelect", Sort);
 

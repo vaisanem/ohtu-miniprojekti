@@ -119,9 +119,4 @@ public class BlogManager implements sqlManager<Blog, Integer> {
 
         return blogs;
     }
-
-    @Override
-    public void delete(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

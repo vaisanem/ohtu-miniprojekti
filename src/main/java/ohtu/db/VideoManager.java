@@ -119,10 +119,4 @@ public class VideoManager implements sqlManager<Video, Integer> {
 
         return books;
     }
-
-    @Override
-    public void delete(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

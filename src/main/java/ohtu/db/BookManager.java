@@ -116,10 +116,4 @@ public class BookManager implements sqlManager<Book, Integer> {
 
         return books;
     }
-
-    @Override
-    public void delete(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
 }
