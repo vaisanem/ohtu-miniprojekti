@@ -18,6 +18,7 @@ public class ItemType {
     private int id;
     private String title;
     private List<String> tags;
+    private List<Comment> comments;
     private typeIdentifier type;
     private int isRead;
     private String author;
@@ -72,6 +73,14 @@ public class ItemType {
 
     public int getIsRead() {
         return isRead;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     public List<String> getTags() {

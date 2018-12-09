@@ -60,6 +60,16 @@ public class Controllers {
 
     @PostMapping("/createUser")
     public String createUser(ModelMap model, @RequestParam String username, @RequestParam String password) {
+        if (username.length() < 4) {
+            model.addAttribute("error", "Username too short (min 4 length)");
+            return "error";
+        }
+
+        if (password.length() < 6) {
+            model.addAttribute("error", "password too short (min 6 length)");
+            return "error";
+        }
+
         loginMan.createUser(username, password);
         return "redirect:/";
     }
@@ -422,15 +432,19 @@ public class Controllers {
         if (user == null || user.equals("NOT LOGGED IN")) {
             Book book = itemMan.getBookMan().findOne(id);
             book.setTags(itemMan.getTags(book.getId()));
+            book.setComments(itemMan.getCommentsForID(book.getId()));
             model.addAttribute("book", book);
             model.addAttribute("tags", book.getTags());
+            model.addAttribute("comments", book.getComments());
             return "book";
         }
 
         Book book = itemMan.getBookMan().findOne(id, user);
         book.setTags(itemMan.getTags(book.getId()));
+        book.setComments(itemMan.getCommentsForID(book.getId()));
         model.addAttribute("book", book);
         model.addAttribute("tags", book.getTags());
+        model.addAttribute("comments", book.getComments());
         return "book";
     }
 
@@ -447,15 +461,19 @@ public class Controllers {
         if (user == null || user.equals("NOT LOGGED IN")) {
             Blog blog = itemMan.getBlogMan().findOne(id);
             blog.setTags(itemMan.getTags(id));
+            blog.setComments(itemMan.getCommentsForID(blog.getId()));
             model.addAttribute("blog", blog);
             model.addAttribute("tags", blog.getTags());
+            model.addAttribute("comments", blog.getComments());
             return "blog";
         }
 
         Blog blog = itemMan.getBlogMan().findOne(id, user);
         blog.setTags(itemMan.getTags(id));
+        blog.setComments(itemMan.getCommentsForID(blog.getId()));
         model.addAttribute("blog", blog);
         model.addAttribute("tags", blog.getTags());
+        model.addAttribute("comments", blog.getComments());
         return "blog";
     }
 
@@ -472,15 +490,19 @@ public class Controllers {
         if (user == null || user.equals("NOT LOGGED IN")) {
             Video video = itemMan.getVideoMan().findOne(id);
             video.setTags(itemMan.getTags(id));
+            video.setComments(itemMan.getCommentsForID(video.getId()));
             model.addAttribute("video", video);
             model.addAttribute("tags", video.getTags());
+            model.addAttribute("comments", video.getComments());
             return "video";
         }
 
         Video video = itemMan.getVideoMan().findOne(id, user);
         video.setTags(itemMan.getTags(id));
+        video.setComments(itemMan.getCommentsForID(video.getId()));
         model.addAttribute("video", video);
         model.addAttribute("tags", video.getTags());
+        model.addAttribute("comments", video.getComments());
         return "video";
     }
 
@@ -502,6 +524,52 @@ public class Controllers {
             return item.getType().name();
         }
         return "redirect:/" + item.getType().name() + '/' + id;
+    }
+
+    @RequestMapping(value = "*/GiveRating", method = RequestMethod.POST)
+    private String rate(ModelMap model, HttpServletRequest request, HttpServletResponse response, @RequestParam Integer id, @RequestParam String RatingSelect) {
+        String user = getUserFromCookie(request);
+
+        if (user == null || user.equals("NOT LOGGED IN")) {
+            return "error";
+        }
+
+        int rating = 0;
+
+        switch (RatingSelect) {
+            case "RatedOne": {
+                rating = 1;
+                break;
+            }
+            case "RatedTwo": {
+                rating = 2;
+                break;
+            }
+            case "RatedThree": {
+                rating = 3;
+                break;
+            }
+            case "RatedFour": {
+                rating = 4;
+                break;
+            }
+            case "RatedFive": {
+                rating = 5;
+                break;
+            }
+        }
+
+        try {
+            if (rating != 0) {
+                itemMan.rateItem(rating, id, user);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Rating failed.");
+            return "error";
+        }
+
+        return "redirect:/items";
+
     }
 
     private void clearErrorsBeforeAdding() {
