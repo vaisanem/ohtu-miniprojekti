@@ -51,8 +51,8 @@
 
             <ul id="itemsToSort" th:if="${items}" class="items">
                 <li class="items" th:each="itemType: ${items}">
-                    <a th:id="${itemType.id}" class="items" th:if="${itemType.isRead} == 0" th:href="${'/' + itemType.type +'/' + itemType.id}"  th:text="${itemType.type + ' - ' + itemType.title + ' - by: ' + itemType.getAuthor()}"></a>
-                    <a th:id="${itemType.id}" class="items" th:if="${itemType.isRead} == 1" th:href="${'/' + itemType.type +'/' + itemType.id}" th:style="${'color: DarkGray;'}" th:text="${itemType.type + ' - ' + itemType.title + ' - by: ' + itemType.getAuthor()}"></a>
+                    <a th:id="${itemType.id}" class="items" th:if="${itemType.isRead} == 0" th:href="${'/' + itemType.type +'/' + itemType.id}"  th:text="${itemType.type + ' - ' + itemType.getAuthor() + ' - ' + itemType.title}"></a>
+                    <a th:id="${itemType.id}" class="items" th:if="${itemType.isRead} == 1" th:href="${'/' + itemType.type +'/' + itemType.id}" th:style="${'color: DarkGray;'}" th:text="${itemType.type + ' - ' + itemType.getAuthor() + ' - ' + itemType.title}"></a>
 					<form style="display: inline;" method ="POST" action="/removeItem">
 						<input type="hidden" name="itemID" th:value="${itemType.id}"/>         
 						<Button name="removeId" type="submit" th:text="Remove" th:value="${itemType.id}"></Button>
