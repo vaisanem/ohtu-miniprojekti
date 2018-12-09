@@ -218,6 +218,19 @@ public class ItemTypeManager {
         connection.close();
     }
 
+    public void rateItem(int rating, int id, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call AddRatingToItem(?, ?, ?)}");
+        stmt.setObject(1, rating);
+        stmt.setObject(2, id);
+        stmt.setObject(3, user);
+
+        stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
+    }
+
     public boolean addTagToItem(int id, String tag) throws SQLException {
         if (tag.length() > 0) {
             Connection connection = database.getConnection();

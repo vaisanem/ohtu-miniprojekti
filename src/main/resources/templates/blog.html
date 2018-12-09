@@ -44,7 +44,7 @@
             </ul>
             <br/>
             <br/>
-            <form method="POST" name="GiveRating" th:action="${blog.id + '/Rate'}">  <!-- TODO IMPLEMENT IN Controllers !-->
+            <form method="POST" name="GiveRating" action="GiveRating">  <!-- TODO IMPLEMENT IN Controllers !-->
                 <select name="RatingSelect" id="Rater">
                     <option id="RateOne" value="RatedOne" th:selected="${RateSelect=='RatedOne'}">1 (worst)</option>
                     <option id="RateTwo" value="RatedTwo" th:selected="${RateSelect=='RatedTwo'}">2</option>
@@ -52,6 +52,7 @@
                     <option id="RateFour" value="RatedFour" th:selected="${RateSelect=='RatedFour'}">4</option>
                     <option id="RateFive" value="RatedFive" th:selected="${RateSelect=='RatedFive'}">5 (best)</option>
                 </select>
+				<input type="hidden" id="type" name="id" th:value ="${blog.id}"/>	
                 <input type="submit" value="Rate" name="Rate"/>
             </form>
             <br/>

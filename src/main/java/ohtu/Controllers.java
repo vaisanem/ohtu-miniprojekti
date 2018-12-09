@@ -505,6 +505,52 @@ public class Controllers {
         return "redirect:/" + item.getType().name() + '/' + id;
     }
 
+    @RequestMapping(value = "*/GiveRating", method = RequestMethod.POST)
+    private String rate(ModelMap model, HttpServletRequest request, HttpServletResponse response, @RequestParam Integer id, @RequestParam String RatingSelect) {
+        String user = getUserFromCookie(request);
+
+        if (user == null || user.equals("NOT LOGGED IN")) {
+            return "error";
+        }
+
+        int rating = 0;
+
+        switch (RatingSelect) {
+            case "RatedOne": {
+                rating = 1;
+                break;
+            }
+            case "RatedTwo": {
+                rating = 2;
+                break;
+            }
+            case "RatedThree": {
+                rating = 3;
+                break;
+            }
+            case "RatedFour": {
+                rating = 4;
+                break;
+            }
+            case "RatedFive": {
+                rating = 5;
+                break;
+            }
+        }
+
+        try {
+            if (rating != 0) {
+                itemMan.rateItem(rating, id, user);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Rating failed.");
+            return "error";
+        }
+
+        return "redirect:/items";
+
+    }
+
     private void clearErrorsBeforeAdding() {
         errors.clear();
     }
