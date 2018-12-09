@@ -381,7 +381,12 @@ public class Controllers {
                         .collect(Collectors.toList());
                 break;
             }
-
+            case "SortByRating": {
+                items = items.stream()
+                        .sorted(Comparator.comparing(ItemType::getRating).reversed().thenComparing(ItemType::getType))
+                        .collect(Collectors.toList());
+                break;
+            }
             default: {
                 items = items.stream()
                         .sorted((item1, item2) -> item1.getType().name().compareTo(item2.getType().name()))
