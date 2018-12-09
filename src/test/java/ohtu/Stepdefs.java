@@ -713,6 +713,11 @@ public class Stepdefs {
                         .collect(Collectors.toList());
                 break;
             }
+            case "rating": {
+                things = things.stream()
+                        .sorted(Comparator.comparing(ItemType::getRating).reversed().thenComparing(ItemType::getType))
+                        .collect(Collectors.toList());
+            }
             default: {
                 break;
             }
