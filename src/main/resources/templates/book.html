@@ -68,7 +68,7 @@
             <h2>Comments</h2>
             <ul class="items">
                 <li class="comments" th:each="comment: ${comments}">
-                    <p><span th:text="${comment.userName + ' at: ' + comment.timeStamp + ' <br/>' + comment.text}"></span></p>
+                    <p><span th:utext="${comment.userName + ' at: ' + comment.timeStamp +  '&lt;br&gt;' + comment.text}"></span></p>
                 </li>
             </ul>
         </div>

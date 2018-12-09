@@ -64,7 +64,7 @@ public class Controllers {
             model.addAttribute("error", "Username too short (min 4 length)");
             return "error";
         }
-        
+
         if (password.length() < 6) {
             model.addAttribute("error", "password too short (min 6 length)");
             return "error";
@@ -433,15 +433,19 @@ public class Controllers {
         if (user == null || user.equals("NOT LOGGED IN")) {
             Book book = itemMan.getBookMan().findOne(id);
             book.setTags(itemMan.getTags(book.getId()));
+            book.setComments(itemMan.getCommentsForID(book.getId()));
             model.addAttribute("book", book);
             model.addAttribute("tags", book.getTags());
+            model.addAttribute("comments", book.getComments());
             return "book";
         }
 
         Book book = itemMan.getBookMan().findOne(id, user);
         book.setTags(itemMan.getTags(book.getId()));
+        book.setComments(itemMan.getCommentsForID(book.getId()));
         model.addAttribute("book", book);
         model.addAttribute("tags", book.getTags());
+        model.addAttribute("comments", book.getComments());
         return "book";
     }
 
@@ -458,15 +462,19 @@ public class Controllers {
         if (user == null || user.equals("NOT LOGGED IN")) {
             Blog blog = itemMan.getBlogMan().findOne(id);
             blog.setTags(itemMan.getTags(id));
+            blog.setComments(itemMan.getCommentsForID(blog.getId()));
             model.addAttribute("blog", blog);
             model.addAttribute("tags", blog.getTags());
+            model.addAttribute("comments", blog.getComments());
             return "blog";
         }
 
         Blog blog = itemMan.getBlogMan().findOne(id, user);
         blog.setTags(itemMan.getTags(id));
+        blog.setComments(itemMan.getCommentsForID(blog.getId()));
         model.addAttribute("blog", blog);
         model.addAttribute("tags", blog.getTags());
+        model.addAttribute("comments", blog.getComments());
         return "blog";
     }
 
@@ -483,15 +491,19 @@ public class Controllers {
         if (user == null || user.equals("NOT LOGGED IN")) {
             Video video = itemMan.getVideoMan().findOne(id);
             video.setTags(itemMan.getTags(id));
+            video.setComments(itemMan.getCommentsForID(video.getId()));
             model.addAttribute("video", video);
             model.addAttribute("tags", video.getTags());
+            model.addAttribute("comments", video.getComments());
             return "video";
         }
 
         Video video = itemMan.getVideoMan().findOne(id, user);
         video.setTags(itemMan.getTags(id));
+        video.setComments(itemMan.getCommentsForID(video.getId()));
         model.addAttribute("video", video);
         model.addAttribute("tags", video.getTags());
+        model.addAttribute("comments", video.getComments());
         return "video";
     }
 

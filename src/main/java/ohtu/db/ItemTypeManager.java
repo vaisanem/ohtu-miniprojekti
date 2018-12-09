@@ -65,6 +65,26 @@ public class ItemTypeManager {
         return tags;
     }
 
+    public List<Comment> getCommentsForID(Integer key) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call getCommentsForID(?)}");
+        stmt.setObject(1, key);
+
+        List<Comment> comments = new ArrayList();
+
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            Comment comment = new Comment(rs);
+            comments.add(comment);
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return comments;
+    }
+
     public HashMap<Integer, List<String>> getAllTags() throws SQLException {
         Connection connection = database.getConnection();
         CallableStatement stmt = connection.prepareCall("SELECT Tag_ItemEntry.fk_ItemEntry_id as id, Tag.Description as Tag FROM Tag_ItemEntry INNER JOIN Tag ON Tag.id = Tag_ItemEntry.fk_Tag_id");
@@ -188,6 +208,43 @@ public class ItemTypeManager {
         });
 
         return filtered;
+    }
+
+    public HashMap<Integer, List<Comment>> getAllComments() throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call getComments}");
+
+        HashMap<Integer, List<Comment>> comments = new HashMap<>();
+
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            Comment newComment = new Comment(rs);
+            if (comments.containsKey(newComment.getItemID())) {
+                comments.get(newComment.getItemID()).add(newComment);
+            } else {
+                comments.put(newComment.getItemID(), new ArrayList<>());
+                comments.get(newComment.getItemID()).add(newComment);
+            }
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return comments;
+    }
+
+    public void applyComments(HashMap<Integer, List<Comment>> comments, List<ItemType> items) {
+        items.forEach(item -> {
+            if (comments.containsKey(item.getId())) {
+                item.setComments(comments.get(item.getId()));
+            }
+        });
+    }
+
+    public void getAndApplyComments(List<ItemType> items) throws SQLException {
+        HashMap<Integer, List<Comment>> comments = getAllComments();
+        applyComments(comments, items);
     }
 
     public void closeConnection() throws SQLException {
