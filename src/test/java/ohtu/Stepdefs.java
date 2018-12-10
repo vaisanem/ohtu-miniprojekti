@@ -404,12 +404,6 @@ public class Stepdefs {
         findElementAndFill("author", "Testaaja");
         findElementAndFill("year", year);
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBook').value='testUser'";
-
-        jse.executeScript(strJS);
-
         element = driver.findElement(By.name("Add new book"));
         element.submit();
         Thread.sleep(SleepTime);
@@ -437,11 +431,6 @@ public class Stepdefs {
         findElementAndFill("author", "Testaaja");
         findElementAndFill("year", "2008");
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBook').value='testUser'";
-        jse.executeScript(strJS);
-
         driver.findElement(By.name("Add new book")).click();
 
         Thread.sleep(SleepTime);
@@ -454,11 +443,6 @@ public class Stepdefs {
         findElementAndFill("bookTitle", "Test");
         findElementAndFill("author", "Testaaja");
         findElementAndFill("year", "2008");
-
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBook').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new book"));
         element.submit();
@@ -473,11 +457,6 @@ public class Stepdefs {
         findElementAndFill("isbn", Integer.toString(Math.abs(random.nextInt())));
         findElementAndFill("year", "2008");
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBook').value='testUser'";
-        jse.executeScript(strJS);
-
         element = driver.findElement(By.name("Add new book"));
         element.submit();
         Thread.sleep(SleepTime);
@@ -490,12 +469,7 @@ public class Stepdefs {
         findElementAndFill("bookTitle", "Test");
         findElementAndFill("isbn", Integer.toString(Math.abs(random.nextInt())));
         findElementAndFill("author", "Testaaja");
-
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBook').value='testUser'";
-        jse.executeScript(strJS);
-
+        
         driver.findElement(By.name("Add new book")).click();
 
         Thread.sleep(SleepTime);
@@ -535,11 +509,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoURL", "https://www.youtube.com/watch?v=WPvGqX-TXP0" + n);
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userVideo').value='testUser'";
-        jse.executeScript(strJS);
-
         element = driver.findElement(By.name("Add new video"));
         element.submit();
     }
@@ -556,11 +525,6 @@ public class Stepdefs {
         findElementAndFill("videoPoster", "Testaaja");
         Thread.sleep(SleepTime);
         findElementAndFill("videoURL", "https://youtu.be/XKu_SEDAykw" + n);
-
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userVideo').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new video"));
         element.submit();
@@ -580,11 +544,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoURL", "uWzPe_S-RVE" + n);
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userVideo').value='testUser'";
-        jse.executeScript(strJS);
-
         element = driver.findElement(By.name("Add new video"));
         element.submit();
         Thread.sleep(SleepTime);
@@ -599,11 +558,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoPoster", "Testaaja");
         Thread.sleep(SleepTime);
-
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userVideo').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new video"));
         element.submit();
@@ -622,10 +576,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoURL", "WPvGqX-TXP0" + n);
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userVideo').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new video"));
         element.submit();
@@ -642,10 +592,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoURL", "WPvGqX-TXP0" + n);
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userVideo').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new video"));
         element.submit();
@@ -665,13 +611,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("blogURL", "https://protesters.com/blogs/1");
 
-        // Sets user to "testUser"
-        System.out.println("Setting user to testuser");
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBlog').value='testUser'";
-        jse.executeScript(strJS);
-        System.out.println("User has been set to testUser");
-
         System.out.println("Finding element for add new blog button");
         driver.findElement(By.name("Add new blog")).click();
         System.out.println("button clicked");
@@ -686,10 +625,6 @@ public class Stepdefs {
         findElementAndFill("blogTitle", "TestTitle");
         Thread.sleep(SleepTime);
         findElementAndFill("blogPoster", "Testaaja");
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBlog').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new blog"));
         element.submit();
@@ -705,11 +640,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("blogURL", "https://protesters.com/blogs/1");
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBlog').value='testUser'";
-        jse.executeScript(strJS);
-
         element = driver.findElement(By.name("Add new blog"));
         element.submit();
         //driver.get(baseUrl + "books");
@@ -723,11 +653,6 @@ public class Stepdefs {
         findElementAndFill("blogTitle", "TestTitle");
         Thread.sleep(SleepTime);
         findElementAndFill("blogURL", "https://protesters.com/blogs/1");
-
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBlog').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new blog"));
         element.submit();
