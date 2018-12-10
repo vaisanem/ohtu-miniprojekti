@@ -44,6 +44,12 @@ public class ItemTypeManager {
         return videoMan;
     }
 
+    /**
+     * Returns a list of Strings representing tags that are linked to the ItemType with ID defined by parameter 'key'
+     * @param key
+     * @return
+     * @throws SQLException 
+     */
     public List<String> getTags(Integer key) throws SQLException {
         Connection connection = database.getConnection();
         CallableStatement stmt = connection.prepareCall("SELECT Tag.Description as Tag FROM Tag_ItemEntry INNER JOIN Tag ON Tag.id = Tag_ItemEntry.fk_Tag_id WHERE Tag_ItemEntry.fk_ItemEntry_id = ?");
@@ -63,6 +69,12 @@ public class ItemTypeManager {
         return tags;
     }
 
+    /**
+     * Returns a list of Strings representing comments that are linked to the ItemType with ID defined by parameter 'key'
+     * @param key
+     * @return
+     * @throws SQLException 
+     */
     public List<Comment> getCommentsForID(Integer key) throws SQLException {
         Connection connection = database.getConnection();
         CallableStatement stmt = connection.prepareCall("{call getCommentsForID(?)}");
@@ -83,6 +95,11 @@ public class ItemTypeManager {
         return comments;
     }
 
+    /**
+     * Returns a HashMap with the key as ItemID, and a list of Strings representing the tags of that item
+     * @return
+     * @throws SQLException 
+     */
     public HashMap<Integer, List<String>> getAllTags() throws SQLException {
         Connection connection = database.getConnection();
         CallableStatement stmt = connection.prepareCall("SELECT Tag_ItemEntry.fk_ItemEntry_id as id, Tag.Description as Tag FROM Tag_ItemEntry INNER JOIN Tag ON Tag.id = Tag_ItemEntry.fk_Tag_id");
@@ -199,6 +216,11 @@ public class ItemTypeManager {
         return filtered;
     }
 
+    /**
+     * Returns a HashMap with the ItemType ID as key, and a list of Comments as value
+     * @return
+     * @throws SQLException 
+     */
     public HashMap<Integer, List<Comment>> getAllComments() throws SQLException {
         Connection connection = database.getConnection();
         CallableStatement stmt = connection.prepareCall("{call getComments}");

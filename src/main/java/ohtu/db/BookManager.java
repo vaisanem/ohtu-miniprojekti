@@ -40,6 +40,28 @@ public class BookManager implements sqlManager<Book, Integer> {
         return diu == 1;
     }
 
+    /**
+     * Edit method requires input parameters of either new values, or THE OLD VALUES entered if values not changed!
+     * Input of empty field will edit the field on SQL to empty!!
+     * @param book
+     * @param newTitle
+     * @param newISBN
+     * @param newAuthor
+     * @throws SQLException 
+     */
+    public void edit(Book book, String newTitle, String newISBN, String newAuthor) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call editBookWithID(?, ?, ?, ?)}");
+        stmt.setObject(1, book.getId());
+        stmt.setObject(2, newTitle);
+        stmt.setObject(3, newISBN);
+        stmt.setObject(4, newAuthor);
+
+        stmt.executeUpdate();
+        stmt.close();
+        connection.close();
+    }
+
     @Override
     public Book findOne(Integer key) throws SQLException {
         Connection connection = database.getConnection();
