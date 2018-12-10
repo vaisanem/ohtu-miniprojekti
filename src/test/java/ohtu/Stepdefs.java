@@ -135,6 +135,16 @@ public class Stepdefs {
             System.out.println("Link " + buttonID + " was never found....");
         }
     }
+    
+    @Then("^user can successfully remove an item$")
+    public void successful_remove() throws Throwable {
+        int before = itemMan.findAll("testUser").size();
+        if (before > 0) {
+            user_clicks_button("remove");
+            int after = itemMan.findAll("testUser").size();
+            assertTrue(before > after);
+        }
+    }
 
     private void is_not_shown(String content) throws Throwable {
         Thread.sleep(SleepTime);
@@ -162,7 +172,7 @@ public class Stepdefs {
             for (int i = 0; i < 4; i++) {
                 Thread.sleep(SleepTime);
                 if (driver.getPageSource().contains(item.getTitle())) {
-                    if (driver.getPageSource().contains(item.getAuthor())) {
+                    if (driver.getPageSource().contains(item.getAuthor().trim())) {
                         found = true;
                         break;
                     }
@@ -235,6 +245,18 @@ public class Stepdefs {
             retryCount++;
         }
     }
+    
+    private Book getBook(int index) throws Throwable {
+        return itemMan.getBookMan().findAll("default").get(index);
+    }
+    
+    private Blog getBlog(int index) throws Throwable {
+        return itemMan.getBlogMan().findAll("default").get(index);
+    }
+    
+    private Video getVideo(int index) throws Throwable {
+        return itemMan.getVideoMan().findAll("default").get(index);
+    }
 
     @Then("^List of all \"([^\"]*)\" is shown$")
     public void list_of_all_is_shown(String WhatIsListed) throws Throwable {
@@ -250,19 +272,19 @@ public class Stepdefs {
             books.addAll(itemMan.getBookMan().findAll("default"));
             listOfAllItemsIsShown(books);
 
-            is_not_shown(itemMan.getBlogMan().findAll("default").get(0).getTitle());
+            is_not_shown(getBlog(0).getTitle());
         } else if (WhatIsListed.contains("blogs")) {
             List<ItemType> blogs = new ArrayList<>();
             blogs.addAll(itemMan.getBlogMan().findAll("default"));
             listOfAllItemsIsShown(blogs);
 
-            is_not_shown(itemMan.getBookMan().findAll("default").get(0).getTitle());
+            is_not_shown(getBook(0).getTitle());
         } else if (WhatIsListed.contains("videos")) {
             List<ItemType> videos = new ArrayList<>();
             videos.addAll(itemMan.getVideoMan().findAll("default"));
             listOfAllItemsIsShown(videos);
 
-            is_not_shown(itemMan.getBlogMan().findAll("default").get(0).getTitle());
+            is_not_shown(getBlog(0).getTitle());
         } else if (WhatIsListed.contains("unread")) {
             listOfAllItemsIsShown(unread);
 
@@ -345,10 +367,28 @@ public class Stepdefs {
     // <editor-fold desc="Book testing">
     @When("^link to book's page is clicked$")
     public void link_to_book_page_is_clicked() throws Throwable {
-        Book one = itemMan.getBookMan().findAll("default").get(0);
+        Book one = getBook(0);
         Thread.sleep(SleepTime);
         clickLinkWithText(one.getTitle().trim(), "book");
         Thread.sleep(SleepTime);
+    }
+    
+    @When("^link to book's author is clicked$")
+    public void link_to_book_author_is_clicked() throws Throwable {
+        Book one = getBook(0);
+        Thread.sleep(SleepTime);
+        clickLinkWithText(one.getAuthor().trim());
+        Thread.sleep(SleepTime);
+    }
+    
+    @Then("^book's author's works are shown$")
+    public void book_authors_works_are_shown() throws Throwable {
+        String author = getBook(0).getAuthor();
+        List<ItemType> by_author = itemMan.getItemsByAuthor(author);
+        listOfAllItemsIsShown(by_author);
+        String other = getBook(1).getAuthor();
+        ItemType unwanted = itemMan.getItemsByAuthor(other).get(0);
+        is_not_shown(unwanted.getTitle());
     }
 
     @When("^book fields title \"([^\"]*)\", isbn \"([^\"]*)\", author and year \"([^\"]*)\" are filled and submitted$")
@@ -357,7 +397,7 @@ public class Stepdefs {
         if (isbn.isEmpty()) {
             isbn = Integer.toString(Math.abs(random.nextInt()));
         } else if (isbn.equals("Already-in-use")) {
-            isbn = itemMan.getBookMan().findAll("default").get(0).getIsbn();
+            isbn = getBook(0).getIsbn();
         }
         findElementAndFill("bookTitle", title);
         findElementAndFill("isbn", isbn);
@@ -379,7 +419,7 @@ public class Stepdefs {
     @Then("^individual book is shown$")
     public void individual_book_is_shown() throws Throwable {
         //driver.get(baseUrl + "books/");
-        Book one = itemMan.getBookMan().findAll("default").get(0);
+        Book one = getBook(0);
         Thread.sleep(SleepTime);
         is_shown(one.getTitle());
         Thread.sleep(SleepTime);
@@ -467,7 +507,7 @@ public class Stepdefs {
     // <editor-fold desc="video testing">
     @When("^link to video's page is clicked$")
     public void link_to_video_s_page_is_clicked() throws Throwable {
-        Video one = itemMan.getVideoMan().findAll("default").get(0);
+        Video one = getVideo(0);
         Thread.sleep(SleepTime);
         clickLinkWithText(one.getTitle().trim(), "video");
         Thread.sleep(SleepTime);
@@ -475,7 +515,7 @@ public class Stepdefs {
 
     @Then("^individual video is shown$")
     public void individual_video_is_shown() throws Throwable {
-        Video one = itemMan.getVideoMan().findAll("default").get(0);
+        Video one = getVideo(0);
         Thread.sleep(SleepTime);
         is_shown(one.getTitle().trim());
         Thread.sleep(SleepTime);
@@ -812,7 +852,7 @@ public class Stepdefs {
     // <editor-fold desc="tag testing">
     @Given("^user is at book's page$")
     public void user_is_at_book_page() throws Throwable {
-        Book book = itemMan.getBookMan().findAll("default").get(0);
+        Book book = getBook(0);
         String new_url = baseUrl + "book/" + book.getId();
         System.out.println(new_url);
         driver.get(baseUrl + "book/" + book.getId());
@@ -820,13 +860,13 @@ public class Stepdefs {
 
     @Given("^user is at blog's page$")
     public void user_is_at_blog_page() throws Throwable {
-        Blog blog = itemMan.getBlogMan().findAll("default").get(0);
+        Blog blog = getBlog(0);
         driver.get(baseUrl + "blog/" + blog.getId());
     }
 
     @Given("^user is at video's page$")
     public void user_is_at_video_page() throws Throwable {
-        Video video = itemMan.getVideoMan().findAll("default").get(0);
+        Video video = getVideo(0);
         driver.get(baseUrl + "video/" + video.getId());
     }
 
@@ -844,5 +884,16 @@ public class Stepdefs {
         element.click();
     }
     // </editor-fold>
+    
+    //Comment testing
+    @When("^comment field is filled with \"([^\"]*)\" and submitted$")
+    public void comment_field_filled_and_submitted(String comment) throws Throwable {
+        Thread.sleep(SleepTime);
+        element = driver.findElement(By.id("comment"));
+        if (comment.isEmpty()) element.clear();
+        else element.sendKeys(comment);
+        element = driver.findElement(By.name("Add comment"));
+        element.submit();
+    }
 
 }

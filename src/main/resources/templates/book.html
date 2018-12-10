@@ -33,7 +33,7 @@
                 </form>
 
                 <h2> Author: </h2>
-                <p><span th:text="${book.author}"></span></p>
+                <a th:href="${'/author/' + book.author}" th:text="${book.author}"></a>
                 <h2> Release year: </h2>
                 <p><span th:text="${book.year}"></span></p>
                 <h2> ISBN:</h2>
