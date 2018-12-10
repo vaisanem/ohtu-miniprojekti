@@ -268,7 +268,7 @@ public class Controllers {
     }
     
     @PostMapping(value={"/blog/{id}/addComment", "/book/{id}/addComment", "/video/{id}/addComment"})
-    public String addCommentForItem(@PathVariable int id, ModelMap model, HttpServletRequest request, @RequestParam String type, @RequestParam String comment) throws SQLException {
+    public String addCommentToItem(@PathVariable int id, ModelMap model, HttpServletRequest request, @RequestParam String type, @RequestParam String comment) throws SQLException {
         String user = getUserFromCookie(request);
 
         if (user == null || user.equals("NOT LOGGED IN")) {
@@ -519,7 +519,7 @@ public class Controllers {
         return "video";
     }
     
-    @GetMapping("/{author}")
+    @GetMapping("/author/{author}")
     public String author(@PathVariable String author, ModelMap model) throws SQLException {
         model.addAttribute("author", author);
         model.addAttribute("items", itemMan.getItemsByAuthor(author));

@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 
     <head>
-        <title>Blog</title>
+        <title>Author</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="stylesheet" href="/style.css"/>
     </head>
@@ -19,10 +19,10 @@
             <h3><span th:text="${author}"></span></h3>
             <br/>
             <br/>
-            <h2> Tags:</h2>
+            <h2> Works:</h2>
             <ul class="items">
-                <li class="tags" th:each="tag: ${tags}">
-                    <p><span th:text="${tag}"></span></p>
+                <li class="items" th:each="item: ${items}">
+                    <p><span th:text="${item}"></span></p>
                 </li>
             </ul>
         </div>
