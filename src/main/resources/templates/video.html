@@ -33,7 +33,7 @@
                     </form>
 
                     <h2> Author: </h2>
-                    <p><span th:text="${video.poster}"></span></p>
+                    <a th:href="${'/author/' + video.poster}" th:text="${video.poster}"></a>
                     <h2> URL: </h2>
                     <a th:href="@{https://www.youtube.com/watch?v={url} (url=${video.URL})}" target="_blank"><span th:text="@{https://www.youtube.com/watch?v={url} (url=${video.URL})}"></span></a>
                     <h2> Rating : </h2>
