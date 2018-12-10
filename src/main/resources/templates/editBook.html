@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Edit Book</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css"/>
+    </head>
+
+    <body>
+        <ul class = "nav">
+            <li class="nav"><a href="/">Home</a></li>
+            <li class="nav"><a href="/items">View List</a></li>
+            <li class="nav"><a href="/newItem">Add new item</a></li>
+        </ul>
+
+        <div class='all'>
+            
+            <h2><span th:text="'Edit Book: ' + ${book.title}"></span></h2>
+
+            <form  method="POST" name="EditBook" action="Edit">
+
+                <br/>
+                
+                <input type="hidden" id="type" name="type" th:value ="book"/>
+
+                Title of book:<br/>
+                <input type="text" id="title" name="bookTitle" th:value="${book.title}"/><br/>
+
+                ISBN:  <br/>
+                <input type="text" id="isbn" name="isbn" th:value="${book.isbn}"/><br/>
+
+                Author: <br/>
+                <input type="text" id="author" name="author" th:value="${book.author}"/><br/>
+
+                Publishing year: <br/>
+                <input type="text" id="year" name="year" th:value="${book.year}"/><br/>
+
+                <input type="submit" value="Edit book" name="Edit book"/>
+            </form>
+            
+        </div>
+
+    </body>
+
+</html>

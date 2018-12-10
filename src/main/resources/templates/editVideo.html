@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Edit Video</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css"/>
+    </head>
+
+    <body>
+        <ul class = "nav">
+            <li class="nav"><a href="/">Home</a></li>
+            <li class="nav"><a href="/items">View List</a></li>
+            <li class="nav"><a href="/newItem">Add new item</a></li>
+        </ul>
+
+        <div class='all'>
+            <h2><span th:text="'Edit Video: ' + ${video.title}"></span></h2>
+            <form method="POST" name="EditVideo" action="Edit">
+                
+                <br/>               
+                
+                <input type="hidden" id="type" name="type" value ="video"/>
+
+                Title:<br/>
+                <input type="text" id="videoTitle" name="videoTitle" th:value="{$video.title}"/><br/>
+
+                URL:<br/>
+                <input type="text" id="videoURL" name="videoURL" th:value="{$video.URL}"/><br/>
+
+                Video Posted By:<br/>
+                <input type="text" id="videoPoster" name="videoPoster" th:value="{$video.poster}"/><br/>
+
+                <input type="submit" value="Add new video" name="Add new video"/>
+
+            </form>
+        </div>
+    </body>
+
+</html>

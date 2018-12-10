@@ -35,7 +35,7 @@
                     <a th:href="${'/author/' + blog.poster}" th:text="${blog.poster}"></a>	
 		    <h2>URL:</h2>
 		    <a th:href="${blog.URL}"><span th:text="${blog.URL}"></span></a>
-		    <h2> Rating : </h2>
+		    <h2> Average rating: </h2>
                     <p><span th:text="${blog.rating}"></span></p>
         	    <h2> Tags:</h2>
 		    <ul class="items">
@@ -64,8 +64,12 @@
                     </form>
 		</div>
 		<div class="right">
+                    <form method="GET" name="EditBlog">
+                        <input type="submit" value="Edit Blog" name="Edit Blog"/>
+                    </form>
+                    <br/>
 		    <h2>Comments</h2>
-                    <ul class="items">
+                    <ul class="comments">
 			<li class="comments" th:each="comment: ${comments}">
                             <p><span th:utext="${comment.userName + ' at: ' + comment.timeStamp +  '&lt;br&gt;' + comment.text}"></span></p>
 			</li>

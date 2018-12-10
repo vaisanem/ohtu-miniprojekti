@@ -44,6 +44,7 @@ p {
     font-family: verdana;
     font-size: 15px;
     margin-left: 40px;
+    line-height: 150%;
 }
 a {
     text-decoration: underline;
@@ -133,7 +134,7 @@ div.left {
 div.right {
     float: left;
     width: 50%;
-    margin-top: 100px;
+    margin-top: 60px;
 }
 
 div.row:after {
@@ -159,4 +160,18 @@ Button.remove:hover {
     /* background-image: linear-gradient(to bottom right, #3DCCCC, #008080); */
     background-image: radial-gradient(#FF0000,#a50000);
     color: white;
+}
+
+/*comment styling */
+
+ul.comments {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    width: 70%;
+}
+li.comments {
+    border: 1px solid black;
+    margin-bottom: 5px;
 }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Edit Blog</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css"/>
+    </head>
+
+    <body>
+        <ul class = "nav">
+            <li class="nav"><a href="/">Home</a></li>
+            <li class="nav"><a href="/items">View List</a></li>
+            <li class="nav"><a href="/newItem">Add new item</a></li>
+        </ul>
+        
+        <div class='all'>
+            
+            <h2><span th:text="'Edit Blog: ' + ${blog.title}"></span></h2>
+
+           <form  method="POST" name="EditBlog" action="Edit">
+
+                    <br/>                   
+		    <input type="hidden" id="type" name="type" value ="blog"/>
+                    Title:<br/>
+                    <input type="text" id="blogTitle" name="blogTitle" th:value="${blog.title}"/><br/>
+
+                    URL:<br/>         
+                    <input type="text" id="blogURL" name="blogURL" th:value="${blog.URL}"/><br/>
+
+                    Blog Posted By:<br/>
+                    <input type="text" id="blogPoster" name="blogPoster" th:value="${blog.poster}"/><br/>
+
+                    <input type="submit" value="Edit Blog" name="Edit blog"/>
+
+                </form>
+            
+        </div>
+    </body>
+
+</html>

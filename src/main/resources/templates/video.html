@@ -36,7 +36,7 @@
                     <a th:href="${'/author/' + video.poster}" th:text="${video.poster}"></a>
                     <h2> URL: </h2>
                     <a th:href="@{https://www.youtube.com/watch?v={url} (url=${video.URL})}" target="_blank"><span th:text="@{https://www.youtube.com/watch?v={url} (url=${video.URL})}"></span></a>
-                    <h2> Rating : </h2>
+                    <h2> Average rating: </h2>
                     <p><span th:text="${video.rating}"></span></p>
                     <h2> Tags:</h2>
                     <ul class="items">
@@ -54,7 +54,7 @@
                             <option id="RateFour" value="RatedFour" th:selected="${RateSelect=='RatedFour'}">4</option>
                             <option id="RateFive" value="RatedFive" th:selected="${RateSelect=='RatedFive'}">5 (best)</option>
                         </select>
-                                        <input type="hidden" id="type" name="id" th:value ="${video.id}"/>	
+                        <input type="hidden" id="type" name="id" th:value ="${video.id}"/>	
                         <input type="submit" value="Rate" name="Rate"/>
                     </form>
                     <br/>
@@ -64,12 +64,16 @@
                         <input type="submit" value="Add tag" name="Add tag" />
                     </form>
                 </div>
-		<div class="right">
-		    <h2>Comments</h2>
-                    <ul class="items">
-			<li class="comments" th:each="comment: ${comments}">
+                <br/>
+                <div class="right">
+                    <form method="GET" name="EditVideo">
+                        <input type="submit" value="Edit Video" name="Edit Video"/>
+                    </form>
+                    <h2>Comments</h2>
+                    <ul class="comments">
+                        <li class="comments" th:each="comment: ${comments}">
                             <p><span th:utext="${comment.userName + ' at: ' + comment.timeStamp +  '&lt;br&gt;' + comment.text}"></span></p>
-			</li>
+                        </li>
                     </ul>
                     <form  method="POST" id="addComment" name="addComment" th:action="${video.id + '/addComment'}">
                         <input type="hidden" id="itemType" name="type" value ="video"/>
@@ -82,7 +86,7 @@
             <br/>
 
             <iframe width="1280" height="720" th:src="@{https://www.youtube.com/embed/{url} (url=${video.URL})}"/>
-            
+
         </div>
     </body>
 </html>

@@ -38,7 +38,7 @@
                 <p><span th:text="${book.year}"></span></p>
                 <h2> ISBN:</h2>
                 <p><span th:text="${book.isbn}"></span></p>
-                <h2> Rating : </h2>
+                <h2> Average rating: </h2>
                 <p><span th:text="${book.rating}"></span></p>
                 <h2> Tags:</h2>
                 <ul class="items">
@@ -67,8 +67,12 @@
                 </form>
                 </div>
 		<div class="right">
+                    <form method="GET" name="EditBook">
+                        <input type="submit" value="Edit Book" name="Edit Book"/>
+                    </form>
+                    <br/>
 		    <h2>Comments</h2>
-                    <ul class="items">
+                    <ul class="comments">
 			<li class="comments" th:each="comment: ${comments}">
                             <p><span th:utext="${comment.userName + ' at: ' + comment.timeStamp +  '&lt;br&gt;' + comment.text}"></span></p>
 			</li>
