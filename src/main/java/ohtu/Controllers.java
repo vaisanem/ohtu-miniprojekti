@@ -156,6 +156,33 @@ public class Controllers {
         return "redirect:/error";
     }
 
+    public void validateBookParams(Optional<String> author, Optional<String> isbn, Optional<String> bookTitle, Optional<String> year) {
+        if (!Book.checkNumericality(year.get())) {
+            errors.add("Missing year or not numeric");
+        }
+        if (isbn.get().isEmpty()) {
+            errors.add("Missing ISBN");
+        }
+        if (bookTitle.get().isEmpty()) {
+            errors.add("Missing Title");
+        }
+        if (author.get().isEmpty()) {
+            errors.add("Missing Author");
+        }
+    }
+
+    public void validateVideoOrBlogParams(Optional<String> url, Optional<String> title, Optional<String> author) {
+        if (url.get().isEmpty()) {
+            errors.add("Missing URL");
+        }
+        if (title.get().isEmpty()) {
+            errors.add("Missing Title");
+        }
+        if (author.get().isEmpty()) {
+            errors.add("Missing Poster");
+        }
+    }
+
     @PostMapping("/addItem")
     public String addItem(ModelMap model, @RequestParam String type, HttpServletRequest request,
             @RequestParam Optional<String> bookTitle, @RequestParam Optional<String> isbn, @RequestParam Optional<String> year, @RequestParam Optional<String> author, //book
@@ -173,18 +200,7 @@ public class Controllers {
         switch (type) {
             case "book": {
                 System.out.println("Redirected user : " + user);
-                if (!Book.checkNumericality(year.get())) {
-                    errors.add("Missing year or not numeric");
-                }
-                if (isbn.get().isEmpty()) {
-                    errors.add("Missing ISBN");
-                }
-                if (bookTitle.get().isEmpty()) {
-                    errors.add("Missing Title");
-                }
-                if (author.get().isEmpty()) {
-                    errors.add("Missing Author");
-                }
+                validateBookParams(author, isbn, bookTitle, year);
                 if (!errors.isEmpty()) {
                     model.addAttribute("errors", errors);
                     return "newItem";
@@ -208,15 +224,7 @@ public class Controllers {
 
             case "video": {
                 System.out.println("Redirected user : " + user);
-                if (videoURL.get().isEmpty()) {
-                    errors.add("Missing URL");
-                }
-                if (videoTitle.get().isEmpty()) {
-                    errors.add("Missing Title");
-                }
-                if (videoPoster.get().isEmpty()) {
-                    errors.add("Missing Poster");
-                }
+                validateVideoOrBlogParams(videoURL, videoTitle, videoPoster);
                 if (!errors.isEmpty()) {
                     model.addAttribute("errors", errors);
                     return "newItem";
@@ -234,15 +242,7 @@ public class Controllers {
 
             case "blog": {
                 System.out.println("Redirected user : " + user);
-                if (blogURL.get().isEmpty()) {
-                    errors.add("Missing URL");
-                }
-                if (blogTitle.get().isEmpty()) {
-                    errors.add("Missing Title");
-                }
-                if (blogPoster.get().isEmpty()) {
-                    errors.add("Missing Poster");
-                }
+                validateVideoOrBlogParams(blogURL, blogTitle, blogPoster);
                 if (!errors.isEmpty()) {
                     model.addAttribute("errors", errors);
                     return "newItem";
