@@ -141,3 +141,9 @@ div.row:after {
   display: table;
   clear: both;
 }
+
+Button.remove {
+  padding: 7px 15px;
+  background-color: #f45f41;
+  border-radius: 12px;
+}

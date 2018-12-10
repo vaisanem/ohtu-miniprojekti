@@ -21,8 +21,8 @@
             <br/>
             <h2> Works:</h2>
             <ul class="items">
-                <li class="items" th:each="item: ${items}">
-                    <p><span th:text="${item}"></span></p>
+                <li th:each="item: ${items}">
+                    <a th:href="${'/' + item.type +'/' + item.id}"  th:text="${item.type + ' - ' + item.title}"></a>
                 </li>
             </ul>
         </div>
