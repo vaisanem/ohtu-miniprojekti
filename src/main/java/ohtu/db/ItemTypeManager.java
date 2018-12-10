@@ -318,7 +318,6 @@ public class ItemTypeManager {
     }
     
     public void addCommentToItem(String comment, int id, String user) throws SQLException {
-        if (comment.isEmpty()) throw new SQLException("Missing comment");
         Connection connection = database.getConnection();
         CallableStatement stmt = connection.prepareCall("{call AddCommentToItem(?, ?, ?)}");
         stmt.setObject(1, comment);

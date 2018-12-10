@@ -11,7 +11,7 @@ Feature: User can comment items
     And link for "book" named "Cucumber" is clicked
     And user is redirected to "/book"
     When comment field is filled with "" and submitted
-    Then "Missing comment" is shown
+    Then "Empty comments" is shown
 
   Scenario: user can add comment
     Given user is at the main page
@@ -23,5 +23,5 @@ Feature: User can comment items
     And user is redirected to "/items"
     And link for "book" named "Cucumber" is clicked
     And user is redirected to "/book"
-    When comment field is filled with " please" and submitted
-    Then "Share us your opinion please" is shown
+    When comment field is filled with ", but what if not want" and submitted
+    Then "Leave a comment, but what if not want" is shown
