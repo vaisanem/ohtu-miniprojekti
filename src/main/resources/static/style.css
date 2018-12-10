@@ -64,7 +64,7 @@ ul.nav {
     height: 100%;
     position: fixed;
     overflow: auto;
-   }
+}
 li.nav a {
     color: black;
     font-family: verdana;
@@ -72,11 +72,11 @@ li.nav a {
     display: block;
     padding: 10px 20px;
     margin-left: 0;
-    
+
 }
 li.nav {
     text-align: center;
-    
+
 }
 
 li.nav a.active {
@@ -126,24 +126,37 @@ div.formthings {
 /* divs for displaying comments on the side*/
 
 div.left {
-  float: left;
-  width: 50%;
+    float: left;
+    width: 50%;
 }
 
 div.right {
-  float: left;
-  width: 50%;
-  margin-top: 100px;
+    float: left;
+    width: 50%;
+    margin-top: 100px;
 }
 
 div.row:after {
-  content: "";
-  display: table;
-  clear: both;
+    content: "";
+    display: table;
+    clear: both;
 }
-
+/* remove button styling*/ 
 Button.remove {
-  padding: 7px 15px;
-  background-color: #f45f41;
-  border-radius: 12px;
+    padding: 7px 15px;
+    margin-top: 5px;
+    margin-right: 5px;
+    border:none;
+    color: black;
+    background-color: white;
+    /* background-color: #f45f41; */
+    /* background-image: linear-gradient(to bottom right, gray, black); */
+    background-image: radial-gradient(white,#C0C0C0);
+    border-radius: 12px;
+
+}
+Button.remove:hover {
+    /* background-image: linear-gradient(to bottom right, #3DCCCC, #008080); */
+    background-image: radial-gradient(#FF0000,#a50000);
+    color: white;
 }
