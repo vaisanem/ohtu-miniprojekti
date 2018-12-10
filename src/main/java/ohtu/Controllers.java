@@ -533,6 +533,11 @@ public class Controllers {
             return "error";
         }
 
+        if (comment == null || comment.equals("Leave a comment") || comment.length() == 0) {
+            model.addAttribute("error", "Empty comments are not allowed!");
+            return "error";
+        }
+
         try {
             itemMan.addCommentToItem(comment, id, user);
             return "redirect:/" + type + '/' + id;
