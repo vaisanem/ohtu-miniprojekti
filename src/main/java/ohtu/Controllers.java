@@ -35,6 +35,18 @@ public class Controllers {
     }
 
     // <editor-fold desc="Login management">
+    public String getUserFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        String user = "NOT LOGGED IN";
+        if (cookies != null) {
+            Optional<Cookie> cooki = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findFirst();
+            if (cooki.isPresent()) {
+                user = cooki.get().getValue();
+            }
+        }
+        return user;
+    }
+
     @PostMapping("/login")
     public String login(ModelMap model, HttpServletRequest request, HttpServletResponse response, @RequestParam String username, @RequestParam String password, @RequestParam("targetURL") String target) {
         if (username.equals("default") || username.equals("testUser")) {
@@ -528,18 +540,6 @@ public class Controllers {
             model.addAttribute("error", "Adding comment failed. " + e.toString());
         }
         return "error";
-    }
-
-    public String getUserFromCookie(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        String user = "NOT LOGGED IN";
-        if (cookies != null) {
-            Optional<Cookie> cooki = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findFirst();
-            if (cooki.isPresent()) {
-                user = cooki.get().getValue();
-            }
-        }
-        return user;
     }
 
     private String addTagForItem(int id, ModelMap model, String tag, ItemType item) throws SQLException {
