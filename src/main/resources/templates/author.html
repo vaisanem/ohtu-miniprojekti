@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Blog</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" href="/style.css"/>
+    </head>
+
+    <body>
+        <ul class = "nav">
+            <li class="nav"><a href="/">Home</a></li>
+            <li class="nav"><a href="/items">View List</a></li>
+            <li class="nav"><a href="/newItem">Add new item</a></li>
+        </ul>
+
+
+        <div class="all">
+            <h3><span th:text="${author}"></span></h3>
+            <br/>
+            <br/>
+            <h2> Tags:</h2>
+            <ul class="items">
+                <li class="tags" th:each="tag: ${tags}">
+                    <p><span th:text="${tag}"></span></p>
+                </li>
+            </ul>
+        </div>
+    </body>
+</html>

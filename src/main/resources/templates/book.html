@@ -73,6 +73,11 @@
                             <p><span th:utext="${comment.userName + ' at: ' + comment.timeStamp +  '&lt;br&gt;' + comment.text}"></span></p>
 			</li>
                     </ul>
+                    <form  method="POST" id="addComment" name="addComment" th:action="${book.id + '/addComment'}">
+                        <input type="hidden" id="itemType" name="type" value ="book"/>
+                        <textarea form="addComment" id="comment" name="comment" rows="3" cols="30">Share us your opinion</textarea>
+                        <input type="submit" value="Comment" name="Add comment" />
+                    </form>
                 </div> 
             </div>
         </div>

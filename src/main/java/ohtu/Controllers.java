@@ -16,15 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class Controllers {
@@ -271,6 +266,24 @@ public class Controllers {
         Video video = itemMan.getVideoMan().findOne(id);
         return addTagForItem(id, model, tag, video);
     }
+    
+    @PostMapping(value={"/blog/{id}/addComment", "/book/{id}/addComment", "/video/{id}/addComment"})
+    public String addCommentForItem(@PathVariable int id, ModelMap model, HttpServletRequest request, @RequestParam String type, @RequestParam String comment) throws SQLException {
+        String user = getUserFromCookie(request);
+
+        if (user == null || user.equals("NOT LOGGED IN")) {
+            model.addAttribute("error", "You must be logged in to perform this action.");
+            return "error";
+        }
+        
+        try {
+            itemMan.addCommentToItem(comment, id, user);
+            return "redirect:/" + type + '/' + id;
+        } catch (Exception e) {
+            model.addAttribute("error", "Adding comment failed. " + e.toString());
+        }
+        return "error";
+    }
 
     @RequestMapping(value = "*/markRead", method = RequestMethod.GET)
     public String markItemAsReadOrUnRead(ModelMap model, HttpServletRequest request, @RequestParam Integer id, @RequestParam(value = "action", required = true) String action) {
@@ -505,6 +518,13 @@ public class Controllers {
         model.addAttribute("comments", video.getComments());
         return "video";
     }
+    
+    @GetMapping("/{author}")
+    public String author(@PathVariable String author, ModelMap model) throws SQLException {
+        model.addAttribute("author", author);
+        model.addAttribute("items", itemMan.getItemsByAuthor(author));
+        return "author";
+    }
 
     private String addTagForItem(int id, ModelMap model, String tag, ItemType item) throws SQLException {
         clearErrorsBeforeAdding();
@@ -574,6 +594,6 @@ public class Controllers {
 
     private void clearErrorsBeforeAdding() {
         errors.clear();
-    }
-
+    } 
+    
 }

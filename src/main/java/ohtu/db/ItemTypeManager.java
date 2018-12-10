@@ -11,9 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import ohtu.types.*;
 
 /**
@@ -108,15 +106,6 @@ public class ItemTypeManager {
         connection.close();
 
         return tags;
-    }
-
-    public Set<String> getSetOfAllTags() throws SQLException { //Sraight-forward SQL-implementaton perhaps better
-        HashMap<Integer, List<String>> tagsById = getAllTags();
-        Set<String> allTags = new HashSet<>();
-        for (int key : tagsById.keySet()) {
-            allTags.addAll(tagsById.get(key));
-        }
-        return allTags;
     }
 
     public ItemType findOne(Integer key, ItemType.typeIdentifier type) throws SQLException {
@@ -304,6 +293,20 @@ public class ItemTypeManager {
         } else {
             return false;
         }
+    }
+    
+    public void addCommentToItem(String comment, int id, String user) throws SQLException {
+        if (comment.isEmpty()) return;
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call AddCommentToItem(?, ?, ?)}");
+        stmt.setObject(1, comment);
+        stmt.setObject(2, id);
+        stmt.setObject(3, user);
+
+        stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
     }
 
     public void delete(Integer id, String user) throws SQLException {
