@@ -184,7 +184,7 @@ public class Stepdefs {
             }
 
         }
-        System.out.println("Everything found.);
+        System.out.println("Everything found.");
         assertTrue(EverythingIsThere);
     }
 
