@@ -326,6 +326,75 @@ public class Controllers {
         return "items";
     }
 
+    @RequestMapping(value = "*/edit", method = RequestMethod.POST)
+    public String goToEditPage(ModelMap model, HttpServletRequest request, @RequestParam Integer itemId, @RequestParam String itemTypeId, RedirectAttributes redirects) {
+        String user = getUserFromCookie(request);
+
+        if (user == null || user.equals("NOT LOGGED IN")) {
+            return "error";
+        }
+        redirects.addFlashAttribute(itemId);
+        switch (itemTypeId) {
+            case "video": {
+                return "redirect:/video/" + itemId + "/editVideo";
+            }
+            case "blog": {
+                return "redirect:/blog/" + itemId + "/editBlog";
+            }
+            case "book": {
+                return "redirect:/book/" + itemId + "/editBook";
+            }
+            default: {
+                return "error";
+            }
+        }
+    }
+
+    @RequestMapping(value = "/video/{id}/editVideo", method = RequestMethod.GET)
+    public String editVideo(ModelMap model, @PathVariable int id) throws SQLException {
+        Video v = itemMan.getVideoMan().findOne(id);
+        model.addAttribute("video", v);
+        return "editVideo";
+    }
+
+    @RequestMapping(value = "/blog/{id}/editBlog", method = RequestMethod.GET)
+    public String editBlog(ModelMap model, @PathVariable int id) throws SQLException {
+        Blog b = itemMan.getBlogMan().findOne(id);
+        model.addAttribute("blog", b);
+        return "editBlog";
+    }
+
+    @RequestMapping(value = "/book/{id}/editBook", method = RequestMethod.GET)
+    public String editBook(ModelMap model, @PathVariable int id) throws SQLException {
+        Book b = itemMan.getBookMan().findOne(id);
+        model.addAttribute("book", b);
+        return "editBook";
+    }
+
+    @PostMapping("/video/{id}/SaveVideo")
+    public String SaveVid(@RequestParam String videoTitle, @RequestParam String videoURL, @RequestParam String videoPoster, @PathVariable int id) throws SQLException {
+        if (videoURL.contains("watch?v=")) {
+            videoURL = videoURL.substring(videoURL.indexOf('=') + 1);
+        } else if (videoURL.contains("youtu.be")) {
+            videoURL = videoURL.substring(videoURL.indexOf('.') + 4);
+        }
+        itemMan.getVideoMan().edit(id, videoTitle, videoURL, videoPoster);
+        return "redirect:/items";
+    }
+
+    @PostMapping("/blog/{id}/SaveBlog")
+    public String SaveBlog(@RequestParam String blogTitle, @RequestParam String blogURL, @RequestParam String blogPoster, @PathVariable int id) throws SQLException {
+        itemMan.getBlogMan().edit(id, blogTitle, blogURL, blogPoster);
+        return "redirect:/items";
+    }
+
+    @PostMapping("/book/{id}/SaveBook")
+    public String SaveBook(@RequestParam String bookTitle, @RequestParam String isbn, @RequestParam String author, @RequestParam String year, @PathVariable int id) throws SQLException {
+        int integerYear = Integer.parseInt(year);
+        itemMan.getBookMan().edit(id, bookTitle, isbn, author, integerYear);
+        return "redirect:/items";
+    }
+
     //</editor-fold>
     //Spacer
     //

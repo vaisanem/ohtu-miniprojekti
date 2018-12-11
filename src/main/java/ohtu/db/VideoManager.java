@@ -48,20 +48,19 @@ public class VideoManager implements sqlManager<Video, Integer> {
      * VALUES entered if values not changed! Input of empty field will edit the
      * field on SQL to empty!!
      *
-     * @param book
+     * @param id
+     * @param newURL
      * @param newTitle
-     * @param newISBN
      * @param newAuthor
      * @throws SQLException
      */
-    public void edit(Video video, String newTitle, String newURL, String newAuthor, int newReleaseYear) throws SQLException {
+    public void edit(int id, String newTitle, String newURL, String newAuthor) throws SQLException {
         Connection connection = database.getConnection();
-        CallableStatement stmt = connection.prepareCall("{call editVideoWithID(?, ?, ?, ?, ?)}");
-        stmt.setObject(1, video.getId());
+        CallableStatement stmt = connection.prepareCall("{call editVideoWithID(?, ?, ?, ?)}");
+        stmt.setObject(1, id);
         stmt.setObject(2, newTitle);
         stmt.setObject(3, newURL);
         stmt.setObject(4, newAuthor);
-        stmt.setObject(5, newReleaseYear);
 
         stmt.executeUpdate();
         stmt.close();

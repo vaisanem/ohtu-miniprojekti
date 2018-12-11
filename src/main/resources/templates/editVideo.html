@@ -3,8 +3,7 @@
 
     <head>
         <title>Edit Video</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8"/>
         <link rel="stylesheet" href="/style.css"/>
     </head>
 
@@ -17,22 +16,22 @@
 
         <div class='all'>
             <h2><span th:text="'Edit Video: ' + ${video.title}"></span></h2>
-            <form method="POST" name="EditVideo" action="Edit">
-                
+            <form method="POST" name="SaveVideo" action="SaveVideo">
+
                 <br/>               
-                
+
                 <input type="hidden" id="type" name="type" value ="video"/>
 
                 Title:<br/>
-                <input type="text" id="videoTitle" name="videoTitle" th:value="{$video.title}"/><br/>
+                <input style='width:400px;' type="text" id="videoTitle" name="videoTitle" th:value="${video.title}"/><br/>
 
                 URL:<br/>
-                <input type="text" id="videoURL" name="videoURL" th:value="{$video.URL}"/><br/>
+                <input style='width:400px;' type="text" id="videoURL" name="videoURL" th:value="@{https://www.youtube.com/watch?v={url} (url=${video.URL})}"/><br/>
 
                 Video Posted By:<br/>
-                <input type="text" id="videoPoster" name="videoPoster" th:value="{$video.poster}"/><br/>
+                <input style='width:400px;' type="text" id="videoPoster" name="videoPoster" th:value="${video.poster}"/><br/>
 
-                <input type="submit" value="Add new video" name="Add new video"/>
+                <input type="submit" value="Save changes" name="Save changes"/>
 
             </form>
         </div>

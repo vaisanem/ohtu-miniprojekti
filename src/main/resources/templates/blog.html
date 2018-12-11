@@ -64,7 +64,9 @@
                     </form>
 		</div>
 		<div class="right">
-                    <form method="GET" name="EditBlog">
+                    <form method="POST" name="edit" action="edit">
+                        <input type="hidden" id="itemId" name="itemId" th:value ="${blog.id}"/>
+                        <input type="hidden" id="itemType" name="itemTypeId" value ="blog"/>
                         <input type="submit" value="Edit Blog" name="Edit Blog"/>
                     </form>
                     <br/>

@@ -66,7 +66,9 @@
                 </div>
                 <br/>
                 <div class="right">
-                    <form method="GET" name="EditVideo">
+                    <form method="POST" name="edit" action="edit">
+                        <input type="hidden" id="itemId" name="itemId" th:value ="${video.id}"/>
+                        <input type="hidden" id="itemType" name="itemTypeId" value ="video"/>
                         <input type="submit" value="Edit Video" name="Edit Video"/>
                     </form>
                     <h2>Comments</h2>

@@ -4,8 +4,7 @@
 
     <head>
         <title>Edit Blog</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8"/>
         <link rel="stylesheet" href="/style.css"/>
     </head>
 
@@ -20,20 +19,20 @@
             
             <h2><span th:text="'Edit Blog: ' + ${blog.title}"></span></h2>
 
-           <form  method="POST" name="EditBlog" action="Edit">
+           <form  method="POST" name="SaveBlog" action="SaveBlog">
 
                     <br/>                   
 		    <input type="hidden" id="type" name="type" value ="blog"/>
                     Title:<br/>
-                    <input type="text" id="blogTitle" name="blogTitle" th:value="${blog.title}"/><br/>
+                    <input style='width:400px;' type="text" id="blogTitle" name="blogTitle" th:value="${blog.title}"/><br/>
 
                     URL:<br/>         
-                    <input type="text" id="blogURL" name="blogURL" th:value="${blog.URL}"/><br/>
+                    <input style='width:400px;' type="text" id="blogURL" name="blogURL" th:value="${blog.URL}"/><br/>
 
                     Blog Posted By:<br/>
-                    <input type="text" id="blogPoster" name="blogPoster" th:value="${blog.poster}"/><br/>
+                    <input style='width:400px;' type="text" id="blogPoster" name="blogPoster" th:value="${blog.poster}"/><br/>
 
-                    <input type="submit" value="Edit Blog" name="Edit blog"/>
+                    <input type="submit" value="Save changes" name="Save changes"/>
 
                 </form>
             

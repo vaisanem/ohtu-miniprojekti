@@ -4,8 +4,8 @@
 
     <head>
         <title>Edit Book</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8"/>
+
         <link rel="stylesheet" href="/style.css"/>
     </head>
 
@@ -20,25 +20,25 @@
             
             <h2><span th:text="'Edit Book: ' + ${book.title}"></span></h2>
 
-            <form  method="POST" name="EditBook" action="Edit">
+            <form  method="POST" name="SaveBook" action="SaveBook">
 
                 <br/>
                 
                 <input type="hidden" id="type" name="type" th:value ="book"/>
 
                 Title of book:<br/>
-                <input type="text" id="title" name="bookTitle" th:value="${book.title}"/><br/>
+                <input style='width:400px;' type="text" id="title" name="bookTitle" th:value="${book.title}"/><br/>
 
                 ISBN:  <br/>
-                <input type="text" id="isbn" name="isbn" th:value="${book.isbn}"/><br/>
+                <input style='width:400px;' type="text" id="isbn" name="isbn" th:value="${book.isbn}"/><br/>
 
                 Author: <br/>
-                <input type="text" id="author" name="author" th:value="${book.author}"/><br/>
+                <input style='width:400px;' type="text" id="author" name="author" th:value="${book.author}"/><br/>
 
                 Publishing year: <br/>
-                <input type="text" id="year" name="year" th:value="${book.year}"/><br/>
+                <input style='width:400px;' type="text" id="year" name="year" th:value="${book.year}"/><br/>
 
-                <input type="submit" value="Edit book" name="Edit book"/>
+                <input type="submit" value="Save changes" name="Save changes"/>
             </form>
             
         </div>
