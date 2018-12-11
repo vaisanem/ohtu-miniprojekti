@@ -59,7 +59,7 @@ public class ItemPropertyManagementController {
     }
 
     @RequestMapping(value = "*/markRead", method = RequestMethod.GET)
-    public String markItemAsReadOrUnRead(ModelMap model, HttpServletRequest request, @RequestParam Integer id, @RequestParam(value = "action", required = true) String action) {
+    public String markItemAsReadOrUnRead(ModelMap model, HttpServletRequest request, @RequestParam Integer id, @RequestParam(value = "action", required = true) String action) throws SQLException {
         String user = userController.getUserFromCookie(request);
 
         if (user == null || user.equals("NOT LOGGED IN")) {
@@ -69,23 +69,13 @@ public class ItemPropertyManagementController {
         switch (action) {
 
             case "Mark as read": {
-                try {
-                    itemMan.markAsRead(id, user);
-                    return "redirect:/items";
-                } catch (SQLException ex) {
-                    model.addAttribute("error", "marking book as read failed... Error stack : " + ex.toString());
-                    return "error";
-                }
+                itemMan.markAsRead(id, user);
+                return "redirect:/items";
             }
 
             case "Mark as unread": {
-                try {
-                    itemMan.markAsUnRead(id, user);
-                    return "redirect:/items";
-                } catch (SQLException ex) {
-                    model.addAttribute("error", "marking book as unread failed... Error stack : " + ex.toString());
-                    return "error";
-                }
+                itemMan.markAsUnRead(id, user);
+                return "redirect:/items";
             }
 
             default: {
@@ -195,11 +185,7 @@ public class ItemPropertyManagementController {
         if (tag.isEmpty()) {
             errors.add("Missing tag");
         } else {
-            try {
-                itemMan.addTagToItem(id, tag);
-            } catch (Exception e) {
-                errors.add(e.toString());
-            }
+            itemMan.addTagToItem(id, tag);
         }
         if (!errors.isEmpty()) {
             model.addAttribute(item.getType().name(), item);
