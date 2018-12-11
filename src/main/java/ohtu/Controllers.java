@@ -79,13 +79,13 @@ public class Controllers {
     public String removeItem(ModelMap model, HttpServletRequest request, @RequestParam Integer itemID) throws SQLException {
         String user = userController.getUserFromCookie(request);
 
-        if (!user.equals("NOT LOGGED IN")) {
-            itemMan.delete(itemID, user);
-            return "redirect:/items";
+        if (user == null || user.equals("NOT LOGGED IN")) {
+            model.addAttribute("error", "Not logged in, cannot delete");
+            return "error";
         }
 
-        model.addAttribute("error", "Not logged in, cannot delete");
-        return "redirect:/error";
+        itemMan.delete(itemID, user);
+        return "redirect:/items";
     }
 
     public void validateBookParams(Optional<String> author, Optional<String> isbn, Optional<String> bookTitle, Optional<String> year) {
@@ -310,13 +310,8 @@ public class Controllers {
         String user = userController.getUserFromCookie(request);
 
         if (user == null || user.equals("NOT LOGGED IN")) {
-            Book book = itemMan.getBookMan().findOne(id);
-            book.setTags(itemMan.getTags(book.getId()));
-            book.setComments(itemMan.getCommentsForID(book.getId()));
-            model.addAttribute("book", book);
-            model.addAttribute("tags", book.getTags());
-            model.addAttribute("comments", book.getComments());
-            return "book";
+            model.addAttribute("error", "not logged in, please login before attempting to view an entry");
+            return "error";
         }
 
         Book book = itemMan.getBookMan().findOne(id, user);
@@ -339,13 +334,8 @@ public class Controllers {
         }
 
         if (user == null || user.equals("NOT LOGGED IN")) {
-            Blog blog = itemMan.getBlogMan().findOne(id);
-            blog.setTags(itemMan.getTags(id));
-            blog.setComments(itemMan.getCommentsForID(blog.getId()));
-            model.addAttribute("blog", blog);
-            model.addAttribute("tags", blog.getTags());
-            model.addAttribute("comments", blog.getComments());
-            return "blog";
+            model.addAttribute("error", "not logged in, please login before attempting to view an entry");
+            return "error";
         }
 
         Blog blog = itemMan.getBlogMan().findOne(id, user);
@@ -368,13 +358,8 @@ public class Controllers {
         }
 
         if (user == null || user.equals("NOT LOGGED IN")) {
-            Video video = itemMan.getVideoMan().findOne(id);
-            video.setTags(itemMan.getTags(id));
-            video.setComments(itemMan.getCommentsForID(video.getId()));
-            model.addAttribute("video", video);
-            model.addAttribute("tags", video.getTags());
-            model.addAttribute("comments", video.getComments());
-            return "video";
+            model.addAttribute("error", "not logged in, please login before attempting to view an entry");
+            return "error";
         }
 
         Video video = itemMan.getVideoMan().findOne(id, user);

@@ -135,7 +135,7 @@ public class Stepdefs {
             System.out.println("Link " + buttonID + " was never found....");
         }
     }
-    
+
     @Then("^user can successfully remove an item$")
     public void successful_remove() throws Throwable {
         int before = itemMan.findAll("testUser").size();
@@ -245,15 +245,15 @@ public class Stepdefs {
             retryCount++;
         }
     }
-    
+
     private Book getBook(int index) throws Throwable {
         return itemMan.getBookMan().findAll("default").get(index);
     }
-    
+
     private Blog getBlog(int index) throws Throwable {
         return itemMan.getBlogMan().findAll("default").get(index);
     }
-    
+
     private Video getVideo(int index) throws Throwable {
         return itemMan.getVideoMan().findAll("default").get(index);
     }
@@ -300,40 +300,16 @@ public class Stepdefs {
         }
     }
 
-    @When("^user chooses \"([^\"]*)\" and clicks Show$")
+    @When("^user chooses \"([^\"]*)\"$")
     public void user_chooses_and_clicks_Show(String choise) throws Throwable {
-        if (choise.equals("ViewBooks")) {
-            driver.findElement(By.id("vBooks")).click();
-        }
-        if (choise.equals("ViewBlogs")) {
-            driver.findElement(By.id("vBlogs")).click();
-        }
-        if (choise.equals("ViewVideos")) {
-            driver.findElement(By.id("vVideos")).click();
-        }
-        if (choise.equals("ViewRead")) {
-            driver.findElement(By.id("vRead")).click();
-        }
-        if (choise.equals("ViewUnread")) {
-            driver.findElement(By.id("vUnread")).click();
-        }
-        findElementAndFill("tags", "blog, book, video");
-        driver.findElement(By.id("Show")).click();
+        driver.findElement(By.id(choise)).click();
         Thread.sleep(SleepTime);
     }
 
-    @When("^user chooses \"([^\"]*)\" and \"([^\"]*)\" and clicks Show$")
+    @When("^user chooses \"([^\"]*)\" and \"([^\"]*)\"$")
     public void user_chooses_and_and_clicks_Show(String choiseOne, String choiseTwo) throws Throwable {
-        if (choiseOne.equals("ViewBooks") || choiseTwo.equals("ViewBooks")) {
-            driver.findElement(By.id("vBooks")).click();
-        }
-        if (choiseOne.equals("ViewBlogs") || choiseTwo.equals("ViewBlogs")) {
-            driver.findElement(By.id("vBlogs")).click();
-        }
-        if (choiseOne.equals("ViewVideos") || choiseTwo.equals("ViewVideos")) {
-            driver.findElement(By.id("vVideos")).click();
-        }
-        findElementAndFill("tags", "blog, book, video");
+        driver.findElement(By.id(choiseOne)).click();
+        driver.findElement(By.id(choiseTwo)).click();
         driver.findElement(By.id("Show")).click();
         Thread.sleep(SleepTime);
     }
@@ -372,7 +348,7 @@ public class Stepdefs {
         clickLinkWithText(one.getTitle().trim(), "book");
         Thread.sleep(SleepTime);
     }
-    
+
     @When("^link to book's author is clicked$")
     public void link_to_book_author_is_clicked() throws Throwable {
         Book one = getBook(0);
@@ -380,7 +356,7 @@ public class Stepdefs {
         clickLinkWithText(one.getAuthor().trim());
         Thread.sleep(SleepTime);
     }
-    
+
     @Then("^book's author's works are shown$")
     public void book_authors_works_are_shown() throws Throwable {
         String author = getBook(0).getAuthor();
@@ -469,7 +445,7 @@ public class Stepdefs {
         findElementAndFill("bookTitle", "Test");
         findElementAndFill("isbn", Integer.toString(Math.abs(random.nextInt())));
         findElementAndFill("author", "Testaaja");
-        
+
         driver.findElement(By.name("Add new book")).click();
 
         Thread.sleep(SleepTime);
@@ -576,7 +552,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoURL", "WPvGqX-TXP0" + n);
 
-
         element = driver.findElement(By.name("Add new video"));
         element.submit();
     }
@@ -592,7 +567,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoURL", "WPvGqX-TXP0" + n);
 
-
         element = driver.findElement(By.name("Add new video"));
         element.submit();
     }
@@ -600,6 +574,14 @@ public class Stepdefs {
     // </editor-fold>
     //                  spacer
     // <editor-fold desc="blog testing">
+    @When("^link to blog's page is clicked$")
+    public void link_to_blog_page_is_clicked() throws Throwable {
+        Blog one = getBlog(0);
+        Thread.sleep(SleepTime);
+        clickLinkWithText(one.getTitle().trim(), "blog");
+        Thread.sleep(SleepTime);
+    }
+
     @When("^blog fields title \"([^\"]*)\" and others are filled and submitted$")
     public void blog_fields_are_submitted(String title) throws Throwable {
         driver.findElement(By.id("blog")).click();
@@ -809,14 +791,17 @@ public class Stepdefs {
         element.click();
     }
     // </editor-fold>
-    
+
     //Comment testing
     @When("^comment field is filled with \"([^\"]*)\" and submitted$")
     public void comment_field_filled_and_submitted(String comment) throws Throwable {
         Thread.sleep(SleepTime);
         element = driver.findElement(By.id("comment"));
-        if (comment.isEmpty()) element.clear();
-        else element.sendKeys(comment);
+        if (comment.isEmpty()) {
+            element.clear();
+        } else {
+            element.sendKeys(comment);
+        }
         element = driver.findElement(By.name("Add comment"));
         element.submit();
     }

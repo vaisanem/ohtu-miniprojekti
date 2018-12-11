@@ -8,7 +8,8 @@ Feature: User can filter view items
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And user is redirected to "/items"
-    And user chooses "ViewVideos" and "ViewBlogs" and clicks Show
+    And user chooses "vVideos" and "vBlogs"
+    And user clicks button "Show"
     Then List of all "books" is shown
 
   Scenario: User can view only listed videos
@@ -19,7 +20,8 @@ Feature: User can filter view items
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And user is redirected to "/items"
-    And user chooses "ViewBooks" and "ViewBlogs" and clicks Show
+    And user chooses "vBooks" and "vBlogs"
+    And user clicks button "Show"
     Then List of all "videos" is shown
 
   Scenario: User can view only listed blogs
@@ -30,8 +32,22 @@ Feature: User can filter view items
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And user is redirected to "/items"
-    And user chooses "ViewBooks" and "ViewVideos" and clicks Show
+    And user chooses "vBooks" and "vVideos"
+    And user clicks button "Show"
     Then List of all "blogs" is shown
+
+  Scenario: User cannot select options that cannot return values
+    Given user is at the main page
+    When link "View List" is clicked
+    And user is redirected to "/login"
+    And field "username" is filled with "default"
+    And field "password" is filled with "doesntMatter"
+    And user clicks button "loginButton"
+    And user is redirected to "/items"
+    And user chooses "vBooks" and "vVideos"
+    And user chooses "vBlogs"
+    And user clicks button "Show"
+    Then "No items match selection" is shown
 
   Scenario: User can view only read items
     Given user is at the main page
@@ -41,7 +57,8 @@ Feature: User can filter view items
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And user is redirected to "/items"
-    And user chooses "ViewUnread" and clicks Show
+    And user chooses "vUnread"
+    And user clicks button "Show"
     Then List of all "read items" is shown
 
   Scenario: User can view only unread items
@@ -52,7 +69,8 @@ Feature: User can filter view items
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And user is redirected to "/items"
-    And user chooses "ViewRead" and clicks Show
+    And user chooses "vRead"
+    And user clicks button "Show"
     Then List of all "unread items" is shown
 
   Scenario: User can view only listed books and blogs
@@ -63,7 +81,8 @@ Feature: User can filter view items
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And user is redirected to "/items"
-    And user chooses "ViewVideos" and clicks Show
+    And user chooses "vVideos"
+    And user clicks button "Show"
     Then List of all "books" and "blogs" is shown
 
   Scenario: User can view only listed videos and blogs
@@ -74,7 +93,8 @@ Feature: User can filter view items
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And user is redirected to "/items"
-    And user chooses "ViewBooks" and clicks Show
+    And user chooses "vBooks"
+    And user clicks button "Show"
     Then List of all "videos" and "blogs" is shown
 
   Scenario: User can search for items with specific tag

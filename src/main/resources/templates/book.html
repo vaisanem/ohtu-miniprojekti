@@ -57,7 +57,7 @@
                         <option id="RateFive" value="RatedFive" th:selected="${RateSelect=='RatedFive'}">5 (best)</option>
                     </select>
                     <input type="hidden" id="type" name="id" th:value ="${book.id}"/>	
-                    <input type="submit" value="Rate" name="Rate"/>
+                    <input type="submit" id="RateButton" value="Rate" name="Rate"/>
                 </form>
                 <br/>
                 <form  method="POST" name="addTag" th:action="${book.id + '/addTag'}">
