@@ -23,3 +23,6 @@ Konfiguraatiosta on kiittäminen kevään 2017 [TKT-FUBAR](https://github.com/TK
  * Toiminnallisuus integroitu
  * Toiminnallisuus testattu onnistuneesti ja vakuuttavasti, myös Travisissa
  * Toiminnallisuus vaaditusti dokumentoitu
+
+Database model diagram of the db behind the software :
+![DatabaseModel](https://github.com/EssKayz/ohtu-miniprojekti/blob/master/Technical%20documentation/Database%20model.PNG)
