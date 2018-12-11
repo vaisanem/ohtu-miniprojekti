@@ -6,7 +6,6 @@
 package ohtu;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import ohtu.db.ItemTypeManager;
@@ -31,13 +30,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ItemPropertyManagementController {
 
     private ItemTypeManager itemMan;
-    private List<String> errors;
+    protected static List<String> errors;
     private UserController userController;
 
     public ItemPropertyManagementController(UserController userCtrl) throws ClassNotFoundException {
         itemMan = new ItemTypeManager();
         userController = userCtrl;
-        errors = new ArrayList<>();
+        errors = Controllers.errors;
     }
 
     // <editor-fold desc="Item property management">
@@ -143,7 +142,14 @@ public class ItemPropertyManagementController {
     }
 
     @PostMapping("/video/{id}/SaveVideo")
-    public String SaveVid(@RequestParam String videoTitle, @RequestParam String videoURL, @RequestParam String videoPoster, @PathVariable int id) throws SQLException {
+    public String SaveVid(ModelMap model, @RequestParam String videoTitle, @RequestParam String videoURL, @RequestParam String videoPoster, @PathVariable int id) throws SQLException {
+        clearErrorsBeforeAdding();
+        Controllers.validateVideoOrBlogParams(videoURL, videoTitle, videoPoster);
+        if (!errors.isEmpty()) {
+            model.addAttribute("errors", errors);
+            model.addAttribute("video", new Video(id, videoURL, videoTitle, videoPoster));
+            return "editVideo";
+        }
         if (videoURL.contains("watch?v=")) {
             videoURL = videoURL.substring(videoURL.indexOf('=') + 1);
         } else if (videoURL.contains("youtu.be")) {
@@ -154,13 +160,27 @@ public class ItemPropertyManagementController {
     }
 
     @PostMapping("/blog/{id}/SaveBlog")
-    public String SaveBlog(@RequestParam String blogTitle, @RequestParam String blogURL, @RequestParam String blogPoster, @PathVariable int id) throws SQLException {
+    public String SaveBlog(ModelMap model, @RequestParam String blogTitle, @RequestParam String blogURL, @RequestParam String blogPoster, @PathVariable int id) throws SQLException {
+        clearErrorsBeforeAdding();
+        Controllers.validateVideoOrBlogParams(blogURL, blogTitle, blogPoster);
+        if (!errors.isEmpty()) {
+            model.addAttribute("errors", errors);
+            model.addAttribute("blog", new Blog(id, blogURL, blogTitle, blogPoster));
+            return "editBlog";
+        }
         itemMan.getBlogMan().edit(id, blogTitle, blogURL, blogPoster);
         return "redirect:/items";
     }
 
     @PostMapping("/book/{id}/SaveBook")
-    public String SaveBook(@RequestParam String bookTitle, @RequestParam String isbn, @RequestParam String author, @RequestParam String year, @PathVariable int id) throws SQLException {
+    public String SaveBook(ModelMap model, @RequestParam String bookTitle, @RequestParam String isbn, @RequestParam String author, @RequestParam String year, @PathVariable int id) throws SQLException {
+        clearErrorsBeforeAdding();
+        Controllers.validateBookParams(author, isbn, bookTitle, year);
+        if (!errors.isEmpty()) {
+            model.addAttribute("errors", errors);
+            model.addAttribute("book", new Book(id, isbn, bookTitle, author, 2018));
+            return "editBook";
+        }
         int integerYear = Integer.parseInt(year);
         itemMan.getBookMan().edit(id, bookTitle, isbn, author, integerYear);
         return "redirect:/items";

@@ -16,6 +16,11 @@
 
         <div class='all'>
             <h2><span th:text="'Edit Video: ' + ${video.title}"></span></h2>
+            <br/>
+            <li th:each="error: ${errors}">
+                <span th:text="${error}"></span>
+            </li>
+            <br/>
             <form method="POST" name="SaveVideo" action="SaveVideo">
 
                 <br/>               

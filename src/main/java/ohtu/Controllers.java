@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 public class Controllers {
 
     private final ItemTypeManager itemMan;
-    private List<String> errors;
+    protected static List<String> errors;
     private UserController userController;
     private ItemPropertyManagementController iTypeController;
 
@@ -88,29 +88,29 @@ public class Controllers {
         return "redirect:/error";
     }
 
-    public void validateBookParams(Optional<String> author, Optional<String> isbn, Optional<String> bookTitle, Optional<String> year) {
-        if (!Book.checkNumericality(year.get())) {
+    protected static void validateBookParams(String author, String isbn, String bookTitle, String year) {
+        if (!Book.checkNumericality(year)) {
             errors.add("Missing year or not numeric");
         }
-        if (isbn.get().isEmpty()) {
+        if (isbn.trim().isEmpty()) {
             errors.add("Missing ISBN");
         }
-        if (bookTitle.get().isEmpty()) {
+        if (bookTitle.trim().isEmpty()) {
             errors.add("Missing Title");
         }
-        if (author.get().isEmpty()) {
+        if (author.trim().isEmpty()) {
             errors.add("Missing Author");
         }
     }
 
-    public void validateVideoOrBlogParams(Optional<String> url, Optional<String> title, Optional<String> author) {
-        if (url.get().isEmpty()) {
+    protected static void validateVideoOrBlogParams(String url, String title, String author) {
+        if (url.trim().isEmpty()) {
             errors.add("Missing URL");
         }
-        if (title.get().isEmpty()) {
+        if (title.trim().isEmpty()) {
             errors.add("Missing Title");
         }
-        if (author.get().isEmpty()) {
+        if (author.trim().isEmpty()) {
             errors.add("Missing Poster");
         }
     }
@@ -132,7 +132,7 @@ public class Controllers {
         switch (type) {
             case "book": {
                 System.out.println("Redirected user : " + user);
-                validateBookParams(author, isbn, bookTitle, year);
+                validateBookParams(author.get(), isbn.get(), bookTitle.get(), year.get());
                 if (!errors.isEmpty()) {
                     model.addAttribute("errors", errors);
                     return "newItem";
@@ -156,7 +156,7 @@ public class Controllers {
 
             case "video": {
                 System.out.println("Redirected user : " + user);
-                validateVideoOrBlogParams(videoURL, videoTitle, videoPoster);
+                validateVideoOrBlogParams(videoURL.get(), videoTitle.get(), videoPoster.get());
                 if (!errors.isEmpty()) {
                     model.addAttribute("errors", errors);
                     return "newItem";
@@ -174,7 +174,7 @@ public class Controllers {
 
             case "blog": {
                 System.out.println("Redirected user : " + user);
-                validateVideoOrBlogParams(blogURL, blogTitle, blogPoster);
+                validateVideoOrBlogParams(blogURL.get(), blogTitle.get(), blogPoster.get());
                 if (!errors.isEmpty()) {
                     model.addAttribute("errors", errors);
                     return "newItem";
