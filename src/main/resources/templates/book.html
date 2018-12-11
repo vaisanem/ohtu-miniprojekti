@@ -13,12 +13,14 @@
             <li class="nav"><a href="/items">View List</a></li>
             <li class="nav"><a href="/newItem">Add new item</a></li>
         </ul>
-        
-        
-        
-        <div>   
-            <h3><span th:text="${book.title}"></span></h3>
-            
+
+
+
+        <div class="all">
+            <div class="row">
+                <div class="left">   
+                <h3><span th:text="${book.title}"></span></h3>
+
                 <li th:each="error: ${errors}">
                     <span th:text="${error}"></span>
                 </li>
@@ -28,28 +30,62 @@
                     <input type="hidden" id="type" name="id" th:value ="${book.id}"  />	
                     <input th:if="${book.isRead} == '0'" type="submit" value="Mark as read" name="action" id="read" />
                     <input th:if="${book.isRead} == '1'" type="submit" value="Mark as unread" name="action" id="unread"/>
-		</form>
-                
-		<h2> Author: </h2>
-			<p><span th:text="${book.author}"></span></p>
-		<h2> Release year: </h2>
-			<p><span th:text="${book.year}"></span></p>
-		<h2> ISBN:</h2>
-			<p><span th:text="${book.isbn}"></span></p>
-		<h2> Tags:</h2>
-			<ul class="items">
-                            <li class="tags" th:each="tag: ${tags}">
-                                <p><span th:text="${tag}"></span></p>
-                            </li>
-                        </ul>
+                </form>
+
+                <h2> Author: </h2>
+                <a th:href="${'/author/' + book.author}" th:text="${book.author}"></a>
+                <h2> Release year: </h2>
+                <p><span th:text="${book.year}"></span></p>
+                <h2> ISBN:</h2>
+                <p><span th:text="${book.isbn}"></span></p>
+                <h2> Average rating: </h2>
+                <p><span th:text="${book.rating}"></span></p>
+                <h2> Tags:</h2>
+                <ul class="items">
+                    <li class="tags" th:each="tag: ${tags}">
+                        <p><span th:text="${tag}"></span></p>
+                    </li>
+                </ul>
                 <br/>
                 <br/>
+                <form method="POST" name="GiveRating" action="GiveRating">  <!-- TODO IMPLEMENT IN Controllers-->
+                    <select name="RatingSelect" id="Rater">
+                        <option id="RateOne" value="RatedOne" th:selected="${RateSelect=='RatedOne'}">1 (worst)</option>
+                        <option id="RateTwo" value="RatedTwo" th:selected="${RateSelect=='RatedTwo'}">2</option>
+                        <option id="RateThree" value="RatedThree" th:selected="${RateSelect=='RatedThree'}">3</option>
+                        <option id="RateFour" value="RatedFour" th:selected="${RateSelect=='RatedFour'}">4</option>
+                        <option id="RateFive" value="RatedFive" th:selected="${RateSelect=='RatedFive'}">5 (best)</option>
+                    </select>
+                    <input type="hidden" id="type" name="id" th:value ="${book.id}"/>	
+                    <input type="submit" value="Rate" name="Rate"/>
+                </form>
                 <br/>
                 <form  method="POST" name="addTag" th:action="${book.id + '/addTag'}">
                     <input type="hidden" id="userTag" name="user" value ="default"/>
                     <input type="text" id="tag" name="tag"/>
                     <input type="submit" value="Add tag" name="Add tag" />
-		</form>
+                </form>
+                </div>
+		<div class="right">
+                    <form method="POST" name="edit" action="edit">
+                        <input type="hidden" id="itemId" name="itemId" th:value ="${book.id}"/>
+                        <input type="hidden" id="itemType" name="itemTypeId" value ="book"/>
+                        <input type="submit" value="Edit Book" name="Edit Book"/>
+                    </form>
+                    <br/>
+		    <h2>Comments</h2>
+                    <ul class="comments">
+			<li class="comments" th:each="comment: ${comments}">
+                            <p><span th:utext="${comment.userName + ' at: ' + comment.timeStamp +  '&lt;br&gt;' + comment.text}"></span></p>
+			</li>
+                    </ul>
+                    <form  method="POST" id="addComment" name="addComment" th:action="${book.id + '/addComment'}">
+                        <input type="hidden" id="itemType" name="type" value ="book"/>
+                        <textarea form="addComment" id="comment" name="comment" rows="3" cols="30">Leave a comment</textarea>
+                        <input type="submit" value="Comment" name="Add comment" />
+                    </form>
+                </div> 
+            </div>
         </div>
     </body>
 </html>

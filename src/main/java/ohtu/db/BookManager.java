@@ -40,6 +40,32 @@ public class BookManager implements sqlManager<Book, Integer> {
         return diu == 1;
     }
 
+    /**
+     * Edit method requires input parameters of either new values, or THE OLD
+     * VALUES entered if values not changed! Input of empty field will edit the
+     * field on SQL to empty!!
+     *
+     * @param id
+     * @param newTitle
+     * @param newISBN
+     * @param newYear
+     * @param newAuthor
+     * @throws SQLException
+     */
+    public void edit(int id, String newTitle, String newISBN, String newAuthor, int newYear) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call editBookWithID(?, ?, ?, ?, ?)}");
+        stmt.setObject(1, id);
+        stmt.setObject(2, newTitle);
+        stmt.setObject(3, newISBN);
+        stmt.setObject(4, newAuthor);
+        stmt.setObject(5, newYear);
+
+        stmt.executeUpdate();
+        stmt.close();
+        connection.close();
+    }
+
     @Override
     public Book findOne(Integer key) throws SQLException {
         Connection connection = database.getConnection();
@@ -116,10 +142,4 @@ public class BookManager implements sqlManager<Book, Integer> {
 
         return books;
     }
-
-    @Override
-    public void delete(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
 }

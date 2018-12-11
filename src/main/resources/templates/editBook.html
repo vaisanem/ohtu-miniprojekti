@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title>Edit Book</title>
+        <meta charset="UTF-8"/>
+
+        <link rel="stylesheet" href="/style.css"/>
+    </head>
+
+    <body>
+        <ul class = "nav">
+            <li class="nav"><a href="/">Home</a></li>
+            <li class="nav"><a href="/items">View List</a></li>
+            <li class="nav"><a href="/newItem">Add new item</a></li>
+        </ul>
+
+        <div class='all'>
+            
+            <h2><span th:text="'Edit Book: ' + ${book.title}"></span></h2>
+
+            <form  method="POST" name="SaveBook" action="SaveBook">
+
+                <br/>
+                
+                <input type="hidden" id="type" name="type" th:value ="book"/>
+
+                Title of book:<br/>
+                <input style='width:400px;' type="text" id="title" name="bookTitle" th:value="${book.title}"/><br/>
+
+                ISBN:  <br/>
+                <input style='width:400px;' type="text" id="isbn" name="isbn" th:value="${book.isbn}"/><br/>
+
+                Author: <br/>
+                <input style='width:400px;' type="text" id="author" name="author" th:value="${book.author}"/><br/>
+
+                Publishing year: <br/>
+                <input style='width:400px;' type="text" id="year" name="year" th:value="${book.year}"/><br/>
+
+                <input type="submit" value="Save changes" name="Save changes"/>
+            </form>
+            
+        </div>
+
+    </body>
+
+</html>

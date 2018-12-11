@@ -41,6 +41,7 @@ public class Book extends ItemType implements Serializable {
         super.setId(rs.getInt("id"));
         super.setTitle(rs.getString("title"));
         super.setIsRead(rs.getInt("hasRead"));
+        super.setRating(rs.getDouble("AverageRating"));
         isbn = rs.getString("ISBN");
         author = rs.getString("Author");
         year = rs.getInt("releaseYear");

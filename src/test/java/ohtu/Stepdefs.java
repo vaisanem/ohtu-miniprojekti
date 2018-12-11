@@ -57,6 +57,7 @@ public class Stepdefs {
     @After
     public void tearDown() throws SQLException {
         itemMan.closeConnection();
+        driver.manage().deleteAllCookies();
         driver.quit();
     }
 
@@ -107,6 +108,44 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
     }
 
+    @When("^field \"([^\"]*)\" is filled with \"([^\"]*)\"$")
+    public void field_is_filled_with(String fieldName, String fieldInput) throws Throwable {
+        findElementAndFill(fieldName, fieldInput);
+    }
+
+    @When("^user clicks button \"([^\"]*)\"$")
+    public void user_clicks_button(String buttonID) throws Throwable {
+        boolean found = false;
+        int trials = 0;
+        while (trials++ < 10) {
+            try {
+                Thread.sleep(SleepTime);
+                WebElement element = driver.findElement(By.id(buttonID));
+                if (element != null) {
+                    element.click();
+                    found = true;
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
+        }
+
+        if (!found) {
+            System.out.println("Link " + buttonID + " was never found....");
+        }
+    }
+    
+    @Then("^user can successfully remove an item$")
+    public void successful_remove() throws Throwable {
+        int before = itemMan.findAll("testUser").size();
+        if (before > 0) {
+            user_clicks_button("remove");
+            int after = itemMan.findAll("testUser").size();
+            assertTrue(before > after);
+        }
+    }
+
     private void is_not_shown(String content) throws Throwable {
         Thread.sleep(SleepTime);
         boolean isShown = false;
@@ -133,7 +172,7 @@ public class Stepdefs {
             for (int i = 0; i < 4; i++) {
                 Thread.sleep(SleepTime);
                 if (driver.getPageSource().contains(item.getTitle())) {
-                    if (driver.getPageSource().contains(item.getAuthor())) {
+                    if (driver.getPageSource().contains(item.getAuthor().trim())) {
                         found = true;
                         break;
                     }
@@ -191,8 +230,32 @@ public class Stepdefs {
     }
 
     private void findElementAndFill(String name, String value) {
-        element = driver.findElement(By.name(name));
-        element.sendKeys(value);
+        int retryCount = 0;
+        while (retryCount < 10) {
+            try {
+                element = driver.findElement(By.name(name));
+                if (element != null) {
+                    element.sendKeys(value);
+                    break;
+                }
+                Thread.sleep(SleepTime);
+            } catch (InterruptedException e) {
+                System.out.println("Couldnt find element :" + name);
+            }
+            retryCount++;
+        }
+    }
+    
+    private Book getBook(int index) throws Throwable {
+        return itemMan.getBookMan().findAll("default").get(index);
+    }
+    
+    private Blog getBlog(int index) throws Throwable {
+        return itemMan.getBlogMan().findAll("default").get(index);
+    }
+    
+    private Video getVideo(int index) throws Throwable {
+        return itemMan.getVideoMan().findAll("default").get(index);
     }
 
     @Then("^List of all \"([^\"]*)\" is shown$")
@@ -209,19 +272,19 @@ public class Stepdefs {
             books.addAll(itemMan.getBookMan().findAll("default"));
             listOfAllItemsIsShown(books);
 
-            is_not_shown(itemMan.getBlogMan().findAll("default").get(0).getTitle());
+            is_not_shown(getBlog(0).getTitle());
         } else if (WhatIsListed.contains("blogs")) {
             List<ItemType> blogs = new ArrayList<>();
             blogs.addAll(itemMan.getBlogMan().findAll("default"));
             listOfAllItemsIsShown(blogs);
 
-            is_not_shown(itemMan.getBookMan().findAll("default").get(0).getTitle());
+            is_not_shown(getBook(0).getTitle());
         } else if (WhatIsListed.contains("videos")) {
             List<ItemType> videos = new ArrayList<>();
             videos.addAll(itemMan.getVideoMan().findAll("default"));
             listOfAllItemsIsShown(videos);
 
-            is_not_shown(itemMan.getBlogMan().findAll("default").get(0).getTitle());
+            is_not_shown(getBlog(0).getTitle());
         } else if (WhatIsListed.contains("unread")) {
             listOfAllItemsIsShown(unread);
 
@@ -304,10 +367,28 @@ public class Stepdefs {
     // <editor-fold desc="Book testing">
     @When("^link to book's page is clicked$")
     public void link_to_book_page_is_clicked() throws Throwable {
-        Book one = itemMan.getBookMan().findAll("default").get(0);
+        Book one = getBook(0);
         Thread.sleep(SleepTime);
         clickLinkWithText(one.getTitle().trim(), "book");
         Thread.sleep(SleepTime);
+    }
+    
+    @When("^link to book's author is clicked$")
+    public void link_to_book_author_is_clicked() throws Throwable {
+        Book one = getBook(0);
+        Thread.sleep(SleepTime);
+        clickLinkWithText(one.getAuthor().trim());
+        Thread.sleep(SleepTime);
+    }
+    
+    @Then("^book's author's works are shown$")
+    public void book_authors_works_are_shown() throws Throwable {
+        String author = getBook(0).getAuthor();
+        List<ItemType> by_author = itemMan.getItemsByAuthor(author);
+        listOfAllItemsIsShown(by_author);
+        String other = getBook(1).getAuthor();
+        ItemType unwanted = itemMan.getItemsByAuthor(other).get(0);
+        is_not_shown(unwanted.getTitle());
     }
 
     @When("^book fields title \"([^\"]*)\", isbn \"([^\"]*)\", author and year \"([^\"]*)\" are filled and submitted$")
@@ -316,18 +397,12 @@ public class Stepdefs {
         if (isbn.isEmpty()) {
             isbn = Integer.toString(Math.abs(random.nextInt()));
         } else if (isbn.equals("Already-in-use")) {
-            isbn = itemMan.getBookMan().findAll("default").get(0).getIsbn();
+            isbn = getBook(0).getIsbn();
         }
         findElementAndFill("bookTitle", title);
         findElementAndFill("isbn", isbn);
         findElementAndFill("author", "Testaaja");
         findElementAndFill("year", year);
-
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBook').value='testUser'";
-
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new book"));
         element.submit();
@@ -338,7 +413,7 @@ public class Stepdefs {
     @Then("^individual book is shown$")
     public void individual_book_is_shown() throws Throwable {
         //driver.get(baseUrl + "books/");
-        Book one = itemMan.getBookMan().findAll("default").get(0);
+        Book one = getBook(0);
         Thread.sleep(SleepTime);
         is_shown(one.getTitle());
         Thread.sleep(SleepTime);
@@ -356,11 +431,6 @@ public class Stepdefs {
         findElementAndFill("author", "Testaaja");
         findElementAndFill("year", "2008");
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBook').value='testUser'";
-        jse.executeScript(strJS);
-
         driver.findElement(By.name("Add new book")).click();
 
         Thread.sleep(SleepTime);
@@ -373,11 +443,6 @@ public class Stepdefs {
         findElementAndFill("bookTitle", "Test");
         findElementAndFill("author", "Testaaja");
         findElementAndFill("year", "2008");
-
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBook').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new book"));
         element.submit();
@@ -392,11 +457,6 @@ public class Stepdefs {
         findElementAndFill("isbn", Integer.toString(Math.abs(random.nextInt())));
         findElementAndFill("year", "2008");
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBook').value='testUser'";
-        jse.executeScript(strJS);
-
         element = driver.findElement(By.name("Add new book"));
         element.submit();
         Thread.sleep(SleepTime);
@@ -409,12 +469,7 @@ public class Stepdefs {
         findElementAndFill("bookTitle", "Test");
         findElementAndFill("isbn", Integer.toString(Math.abs(random.nextInt())));
         findElementAndFill("author", "Testaaja");
-
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBook').value='testUser'";
-        jse.executeScript(strJS);
-
+        
         driver.findElement(By.name("Add new book")).click();
 
         Thread.sleep(SleepTime);
@@ -426,7 +481,7 @@ public class Stepdefs {
     // <editor-fold desc="video testing">
     @When("^link to video's page is clicked$")
     public void link_to_video_s_page_is_clicked() throws Throwable {
-        Video one = itemMan.getVideoMan().findAll("default").get(0);
+        Video one = getVideo(0);
         Thread.sleep(SleepTime);
         clickLinkWithText(one.getTitle().trim(), "video");
         Thread.sleep(SleepTime);
@@ -434,7 +489,7 @@ public class Stepdefs {
 
     @Then("^individual video is shown$")
     public void individual_video_is_shown() throws Throwable {
-        Video one = itemMan.getVideoMan().findAll("default").get(0);
+        Video one = getVideo(0);
         Thread.sleep(SleepTime);
         is_shown(one.getTitle().trim());
         Thread.sleep(SleepTime);
@@ -454,11 +509,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoURL", "https://www.youtube.com/watch?v=WPvGqX-TXP0" + n);
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userVideo').value='testUser'";
-        jse.executeScript(strJS);
-
         element = driver.findElement(By.name("Add new video"));
         element.submit();
     }
@@ -475,11 +525,6 @@ public class Stepdefs {
         findElementAndFill("videoPoster", "Testaaja");
         Thread.sleep(SleepTime);
         findElementAndFill("videoURL", "https://youtu.be/XKu_SEDAykw" + n);
-
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userVideo').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new video"));
         element.submit();
@@ -499,11 +544,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoURL", "uWzPe_S-RVE" + n);
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userVideo').value='testUser'";
-        jse.executeScript(strJS);
-
         element = driver.findElement(By.name("Add new video"));
         element.submit();
         Thread.sleep(SleepTime);
@@ -518,11 +558,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoPoster", "Testaaja");
         Thread.sleep(SleepTime);
-
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userVideo').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new video"));
         element.submit();
@@ -541,10 +576,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoURL", "WPvGqX-TXP0" + n);
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userVideo').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new video"));
         element.submit();
@@ -561,10 +592,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("videoURL", "WPvGqX-TXP0" + n);
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userVideo').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new video"));
         element.submit();
@@ -584,13 +611,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("blogURL", "https://protesters.com/blogs/1");
 
-        // Sets user to "testUser"
-        System.out.println("Setting user to testuser");
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBlog').value='testUser'";
-        jse.executeScript(strJS);
-        System.out.println("User has been set to testUser");
-
         System.out.println("Finding element for add new blog button");
         driver.findElement(By.name("Add new blog")).click();
         System.out.println("button clicked");
@@ -605,10 +625,6 @@ public class Stepdefs {
         findElementAndFill("blogTitle", "TestTitle");
         Thread.sleep(SleepTime);
         findElementAndFill("blogPoster", "Testaaja");
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBlog').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new blog"));
         element.submit();
@@ -624,11 +640,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("blogURL", "https://protesters.com/blogs/1");
 
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBlog').value='testUser'";
-        jse.executeScript(strJS);
-
         element = driver.findElement(By.name("Add new blog"));
         element.submit();
         //driver.get(baseUrl + "books");
@@ -642,11 +653,6 @@ public class Stepdefs {
         findElementAndFill("blogTitle", "TestTitle");
         Thread.sleep(SleepTime);
         findElementAndFill("blogURL", "https://protesters.com/blogs/1");
-
-        // Sets user to "testUser"
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String strJS = "document.getElementById('userBlog').value='testUser'";
-        jse.executeScript(strJS);
 
         element = driver.findElement(By.name("Add new blog"));
         element.submit();
@@ -671,6 +677,11 @@ public class Stepdefs {
                         .sorted(Comparator.comparing(ItemType::getTitle).thenComparing(ItemType::getType))
                         .collect(Collectors.toList());
                 break;
+            }
+            case "rating": {
+                things = things.stream()
+                        .sorted(Comparator.comparing(ItemType::getRating).reversed().thenComparing(ItemType::getType))
+                        .collect(Collectors.toList());
             }
             default: {
                 break;
@@ -766,7 +777,7 @@ public class Stepdefs {
     // <editor-fold desc="tag testing">
     @Given("^user is at book's page$")
     public void user_is_at_book_page() throws Throwable {
-        Book book = itemMan.getBookMan().findAll("default").get(0);
+        Book book = getBook(0);
         String new_url = baseUrl + "book/" + book.getId();
         System.out.println(new_url);
         driver.get(baseUrl + "book/" + book.getId());
@@ -774,13 +785,13 @@ public class Stepdefs {
 
     @Given("^user is at blog's page$")
     public void user_is_at_blog_page() throws Throwable {
-        Blog blog = itemMan.getBlogMan().findAll("default").get(0);
+        Blog blog = getBlog(0);
         driver.get(baseUrl + "blog/" + blog.getId());
     }
 
     @Given("^user is at video's page$")
     public void user_is_at_video_page() throws Throwable {
-        Video video = itemMan.getVideoMan().findAll("default").get(0);
+        Video video = getVideo(0);
         driver.get(baseUrl + "video/" + video.getId());
     }
 
@@ -798,5 +809,16 @@ public class Stepdefs {
         element.click();
     }
     // </editor-fold>
+    
+    //Comment testing
+    @When("^comment field is filled with \"([^\"]*)\" and submitted$")
+    public void comment_field_filled_and_submitted(String comment) throws Throwable {
+        Thread.sleep(SleepTime);
+        element = driver.findElement(By.id("comment"));
+        if (comment.isEmpty()) element.clear();
+        else element.sendKeys(comment);
+        element = driver.findElement(By.name("Add comment"));
+        element.submit();
+    }
 
 }

@@ -11,9 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import ohtu.types.*;
 
 /**
@@ -28,10 +26,7 @@ public class ItemTypeManager {
     private BlogManager blogMan;
 
     public ItemTypeManager() throws ClassNotFoundException {
-        String addr = "ohmipro.ddns.net";
-        String url = "jdbc:sqlserver://" + addr + ":34200;databaseName=OhtuMPv2;user=ohtuadm;password=hakimi1337";
-
-        database = new Database(url);
+        database = new Database();
         bookMan = new BookManager(database);
         videoMan = new VideoManager(database);
         blogMan = new BlogManager(database);
@@ -49,6 +44,12 @@ public class ItemTypeManager {
         return videoMan;
     }
 
+    /**
+     * Returns a list of Strings representing tags that are linked to the ItemType with ID defined by parameter 'key'
+     * @param key
+     * @return
+     * @throws SQLException 
+     */
     public List<String> getTags(Integer key) throws SQLException {
         Connection connection = database.getConnection();
         CallableStatement stmt = connection.prepareCall("SELECT Tag.Description as Tag FROM Tag_ItemEntry INNER JOIN Tag ON Tag.id = Tag_ItemEntry.fk_Tag_id WHERE Tag_ItemEntry.fk_ItemEntry_id = ?");
@@ -68,6 +69,37 @@ public class ItemTypeManager {
         return tags;
     }
 
+    /**
+     * Returns a list of Strings representing comments that are linked to the ItemType with ID defined by parameter 'key'
+     * @param key
+     * @return
+     * @throws SQLException 
+     */
+    public List<Comment> getCommentsForID(Integer key) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call getCommentsForID(?)}");
+        stmt.setObject(1, key);
+
+        List<Comment> comments = new ArrayList();
+
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            Comment comment = new Comment(rs);
+            comments.add(comment);
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return comments;
+    }
+
+    /**
+     * Returns a HashMap with the key as ItemID, and a list of Strings representing the tags of that item
+     * @return
+     * @throws SQLException 
+     */
     public HashMap<Integer, List<String>> getAllTags() throws SQLException {
         Connection connection = database.getConnection();
         CallableStatement stmt = connection.prepareCall("SELECT Tag_ItemEntry.fk_ItemEntry_id as id, Tag.Description as Tag FROM Tag_ItemEntry INNER JOIN Tag ON Tag.id = Tag_ItemEntry.fk_Tag_id");
@@ -91,15 +123,6 @@ public class ItemTypeManager {
         connection.close();
 
         return tags;
-    }
-
-    public Set<String> getSetOfAllTags() throws SQLException { //Sraight-forward SQL-implementaton perhaps better
-        HashMap<Integer, List<String>> tagsById = getAllTags();
-        Set<String> allTags = new HashSet<>();
-        for (int key : tagsById.keySet()) {
-            allTags.addAll(tagsById.get(key));
-        }
-        return allTags;
     }
 
     public ItemType findOne(Integer key, ItemType.typeIdentifier type) throws SQLException {
@@ -144,8 +167,27 @@ public class ItemTypeManager {
         items.addAll(blogMan.findAll(user));
         items.addAll(bookMan.findAll(user));
         items.addAll(videoMan.findAll(user));
-        
+
         getAndApplyTags(items);
+
+        return items;
+    }
+
+    public List<ItemType> getItemsByAuthor(String authorName) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call getItemsForAuthor(?)}");
+        stmt.setObject(1, authorName);
+
+        List<ItemType> items = new ArrayList();
+
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            items.add(new ItemType(rs.getInt("ItemID"), rs.getString("Title"), rs.getString("Author"), rs.getString("ItemIdentifier")));
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
 
         return items;
     }
@@ -172,6 +214,48 @@ public class ItemTypeManager {
         });
 
         return filtered;
+    }
+
+    /**
+     * Returns a HashMap with the ItemType ID as key, and a list of Comments as value
+     * @return
+     * @throws SQLException 
+     */
+    public HashMap<Integer, List<Comment>> getAllComments() throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call getComments}");
+
+        HashMap<Integer, List<Comment>> comments = new HashMap<>();
+
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            Comment newComment = new Comment(rs);
+            if (comments.containsKey(newComment.getItemID())) {
+                comments.get(newComment.getItemID()).add(newComment);
+            } else {
+                comments.put(newComment.getItemID(), new ArrayList<>());
+                comments.get(newComment.getItemID()).add(newComment);
+            }
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return comments;
+    }
+
+    public void applyComments(HashMap<Integer, List<Comment>> comments, List<ItemType> items) {
+        items.forEach(item -> {
+            if (comments.containsKey(item.getId())) {
+                item.setComments(comments.get(item.getId()));
+            }
+        });
+    }
+
+    public void getAndApplyComments(List<ItemType> items) throws SQLException {
+        HashMap<Integer, List<Comment>> comments = getAllComments();
+        applyComments(comments, items);
     }
 
     public void closeConnection() throws SQLException {
@@ -202,6 +286,19 @@ public class ItemTypeManager {
         connection.close();
     }
 
+    public void rateItem(int rating, int id, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call AddRatingToItem(?, ?, ?)}");
+        stmt.setObject(1, rating);
+        stmt.setObject(2, id);
+        stmt.setObject(3, user);
+
+        stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
+    }
+
     public boolean addTagToItem(int id, String tag) throws SQLException {
         if (tag.length() > 0) {
             Connection connection = database.getConnection();
@@ -219,9 +316,30 @@ public class ItemTypeManager {
             return false;
         }
     }
+    
+    public void addCommentToItem(String comment, int id, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call AddCommentToItem(?, ?, ?)}");
+        stmt.setObject(1, comment);
+        stmt.setObject(2, id);
+        stmt.setObject(3, user);
 
-    public void delete(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
+    }
+
+    public void delete(Integer id, String user) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call RemoveUserItemLink(?, ?)}");
+        stmt.setObject(1, id);
+        stmt.setObject(2, user);
+
+        stmt.executeUpdate();
+
+        stmt.close();
+        connection.close();
     }
 
     // <editor-fold desc="For JUnit testing">

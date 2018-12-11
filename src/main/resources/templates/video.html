@@ -13,45 +13,82 @@
             <li class="nav"><a href="/items">View List</a></li>
             <li class="nav"><a href="/newItem">Add new item</a></li>
         </ul>
-        
-        
-        
-        <div>   
-            <h3><span th:text="${video.title}"></span></h3>
-            
-                <li th:each="error: ${errors}">
-                    <span th:text="${error}"></span>
-                </li>
-                <br/>
-                <form  method="GET" name="markRead" action="markRead">
-                    <input type="hidden" id="userBook" name="user" value ="default"/>
-                    <input type="hidden" id="type" name="id" th:value ="${video.id}"  />	
-                    <input th:if="${video.isRead} == '0'" type="submit" value="Mark as read" name="action" id="read"/>
-                    <input th:if="${video.isRead} == '1'" type="submit" value="Mark as unread" name="action" id="unread"/>
-                </form>
-           
-		<h2> Author: </h2>
-			<p><span th:text="${video.poster}"></span></p>
-		<h2> URL: </h2>
-                <a th:href="@{https://www.youtube.com/watch?v={url} (url=${video.URL})}" target="_blank"><span th:text="@{https://www.youtube.com/watch?v={url} (url=${video.URL})}"></span></a>
-                <h2> Tags:</h2>
+
+
+
+        <div class="all">
+            <div class="row">
+                <div class="left">   
+                    <h3><span th:text="${video.title}"></span></h3>
+
+                    <li th:each="error: ${errors}">
+                        <span th:text="${error}"></span>
+                    </li>
+                    <br/>
+                    <form  method="GET" name="markRead" action="markRead">
+                        <input type="hidden" id="userBook" name="user" value ="default"/>
+                        <input type="hidden" id="type" name="id" th:value ="${video.id}"  />	
+                        <input th:if="${video.isRead} == '0'" type="submit" value="Mark as read" name="action" id="read"/>
+                        <input th:if="${video.isRead} == '1'" type="submit" value="Mark as unread" name="action" id="unread"/>
+                    </form>
+
+                    <h2> Author: </h2>
+                    <a th:href="${'/author/' + video.poster}" th:text="${video.poster}"></a>
+                    <h2> URL: </h2>
+                    <a th:href="@{https://www.youtube.com/watch?v={url} (url=${video.URL})}" target="_blank"><span th:text="@{https://www.youtube.com/watch?v={url} (url=${video.URL})}"></span></a>
+                    <h2> Average rating: </h2>
+                    <p><span th:text="${video.rating}"></span></p>
+                    <h2> Tags:</h2>
                     <ul class="items">
                         <li class="tags" th:each="tag: ${tags}">
                             <p><span th:text="${tag}"></span></p>
                         </li>
                     </ul>
+                    <br/>
+                    <br/>
+                    <form method="POST" name="GiveRating" action="GiveRating">  <!-- TODO IMPLEMENT IN Controllers -->
+                        <select name="RatingSelect" id="Rater">
+                            <option id="RateOne" value="RatedOne" th:selected="${RateSelect=='RatedOne'}">1 (worst)</option>
+                            <option id="RateTwo" value="RatedTwo" th:selected="${RateSelect=='RatedTwo'}">2</option>
+                            <option id="RateThree" value="RatedThree" th:selected="${RateSelect=='RatedThree'}">3</option>
+                            <option id="RateFour" value="RatedFour" th:selected="${RateSelect=='RatedFour'}">4</option>
+                            <option id="RateFive" value="RatedFive" th:selected="${RateSelect=='RatedFive'}">5 (best)</option>
+                        </select>
+                        <input type="hidden" id="type" name="id" th:value ="${video.id}"/>	
+                        <input type="submit" value="Rate" name="Rate"/>
+                    </form>
+                    <br/>
+                    <form  method="POST" name="addTag" th:action="${video.id + '/addTag'}">
+                        <input type="hidden" id="userTag" name="user" value ="default"/>
+                        <input type="text" id="tag" name="tag"/>
+                        <input type="submit" value="Add tag" name="Add tag" />
+                    </form>
+                </div>
                 <br/>
-                <br/>
-                <br/>
-                <form  method="POST" name="addTag" th:action="${video.id + '/addTag'}">
-                    <input type="hidden" id="userTag" name="user" value ="default"/>
-                    <input type="text" id="tag" name="tag"/>
-                    <input type="submit" value="Add tag" name="Add tag" />
-		</form>
-                <br/>
-                <br/>
-				
-                <iframe width="1280" height="720" th:src="@{https://www.youtube.com/embed/{url} (url=${video.URL})}"/>
+                <div class="right">
+                    <form method="POST" name="edit" action="edit">
+                        <input type="hidden" id="itemId" name="itemId" th:value ="${video.id}"/>
+                        <input type="hidden" id="itemType" name="itemTypeId" value ="video"/>
+                        <input type="submit" value="Edit Video" name="Edit Video"/>
+                    </form>
+                    <h2>Comments</h2>
+                    <ul class="comments">
+                        <li class="comments" th:each="comment: ${comments}">
+                            <p><span th:utext="${comment.userName + ' at: ' + comment.timeStamp +  '&lt;br&gt;' + comment.text}"></span></p>
+                        </li>
+                    </ul>
+                    <form  method="POST" id="addComment" name="addComment" th:action="${video.id + '/addComment'}">
+                        <input type="hidden" id="itemType" name="type" value ="video"/>
+                        <textarea form="addComment" id="comment" name="comment" rows="3" cols="30">Leave a comment</textarea>
+                        <input type="submit" value="Comment" name="Add comment" />
+                    </form>
+                </div> 
+            </div>    
+            <br/>
+            <br/>
+
+            <iframe width="1280" height="720" th:src="@{https://www.youtube.com/embed/{url} (url=${video.URL})}"/>
+
         </div>
     </body>
 </html>

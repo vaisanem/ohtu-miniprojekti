@@ -43,6 +43,28 @@ public class BlogManager implements sqlManager<Blog, Integer> {
         return diu == 1;
     }
 
+    /**
+     * Edit method requires input parameters of either new values, or THE OLD VALUES entered if values not changed!
+     * Input of empty field will edit the field on SQL to empty!!
+     * @param id
+     * @param newURL
+     * @param newTitle
+     * @param newAuthor
+     * @throws SQLException 
+     */
+    public void edit(int id, String newTitle, String newURL, String newAuthor) throws SQLException {
+        Connection connection = database.getConnection();
+        CallableStatement stmt = connection.prepareCall("{call editBlogWithID(?, ?, ?, ?)}");
+        stmt.setObject(1, id);
+        stmt.setObject(2, newTitle);
+        stmt.setObject(3, newURL);
+        stmt.setObject(4, newAuthor);
+
+        stmt.executeUpdate();
+        stmt.close();
+        connection.close();
+    }
+
     @Override
     public Blog findOne(Integer key) throws SQLException {
         Connection connection = database.getConnection();
@@ -118,10 +140,5 @@ public class BlogManager implements sqlManager<Blog, Integer> {
         connection.close();
 
         return blogs;
-    }
-
-    @Override
-    public void delete(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

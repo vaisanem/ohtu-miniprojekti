@@ -88,7 +88,10 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
                 fileTree(dir: it,
-                    exclude: ['ohtu/Main**'])
+                    exclude: ['ohtu/Main**',
+							  '**/UserController**',
+							  '**/LoginManager**'
+					])
             })
     }
 }

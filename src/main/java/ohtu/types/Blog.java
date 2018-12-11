@@ -37,6 +37,7 @@ public class Blog extends ItemType {
         super.setId(rs.getInt("id"));
         super.setTitle(rs.getString("title"));
         super.setIsRead(rs.getInt("hasRead"));
+        super.setRating(rs.getDouble("AverageRating"));
         URL = rs.getString("URL");
         poster = rs.getString("Author");
     }

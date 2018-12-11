@@ -18,9 +18,11 @@ public class ItemType {
     private int id;
     private String title;
     private List<String> tags;
+    private List<Comment> comments;
     private typeIdentifier type;
     private int isRead;
     private String author;
+    private double rating;
 
     @Override
     public boolean equals(Object t) {
@@ -37,6 +39,29 @@ public class ItemType {
     public ItemType() {
     }
 
+    public ItemType(int id, String title, String author, String type) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        switch (type) {
+            case "book": {
+                this.type = typeIdentifier.book;
+                break;
+            }
+            case "blog": {
+                this.type = typeIdentifier.blog;
+                break;
+            }
+            case "video": {
+                this.type = typeIdentifier.video;
+                break;
+            }
+            default: {
+                System.out.println("Item type unidentifiable");
+            }
+        }
+    }
+
     public List<String> generateTags(ItemTypeManager manager) throws SQLException {
         this.tags = manager.getTags(id);
         return tags;
@@ -48,6 +73,14 @@ public class ItemType {
 
     public int getIsRead() {
         return isRead;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     public List<String> getTags() {
@@ -84,6 +117,14 @@ public class ItemType {
 
     public String getAuthor() {
         return author;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
 }
