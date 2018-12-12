@@ -8,7 +8,7 @@ Feature: user can add new blog
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And blog adding fields are filled with title "How to test properly", poster "Testaaja" and URL "https://protesters.com/blogs/1"
-    And user clicks button named "Add new blog"
+    And user clicks button "addBlog"
     And user is redirected to "/items"
     And link for "blog" named "How to test properly" is clicked
     And user is redirected to "/blog"
@@ -22,7 +22,7 @@ Scenario: user cant add new blog without URL
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And blog adding fields are filled with title "How to test properly", poster "Testaaja" and URL ""
-    And user clicks button named "Add new blog"
+    And user clicks button "addBlog"
     Then "Missing URL" is shown
     
 Scenario: user cant add new blog without Title
@@ -33,7 +33,7 @@ Scenario: user cant add new blog without Title
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And blog adding fields are filled with title "", poster "Testaaja" and URL "https://protesters.com/blogs/1"
-    And user clicks button named "Add new blog"
+    And user clicks button "addBlog"
     Then "Missing Title" is shown
     
 Scenario: user cant add new blog without Poster
@@ -44,5 +44,5 @@ Scenario: user cant add new blog without Poster
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And blog adding fields are filled with title "How to test properly", poster "" and URL "https://protesters.com/blogs/1"
-    And user clicks button named "Add new blog"
+    And user clicks button "addBlog"
     Then "Missing Poster" is shown

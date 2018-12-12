@@ -9,7 +9,7 @@ Feature: user can add new book
     And user clicks button "loginButton"
     And user is redirected to "/newItem"
     And book fields are filled with title "Cucumber", isbn "random", author "Testaaja" and year "2018"
-    And user clicks button named "Add new book"
+    And user clicks button "addBook"
     And user is redirected to "/items"
     And link for "book" named "Cucumber" is clicked
     And user is redirected to "/book"
@@ -24,7 +24,7 @@ Feature: user can add new book
     And user clicks button "loginButton"
     And user is redirected to "/newItem"
     And book fields are filled with title "Cucumber", isbn "Already-in-use", author "Testaaja" and year "2018"
-    And user clicks button named "Add new book"
+    And user clicks button "addBook"
     Then "ISBN already in use" is shown
 
   Scenario: user cannot add book with non-numerical year
@@ -36,7 +36,7 @@ Feature: user can add new book
     And user clicks button "loginButton"
     And user is redirected to "/newItem"
     And book fields are filled with title "Cucumber", isbn "random", author "Testaaja" and year "once upon a time"
-    And user clicks button named "Add new book"
+    And user clicks button "addBook"
     Then "Missing year or not numeric" is shown
 
   Scenario: user cant  add new book without Title
@@ -48,7 +48,7 @@ Feature: user can add new book
     And user clicks button "loginButton"
     And user is redirected to "/newItem"
     And book fields are filled with title "", isbn "random", author "Testaaja" and year "2018"
-    And user clicks button named "Add new book"
+    And user clicks button "addBook"
     Then "Missing Title" is shown
 
   Scenario: user cant add new book without ISBN
@@ -60,7 +60,7 @@ Feature: user can add new book
     And user clicks button "loginButton"
     And user is redirected to "/newItem"
     And book fields are filled with title "Cucumber", isbn "", author "Testaaja" and year "2018"
-    And user clicks button named "Add new book"
+    And user clicks button "addBook"
     Then "Missing ISBN" is shown
 
   Scenario: user cant add new book without Author
@@ -72,7 +72,7 @@ Feature: user can add new book
     And user clicks button "loginButton"
     And user is redirected to "/newItem"
     And book fields are filled with title "Cucumber", isbn "random", author "" and year "2018"
-    And user clicks button named "Add new book"
+    And user clicks button "addBook"
     Then "Missing Author" is shown
 
   Scenario: user cant add new book without Year
@@ -84,5 +84,5 @@ Feature: user can add new book
     And user clicks button "loginButton"
     And user is redirected to "/newItem"
     And book fields are filled with title "Cucumber", isbn "random", author "Testaaja" and year ""
-    And user clicks button named "Add new book"
+    And user clicks button "addBook"
     Then "Missing year or not numeric" is shown

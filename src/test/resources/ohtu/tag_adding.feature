@@ -2,11 +2,7 @@ Feature: user can add a tag
 
   Scenario: user cannot add empty tag for a book
     Given user is at the main page
-    When link "View List" is clicked
-    And user is redirected to "/login"
-    And field "username" is filled with "default"
-    And field "password" is filled with "doesntMatter"
-    And user clicks button "loginButton"
+    And user is logged in as "default" with password "anything" 
     And user is redirected to "/items"
     And link to book's page is clicked
     And user is redirected to "/book"
@@ -15,11 +11,7 @@ Feature: user can add a tag
 
   Scenario: user cannot add empty tag for a blog
     Given user is at the main page
-    When link "View List" is clicked
-    And user is redirected to "/login"
-    And field "username" is filled with "default"
-    And field "password" is filled with "doesntMatter"
-    And user clicks button "loginButton"
+    And user is logged in as "default" with password "anything"
     And user is redirected to "/items"
     And link to blog's page is clicked
     And user is redirected to "/blog"
@@ -28,11 +20,7 @@ Feature: user can add a tag
 
   Scenario: user can successfully add tag for a book
     Given user is at the main page
-    When link "View List" is clicked
-    And user is redirected to "/login"
-    And field "username" is filled with "default"
-    And field "password" is filled with "doesntMatter"
-    And user clicks button "loginButton"
+    And user is logged in as "default" with password "anything"
     And user is redirected to "/items"
     And link to book's page is clicked
     And user is redirected to "/book"
@@ -41,11 +29,7 @@ Feature: user can add a tag
 
   Scenario: user can successfully add tag for a video
     Given user is at the main page
-    When link "View List" is clicked
-    And user is redirected to "/login"
-    And field "username" is filled with "default"
-    And field "password" is filled with "doesntMatter"
-    And user clicks button "loginButton"
+    And user is logged in as "default" with password "anything"
     And user is redirected to "/items"
     And link to blog's page is clicked
     And user is redirected to "/blog"

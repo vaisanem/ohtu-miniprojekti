@@ -69,13 +69,13 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
     }
     
-    @Given("^user is logged in as \"([^\"]*)\"$")
-    public void user_is_logged_in_as(String username) throws Throwable {
+    @Given("^user is logged in as \"([^\"]*)\" with password \"([^\"]*)\"$")
+    public void user_is_logged_in_as(String username, String password) throws Throwable {
         user_is_at_the_main_page();
         link_is_clicked("View List");
         user_is_redirected_to("/login");
         field_is_filled_with("username", username);
-        field_is_filled_with("password", "doesntMatter");
+        field_is_filled_with("password", password);
         user_clicks_button("loginButton");
     }
 
@@ -127,11 +127,6 @@ public class Stepdefs {
     @When("^user clicks button \"([^\"]*)\"$")
     public void user_clicks_button(String buttonID) throws Throwable {
         user_clicks_button_by(By.id(buttonID));
-    }
-    
-    @When("^user clicks button named \"([^\"]*)\"$")
-    public void user_clicks_button_by_name(String name) throws Throwable {
-        user_clicks_button_by(By.name(name));
     }
     
     private void user_clicks_button_by(By by) throws Throwable {
@@ -251,6 +246,12 @@ public class Stepdefs {
 
     private void findElementAndFill(String name, String value) {
         int retryCount = 0;
+        
+        if(value.equals("random")){
+            Random r = new Random();
+            value = "" + Math.abs(r.nextInt(8999999) + 1000000);
+        }
+        
         while (retryCount < 10) {
             try {
                 element = driver.findElement(By.name(name));
