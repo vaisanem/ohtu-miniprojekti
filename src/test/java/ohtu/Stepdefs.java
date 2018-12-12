@@ -153,7 +153,7 @@ public class Stepdefs {
 
     @Then("^user can successfully remove an item$")
     public void successful_remove() throws Throwable {
-        ItemType item = itemMan.findAll("testUser").stream().findAny().get();
+        ItemType item = itemMan.findAll("testUser").stream().filter(itm -> itm.getType() != ItemType.typeIdentifier.blog).findAny().get();
         itemMan.delete(item.getId(), "testUser");
         driver.findElement(By.id(item.getId() + "-remove")).click();
         List<ItemType> items = itemMan.findAll("testUser");
