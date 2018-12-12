@@ -13,6 +13,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import ohtu.db.ItemTypeManager;
 import ohtu.types.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -138,12 +139,12 @@ public class Stepdefs {
 
     @Then("^user can successfully remove an item$")
     public void successful_remove() throws Throwable {
-        int before = itemMan.findAll("testUser").size();
-        if (before > 0) {
-            user_clicks_button("remove");
-            int after = itemMan.findAll("testUser").size();
-            assertTrue(before > after);
-        }
+        ItemType item = itemMan.findAll("testUser").stream().findAny().get();
+        itemMan.delete(item.getId(), "testUser");
+        driver.findElement(By.id(item.getId() + "-remove")).click();       
+        List<ItemType> items = itemMan.findAll("testUser");
+        boolean stillFound = items.stream().anyMatch(itm -> itm.getId() == item.getId());
+        assertFalse(stillFound);
     }
 
     private void is_not_shown(String content) throws Throwable {
