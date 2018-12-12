@@ -34,7 +34,7 @@ public class Stepdefs {
     public Stepdefs() throws ClassNotFoundException {
         File file;
         itemMan = new ItemTypeManager();
-        SleepTime = 100;
+        SleepTime = 75;
         if (System.getProperty("os.name").matches("Mac OS X")) {
             file = new File("lib/macgeckodriver");
         } else {
@@ -68,7 +68,7 @@ public class Stepdefs {
         driver.get(baseUrl);
         Thread.sleep(SleepTime);
     }
-    
+
     @Given("^user is logged in as \"([^\"]*)\" with password \"([^\"]*)\"$")
     public void user_is_logged_in_as(String username, String password) throws Throwable {
         user_is_at_the_main_page();
@@ -128,7 +128,7 @@ public class Stepdefs {
     public void user_clicks_button(String buttonID) throws Throwable {
         user_clicks_button_by(By.id(buttonID));
     }
-    
+
     private void user_clicks_button_by(By by) throws Throwable {
         boolean found = false;
         int trials = 0;
@@ -155,7 +155,7 @@ public class Stepdefs {
     public void successful_remove() throws Throwable {
         ItemType item = itemMan.findAll("testUser").stream().findAny().get();
         itemMan.delete(item.getId(), "testUser");
-        driver.findElement(By.id(item.getId() + "-remove")).click();       
+        driver.findElement(By.id(item.getId() + "-remove")).click();
         List<ItemType> items = itemMan.findAll("testUser");
         boolean stillFound = items.stream().anyMatch(itm -> itm.getId() == item.getId());
         assertFalse(stillFound);
@@ -246,12 +246,12 @@ public class Stepdefs {
 
     private void findElementAndFill(String name, String value) {
         int retryCount = 0;
-        
-        if(value.equals("random")){
+
+        if (value.equals("random")) {
             Random r = new Random();
             value = "" + Math.abs(r.nextInt(8999999) + 1000000);
         }
-        
+
         while (retryCount < 10) {
             try {
                 element = driver.findElement(By.name(name));
@@ -266,7 +266,7 @@ public class Stepdefs {
             retryCount++;
         }
     }
-    
+
     private void findElementAndClear(String name) {
         int retryCount = 0;
         while (retryCount < 10) {
@@ -379,9 +379,9 @@ public class Stepdefs {
     // </editor-fold>
     //                  spacer
     // <editor-fold desc="Book testing">
-    @When("^link to book's page is clicked$")
-    public void link_to_book_page_is_clicked() throws Throwable {
-        Book one = getBook(0, "default");
+    @When("^link to \"([^\"]*)\" book's page is clicked$")
+    public void link_to_book_page_is_clicked(String user) throws Throwable {
+        Book one = getBook(0, user);
         Thread.sleep(SleepTime);
         clickLinkWithText(one.getTitle().trim(), "book");
         Thread.sleep(SleepTime);
@@ -418,20 +418,20 @@ public class Stepdefs {
         findElementAndFill("author", author);
         findElementAndFill("year", year);
     }
-    
+
     @When("^book fields are cleared$")
     public void book_fields_are_cleared() throws Throwable {
-        Thread.sleep(SleepTime*100);
+        Thread.sleep(SleepTime);
         findElementAndClear("bookTitle");
         findElementAndClear("isbn");
         findElementAndClear("author");
         findElementAndClear("year");
     }
 
-    @Then("^individual book is shown$")
-    public void individual_book_is_shown() throws Throwable {
+    @Then("^individual \"([^\"]*)\" book is shown$")
+    public void individual_book_is_shown(String user) throws Throwable {
         //driver.get(baseUrl + "books/");
-        Book one = getBook(0, "default");
+        Book one = getBook(0, user);
         Thread.sleep(SleepTime);
         is_shown(one.getTitle());
         Thread.sleep(SleepTime);
@@ -445,17 +445,17 @@ public class Stepdefs {
     // </editor-fold>
     //                  spacer
     // <editor-fold desc="video testing">
-    @When("^link to video's page is clicked$")
-    public void link_to_video_s_page_is_clicked() throws Throwable {
-        Video one = getVideo(0, "default");
+    @When("^link to \"([^\"]*)\" video's page is clicked$")
+    public void link_to_video_s_page_is_clicked(String user) throws Throwable {
+        Video one = getVideo(0, user);
         Thread.sleep(SleepTime);
         clickLinkWithText(one.getTitle().trim(), "video");
         Thread.sleep(SleepTime);
     }
 
-    @Then("^individual video is shown$")
-    public void individual_video_is_shown() throws Throwable {
-        Video one = getVideo(0, "default");
+    @Then("^individual \"([^\"]*)\" video is shown$")
+    public void individual_video_is_shown(String user) throws Throwable {
+        Video one = getVideo(0, user);
         Thread.sleep(SleepTime);
         is_shown(one.getTitle().trim());
         Thread.sleep(SleepTime);
@@ -564,14 +564,14 @@ public class Stepdefs {
     // </editor-fold>
     //                  spacer
     // <editor-fold desc="blog testing">
-    @When("^link to blog's page is clicked$")
-    public void link_to_blog_page_is_clicked() throws Throwable {
-        Blog one = getBlog(0, "default");
+    @When("^link to \"([^\"]*)\" blog's page is clicked$")
+    public void link_to_blog_page_is_clicked(String user) throws Throwable {
+        Blog one = getBlog(0, user);
         Thread.sleep(SleepTime);
         clickLinkWithText(one.getTitle().trim(), "blog");
         Thread.sleep(SleepTime);
     }
-    
+
     @When("^blog adding fields are filled with title \"([^\"]*)\", poster \"([^\"]*)\" and URL \"([^\"]*)\"$")
     public void blog_adding_fields_are_filled_with(String title, String poster, String URL) throws Throwable {
         driver.findElement(By.id("blog")).click();
@@ -581,7 +581,7 @@ public class Stepdefs {
         }
         blog_fields_are_filled_with(title, poster, URL);
     }
-    
+
     @When("^blog fields are filled with title \"([^\"]*)\", poster \"([^\"]*)\" and URL \"([^\"]*)\"$")
     public void blog_fields_are_filled_with(String title, String poster, String URL) throws Throwable {
         Thread.sleep(SleepTime);
@@ -591,7 +591,7 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
         findElementAndFill("blogURL", URL);
     }
-    
+
     @When("^blog fields are cleared$")
     public void blog_fields_are_cleared() throws Throwable {
         Thread.sleep(SleepTime);
@@ -718,24 +718,29 @@ public class Stepdefs {
     //</editor-fold>
 
     // <editor-fold desc="tag testing">
-    @Given("^user is at book's page$")
-    public void user_is_at_book_page() throws Throwable {
-        Book book = getBook(0, "testUser");
-        String new_url = baseUrl + "book/" + book.getId();
-        System.out.println(new_url);
-        driver.get(baseUrl + "book/" + book.getId());
-    }
+    @Given("^\"([^\"]*)\" is at \"([^\"]*)\"'s page$")
+    public void user_is_at_book_page(String user, String type) throws Throwable {
+        int id = -1;
+        switch (type) {
+            case "book": {
+                Book book = getBook(0, user);
+                id = book.getId();
+                break;
+            }
 
-    @Given("^user is at blog's page$")
-    public void user_is_at_blog_page() throws Throwable {
-        Blog blog = getBlog(0, "testUser");
-        driver.get(baseUrl + "blog/" + blog.getId());
-    }
+            case "blog": {
+                Blog blog = getBlog(0, user);
+                id = blog.getId();
+                break;
+            }
 
-    @Given("^user is at video's page$")
-    public void user_is_at_video_page() throws Throwable {
-        Video video = getVideo(0, "testUser");
-        driver.get(baseUrl + "video/" + video.getId());
+            case "video": {
+                Video video = getVideo(0, user);
+                id = video.getId();
+            }
+        }
+
+        driver.get(baseUrl + type + "/" + id);
     }
 
     @When("^tag field is filled with \"([^\"]*)\" and submitted$")

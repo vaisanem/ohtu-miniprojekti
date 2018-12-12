@@ -1,8 +1,8 @@
 Feature: user can edit a blog
 
   Scenario: user can succesfully edit a blog
-    Given user is logged in as "testUser" with password "anything"
-    And user is at blog's page
+    Given user is logged in as "editor" with password "editor"
+    And "editor" is at "blog"'s page
     And user clicks button "editButton"
     And blog fields are cleared
     And field "blogTitle" is filled with "Edited"
@@ -15,8 +15,8 @@ Feature: user can edit a blog
     Then "Edited" is shown
 
   Scenario: user cant edit a blog without URL
-    Given user is logged in as "testUser" with password "anything"
-    And user is at blog's page
+    Given user is logged in as "editor" with password "editor"
+    And "editor" is at "blog"'s page
     And user clicks button "editButton"
     And blog fields are cleared
     And field "blogTitle" is filled with "Edited"
@@ -26,8 +26,8 @@ Feature: user can edit a blog
     Then "Missing URL" is shown
 
   Scenario: user cant edit a blog without Title
-    Given user is logged in as "testUser" with password "anything"
-    And user is at blog's page
+    Given user is logged in as "editor" with password "editor"
+    And "editor" is at "blog"'s page
     And user clicks button "editButton"
     And blog fields are cleared
     And field "blogTitle" is filled with ""
@@ -37,8 +37,8 @@ Feature: user can edit a blog
     Then "Missing Title" is shown
 
   Scenario: user cant edit a blog without Poster
-    Given user is logged in as "testUser" with password "anything"
-    And user is at blog's page
+    Given user is logged in as "editor" with password "editor"
+    And "editor" is at "blog"'s page
     And user clicks button "editButton"
     And blog fields are cleared
     And field "blogTitle" is filled with "Edited"
