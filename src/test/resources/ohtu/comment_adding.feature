@@ -8,7 +8,7 @@ Feature: User can comment items
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And user is redirected to "/items"
-    And link for "book" named "Cucumber" is clicked
+    And link for "book" named "Edited" is clicked
     And user is redirected to "/book"
     When comment field is filled with "" and submitted
     Then "Empty comments" is shown
@@ -21,7 +21,7 @@ Feature: User can comment items
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
     And user is redirected to "/items"
-    And link for "book" named "Cucumber" is clicked
+    And link for "book" named "Edited" is clicked
     And user is redirected to "/book"
     When comment field is filled with ", but what if not want" and submitted
     Then "Leave a comment, but what if not want" is shown

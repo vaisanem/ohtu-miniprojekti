@@ -9,10 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import ohtu.db.ItemTypeManager;
-import ohtu.types.Blog;
-import ohtu.types.Book;
-import ohtu.types.ItemType;
-import ohtu.types.Video;
+import ohtu.types.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,7 +60,7 @@ public class ItemPropertyManagementController {
         String user = userController.getUserFromCookie(request);
 
         if (user == null || user.equals("NOT LOGGED IN")) {
-            return "error";
+            return "redirect:/login";
         }
 
         switch (action) {
@@ -91,7 +88,7 @@ public class ItemPropertyManagementController {
         String user = userController.getUserFromCookie(request);
 
         if (user == null || user.equals("NOT LOGGED IN")) {
-            return "error";
+            return "redirect:/login";
         }
         redirects.addFlashAttribute(itemId);
         switch (itemTypeId) {
@@ -172,8 +169,15 @@ public class ItemPropertyManagementController {
             return "editBook";
         }
         int integerYear = Integer.parseInt(year);
-        itemMan.getBookMan().edit(id, bookTitle, isbn, author, integerYear);
-        return "redirect:/items";
+        
+        try {
+            itemMan.getBookMan().edit(id, bookTitle, isbn, author, integerYear);
+            return "redirect:/items";
+        } catch (Exception e) {
+            errors.add(e.toString());
+            model.addAttribute("errors", errors);
+            return "editBook";
+        }
     }
 
     //</editor-fold>

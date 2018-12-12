@@ -67,6 +67,16 @@ public class Stepdefs {
         driver.get(baseUrl);
         Thread.sleep(SleepTime);
     }
+    
+    @Given("^user is logged in as \"([^\"]*)\"$")
+    public void user_is_logged_in_as(String username) throws Throwable {
+        user_is_at_the_main_page();
+        link_is_clicked("View List");
+        user_is_redirected_to("/login");
+        field_is_filled_with("username", username);
+        field_is_filled_with("password", "doesntMatter");
+        user_clicks_button("loginButton");
+    }
 
     @When("^user is redirected to \"([^\"]*)\"$")
     public void user_is_redirected_to(String arg1) throws Throwable {
@@ -115,12 +125,21 @@ public class Stepdefs {
 
     @When("^user clicks button \"([^\"]*)\"$")
     public void user_clicks_button(String buttonID) throws Throwable {
+        user_clicks_button_by(By.id(buttonID));
+    }
+    
+    @When("^user clicks button named \"([^\"]*)\"$")
+    public void user_clicks_button_by_name(String name) throws Throwable {
+        user_clicks_button_by(By.name(name));
+    }
+    
+    private void user_clicks_button_by(By by) throws Throwable {
         boolean found = false;
         int trials = 0;
         while (trials++ < 10) {
             try {
                 Thread.sleep(SleepTime);
-                WebElement element = driver.findElement(By.id(buttonID));
+                WebElement element = driver.findElement(by);
                 if (element != null) {
                     element.click();
                     found = true;
@@ -132,17 +151,7 @@ public class Stepdefs {
         }
 
         if (!found) {
-            System.out.println("Link " + buttonID + " was never found....");
-        }
-    }
-
-    @Then("^user can successfully remove an item$")
-    public void successful_remove() throws Throwable {
-        int before = itemMan.findAll("testUser").size();
-        if (before > 0) {
-            user_clicks_button("remove");
-            int after = itemMan.findAll("testUser").size();
-            assertTrue(before > after);
+            System.out.println("Button " + by + " was never found....");
         }
     }
 
@@ -245,17 +254,34 @@ public class Stepdefs {
             retryCount++;
         }
     }
-
-    private Book getBook(int index) throws Throwable {
-        return itemMan.getBookMan().findAll("default").get(index);
+    
+    private void findElementAndClear(String name) {
+        int retryCount = 0;
+        while (retryCount < 10) {
+            try {
+                element = driver.findElement(By.name(name));
+                if (element != null) {
+                    element.clear();
+                    break;
+                }
+                Thread.sleep(SleepTime);
+            } catch (InterruptedException e) {
+                System.out.println("Couldnt find element :" + name);
+            }
+            retryCount++;
+        }
     }
 
-    private Blog getBlog(int index) throws Throwable {
-        return itemMan.getBlogMan().findAll("default").get(index);
+    private Book getBook(int index, String user) throws Throwable {
+        return itemMan.getBookMan().findAll(user).get(index);
     }
 
-    private Video getVideo(int index) throws Throwable {
-        return itemMan.getVideoMan().findAll("default").get(index);
+    private Blog getBlog(int index, String user) throws Throwable {
+        return itemMan.getBlogMan().findAll(user).get(index);
+    }
+
+    private Video getVideo(int index, String user) throws Throwable {
+        return itemMan.getVideoMan().findAll(user).get(index);
     }
 
     @Then("^List of all \"([^\"]*)\" is shown$")
@@ -272,19 +298,19 @@ public class Stepdefs {
             books.addAll(itemMan.getBookMan().findAll("default"));
             listOfAllItemsIsShown(books);
 
-            is_not_shown(getBlog(0).getTitle());
+            is_not_shown(getBlog(0, "default").getTitle());
         } else if (WhatIsListed.contains("blogs")) {
             List<ItemType> blogs = new ArrayList<>();
             blogs.addAll(itemMan.getBlogMan().findAll("default"));
             listOfAllItemsIsShown(blogs);
 
-            is_not_shown(getBook(0).getTitle());
+            is_not_shown(getBook(0, "default").getTitle());
         } else if (WhatIsListed.contains("videos")) {
             List<ItemType> videos = new ArrayList<>();
             videos.addAll(itemMan.getVideoMan().findAll("default"));
             listOfAllItemsIsShown(videos);
 
-            is_not_shown(getBlog(0).getTitle());
+            is_not_shown(getBlog(0, "default").getTitle());
         } else if (WhatIsListed.contains("unread")) {
             listOfAllItemsIsShown(unread);
 
@@ -343,7 +369,7 @@ public class Stepdefs {
     // <editor-fold desc="Book testing">
     @When("^link to book's page is clicked$")
     public void link_to_book_page_is_clicked() throws Throwable {
-        Book one = getBook(0);
+        Book one = getBook(0, "default");
         Thread.sleep(SleepTime);
         clickLinkWithText(one.getTitle().trim(), "book");
         Thread.sleep(SleepTime);
@@ -351,7 +377,7 @@ public class Stepdefs {
 
     @When("^link to book's author is clicked$")
     public void link_to_book_author_is_clicked() throws Throwable {
-        Book one = getBook(0);
+        Book one = getBook(0, "default");
         Thread.sleep(SleepTime);
         clickLinkWithText(one.getAuthor().trim());
         Thread.sleep(SleepTime);
@@ -359,37 +385,41 @@ public class Stepdefs {
 
     @Then("^book's author's works are shown$")
     public void book_authors_works_are_shown() throws Throwable {
-        String author = getBook(0).getAuthor();
+        String author = getBook(0, "default").getAuthor();
         List<ItemType> by_author = itemMan.getItemsByAuthor(author);
         listOfAllItemsIsShown(by_author);
-        String other = getBook(1).getAuthor();
+        String other = getBook(1, "default").getAuthor();
         ItemType unwanted = itemMan.getItemsByAuthor(other).get(0);
         is_not_shown(unwanted.getTitle());
     }
 
-    @When("^book fields title \"([^\"]*)\", isbn \"([^\"]*)\", author and year \"([^\"]*)\" are filled and submitted$")
-    public void book_fields_are_submitted(String title, String isbn, String year) throws Throwable {
+    @When("^book fields are filled with title \"([^\"]*)\", isbn \"([^\"]*)\", author \"([^\"]*)\" and year \"([^\"]*)\"$")
+    public void book_fields_are_filled_with(String title, String isbn, String author, String year) throws Throwable {
         Thread.sleep(SleepTime);
-        if (isbn.isEmpty()) {
+        if (isbn.equals("random")) {
             isbn = Integer.toString(Math.abs(random.nextInt()));
         } else if (isbn.equals("Already-in-use")) {
-            isbn = getBook(0).getIsbn();
+            isbn = getBook(1, "testUser").getIsbn();
         }
         findElementAndFill("bookTitle", title);
         findElementAndFill("isbn", isbn);
-        findElementAndFill("author", "Testaaja");
+        findElementAndFill("author", author);
         findElementAndFill("year", year);
-
-        element = driver.findElement(By.name("Add new book"));
-        element.submit();
-        Thread.sleep(SleepTime);
-        //driver.get(baseUrl + "books");
+    }
+    
+    @When("^book fields are cleared$")
+    public void book_fields_are_cleared() throws Throwable {
+        Thread.sleep(SleepTime*100);
+        findElementAndClear("bookTitle");
+        findElementAndClear("isbn");
+        findElementAndClear("author");
+        findElementAndClear("year");
     }
 
     @Then("^individual book is shown$")
     public void individual_book_is_shown() throws Throwable {
         //driver.get(baseUrl + "books/");
-        Book one = getBook(0);
+        Book one = getBook(0, "default");
         Thread.sleep(SleepTime);
         is_shown(one.getTitle());
         Thread.sleep(SleepTime);
@@ -400,64 +430,12 @@ public class Stepdefs {
         is_shown(Integer.toString(one.getYear()));
     }
 
-    @When("^book fields isbn, author and year are filled and submitted$")
-    public void book_fields_isbn_author_and_year_are_filled_and_submitted() throws Throwable {
-        Thread.sleep(SleepTime);
-        findElementAndFill("isbn", Integer.toString(Math.abs(random.nextInt())));
-        findElementAndFill("author", "Testaaja");
-        findElementAndFill("year", "2008");
-
-        driver.findElement(By.name("Add new book")).click();
-
-        Thread.sleep(SleepTime);
-        //driver.get(baseUrl + "books");
-    }
-
-    @When("^book fields Title, author and year are filled and submitted$")
-    public void book_fields_Title_author_and_year_are_filled_and_submitted() throws Throwable {
-        Thread.sleep(SleepTime);
-        findElementAndFill("bookTitle", "Test");
-        findElementAndFill("author", "Testaaja");
-        findElementAndFill("year", "2008");
-
-        element = driver.findElement(By.name("Add new book"));
-        element.submit();
-        Thread.sleep(SleepTime);
-        //driver.get(baseUrl + "books");
-    }
-
-    @When("^book fields isbn, title and year are filled and submitted$")
-    public void book_fields_isbn_title_and_year_are_filled_and_submitted() throws Throwable {
-        Thread.sleep(SleepTime);
-        findElementAndFill("bookTitle", "Test");
-        findElementAndFill("isbn", Integer.toString(Math.abs(random.nextInt())));
-        findElementAndFill("year", "2008");
-
-        element = driver.findElement(By.name("Add new book"));
-        element.submit();
-        Thread.sleep(SleepTime);
-        //driver.get(baseUrl + "books");
-    }
-
-    @When("^book fields isbn, author and Title are filled and submitted$")
-    public void book_fields_isbn_author_and_Title_are_filled_and_submitted() throws Throwable {
-        Thread.sleep(SleepTime);
-        findElementAndFill("bookTitle", "Test");
-        findElementAndFill("isbn", Integer.toString(Math.abs(random.nextInt())));
-        findElementAndFill("author", "Testaaja");
-
-        driver.findElement(By.name("Add new book")).click();
-
-        Thread.sleep(SleepTime);
-        //driver.get(baseUrl + "books");
-    }
-
     // </editor-fold>
     //                  spacer
     // <editor-fold desc="video testing">
     @When("^link to video's page is clicked$")
     public void link_to_video_s_page_is_clicked() throws Throwable {
-        Video one = getVideo(0);
+        Video one = getVideo(0, "default");
         Thread.sleep(SleepTime);
         clickLinkWithText(one.getTitle().trim(), "video");
         Thread.sleep(SleepTime);
@@ -465,7 +443,7 @@ public class Stepdefs {
 
     @Then("^individual video is shown$")
     public void individual_video_is_shown() throws Throwable {
-        Video one = getVideo(0);
+        Video one = getVideo(0, "default");
         Thread.sleep(SleepTime);
         is_shown(one.getTitle().trim());
         Thread.sleep(SleepTime);
@@ -576,69 +554,40 @@ public class Stepdefs {
     // <editor-fold desc="blog testing">
     @When("^link to blog's page is clicked$")
     public void link_to_blog_page_is_clicked() throws Throwable {
-        Blog one = getBlog(0);
+        Blog one = getBlog(0, "default");
         Thread.sleep(SleepTime);
         clickLinkWithText(one.getTitle().trim(), "blog");
         Thread.sleep(SleepTime);
     }
-
-    @When("^blog fields title \"([^\"]*)\" and others are filled and submitted$")
-    public void blog_fields_are_submitted(String title) throws Throwable {
+    
+    @When("^blog adding fields are filled with title \"([^\"]*)\", poster \"([^\"]*)\" and URL \"([^\"]*)\"$")
+    public void blog_adding_fields_are_filled_with(String title, String poster, String URL) throws Throwable {
         driver.findElement(By.id("blog")).click();
         System.out.println("Attempted to click blog radiobutton..");
+        if (!URL.isEmpty()) {
+            URL += random.nextInt(100); //call AddBlogAndLink seems to throw SQLException with already existing author and URL combination
+        }
+        blog_fields_are_filled_with(title, poster, URL);
+    }
+    
+    @When("^blog fields are filled with title \"([^\"]*)\", poster \"([^\"]*)\" and URL \"([^\"]*)\"$")
+    public void blog_fields_are_filled_with(String title, String poster, String URL) throws Throwable {
         Thread.sleep(SleepTime);
         findElementAndFill("blogTitle", title);
         Thread.sleep(SleepTime);
-        findElementAndFill("blogPoster", "Testaaja");
+        findElementAndFill("blogPoster", poster);
         Thread.sleep(SleepTime);
-        findElementAndFill("blogURL", "https://protesters.com/blogs/1");
-
-        System.out.println("Finding element for add new blog button");
-        driver.findElement(By.name("Add new blog")).click();
-        System.out.println("button clicked");
-        //driver.get(baseUrl + "books");
+        findElementAndFill("blogURL", URL);
     }
-
-    @When("^blog fields title and poster are filled correctly and submitted\\.$")
-    public void blog_fields_title_and_poster_are_filled_correctly_and_submitted() throws Throwable {
-        driver.findElement(By.id("blog")).click();
-        System.out.println("Attempted to click blog radiobutton..");
+    
+    @When("^blog fields are cleared$")
+    public void blog_fields_are_cleared() throws Throwable {
         Thread.sleep(SleepTime);
-        findElementAndFill("blogTitle", "TestTitle");
+        findElementAndClear("blogTitle");
         Thread.sleep(SleepTime);
-        findElementAndFill("blogPoster", "Testaaja");
-
-        element = driver.findElement(By.name("Add new blog"));
-        element.submit();
-        //driver.get(baseUrl + "books");
-    }
-
-    @When("^blog fields URL and Poster are filled and submitted$")
-    public void blog_fields_URL_and_Poster_are_filled_and_submitted() throws Throwable {
-        driver.findElement(By.id("blog")).click();
-        System.out.println("Attempted to click blog radiobutton..");
+        findElementAndClear("blogPoster");
         Thread.sleep(SleepTime);
-        findElementAndFill("blogPoster", "Testaaja");
-        Thread.sleep(SleepTime);
-        findElementAndFill("blogURL", "https://protesters.com/blogs/1");
-
-        element = driver.findElement(By.name("Add new blog"));
-        element.submit();
-        //driver.get(baseUrl + "books");
-    }
-
-    @When("^blog fields URL and Title are filled and submitted$")
-    public void blog_fields_URL_and_Title_are_filled_and_submitted() throws Throwable {
-        driver.findElement(By.id("blog")).click();
-        System.out.println("Attempted to click blog radiobutton..");
-        Thread.sleep(SleepTime);
-        findElementAndFill("blogTitle", "TestTitle");
-        Thread.sleep(SleepTime);
-        findElementAndFill("blogURL", "https://protesters.com/blogs/1");
-
-        element = driver.findElement(By.name("Add new blog"));
-        element.submit();
-        //driver.get(baseUrl + "books");
+        findElementAndClear("blogURL");
     }
 
     // </editor-fold>
@@ -759,7 +708,7 @@ public class Stepdefs {
     // <editor-fold desc="tag testing">
     @Given("^user is at book's page$")
     public void user_is_at_book_page() throws Throwable {
-        Book book = getBook(0);
+        Book book = getBook(0, "testUser");
         String new_url = baseUrl + "book/" + book.getId();
         System.out.println(new_url);
         driver.get(baseUrl + "book/" + book.getId());
@@ -767,13 +716,13 @@ public class Stepdefs {
 
     @Given("^user is at blog's page$")
     public void user_is_at_blog_page() throws Throwable {
-        Blog blog = getBlog(0);
+        Blog blog = getBlog(0, "testUser");
         driver.get(baseUrl + "blog/" + blog.getId());
     }
 
     @Given("^user is at video's page$")
     public void user_is_at_video_page() throws Throwable {
-        Video video = getVideo(0);
+        Video video = getVideo(0, "testUser");
         driver.get(baseUrl + "video/" + video.getId());
     }
 
@@ -791,6 +740,17 @@ public class Stepdefs {
         element.click();
     }
     // </editor-fold>
+    
+    //Deletion testing
+    @Then("^user can successfully remove an item$")
+    public void successful_remove() throws Throwable {
+        int before = itemMan.findAll("testUser").size();
+        if (before > 0) {
+            user_clicks_button("remove");
+            int after = itemMan.findAll("testUser").size();
+            assertTrue(before > after);
+        }
+    }
 
     //Comment testing
     @When("^comment field is filled with \"([^\"]*)\" and submitted$")
