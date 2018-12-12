@@ -7,7 +7,11 @@ Feature: user can add new blog
     And field "username" is filled with "testUser"
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
-    And blog fields title "How to test properly" and others are filled and submitted
+    And user clicks button "blog"
+    And field "blogTitle" is filled with "How to test properly"
+    And field "blogPoster" is filled with "Testaaja"
+    And field "blogURL" is filled with "https://protesters.com/blogs/1"
+    And user clicks button "addBlog"
     And user is redirected to "/items"
     And link for "blog" named "How to test properly" is clicked
     And user is redirected to "/blog"
@@ -20,7 +24,11 @@ Scenario: user cant add new blog without URL
     And field "username" is filled with "testUser"
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
-    And blog fields title and poster are filled correctly and submitted.
+    And user clicks button "blog"
+    And field "blogTitle" is filled with "How to test properly"
+    And field "blogPoster" is filled with "Testaaja"
+    And field "blogURL" is filled with ""
+    And user clicks button "addBlog"
     Then "Missing URL" is shown
     
 Scenario: user cant add new blog without Title
@@ -30,7 +38,11 @@ Scenario: user cant add new blog without Title
     And field "username" is filled with "testUser"
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
-    And blog fields URL and Poster are filled and submitted
+    And user clicks button "blog"
+    And field "blogTitle" is filled with ""
+    And field "blogPoster" is filled with "Testaaja"
+    And field "blogURL" is filled with "https://protesters.com/blogs/1"
+    And user clicks button "addBlog"
     Then "Missing Title" is shown
     
 Scenario: user cant add new blog without Poster
@@ -40,5 +52,9 @@ Scenario: user cant add new blog without Poster
     And field "username" is filled with "testUser"
     And field "password" is filled with "doesntMatter"
     And user clicks button "loginButton"
-    And blog fields URL and Title are filled and submitted
+    And user clicks button "blog"
+    And field "blogTitle" is filled with "How to test properly"
+    And field "blogPoster" is filled with ""
+    And field "blogURL" is filled with "https://protesters.com/blogs/1"
+    And user clicks button "addBlog"
     Then "Missing Poster" is shown

@@ -19,7 +19,11 @@
         <div class='all'>
             
             <h2><span th:text="'Edit Book: ' + ${book.title}"></span></h2>
-
+            <br/>
+            <li th:each="error: ${errors}">
+                <span th:text="${error}"></span>
+            </li>
+            <br/>
             <form  method="POST" name="SaveBook" action="SaveBook">
 
                 <br/>
@@ -38,7 +42,7 @@
                 Publishing year: <br/>
                 <input style='width:400px;' type="text" id="year" name="year" th:value="${book.year}"/><br/>
 
-                <input type="submit" value="Save changes" name="Save changes"/>
+                <input type="submit" id="saveChangeButton" value="Save changes" name="Save changes"/>
             </form>
             
         </div>

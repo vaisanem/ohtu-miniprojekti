@@ -18,7 +18,11 @@
         <div class='all'>
             
             <h2><span th:text="'Edit Blog: ' + ${blog.title}"></span></h2>
-
+            <br/>
+            <li th:each="error: ${errors}">
+                <span th:text="${error}"></span>
+            </li>
+            <br/>
            <form  method="POST" name="SaveBlog" action="SaveBlog">
 
                     <br/>                   
@@ -32,7 +36,7 @@
                     Blog Posted By:<br/>
                     <input style='width:400px;' type="text" id="blogPoster" name="blogPoster" th:value="${blog.poster}"/><br/>
 
-                    <input type="submit" value="Save changes" name="Save changes"/>
+                    <input type="submit" id="saveChangeButton" value="Save changes" name="Save changes"/>
 
                 </form>
             

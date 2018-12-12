@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 public class Controllers {
 
     private final ItemTypeManager itemMan;
-    private List<String> errors;
+    protected static List<String> errors;
     private UserController userController;
     private ItemPropertyManagementController iTypeController;
 
@@ -79,38 +79,38 @@ public class Controllers {
     public String removeItem(ModelMap model, HttpServletRequest request, @RequestParam Integer itemID) throws SQLException {
         String user = userController.getUserFromCookie(request);
 
-        if (!user.equals("NOT LOGGED IN")) {
-            itemMan.delete(itemID, user);
-            return "redirect:/items";
+        if (user == null || user.equals("NOT LOGGED IN")) {
+            model.addAttribute("error", "Not logged in, cannot delete");
+            return "error";
         }
 
-        model.addAttribute("error", "Not logged in, cannot delete");
-        return "redirect:/error";
+        itemMan.delete(itemID, user);
+        return "redirect:/items";
     }
 
-    public void validateBookParams(Optional<String> author, Optional<String> isbn, Optional<String> bookTitle, Optional<String> year) {
-        if (!Book.checkNumericality(year.get())) {
+    protected static void validateBookParams(String author, String isbn, String bookTitle, String year) {
+        if (!Book.checkNumericality(year)) {
             errors.add("Missing year or not numeric");
         }
-        if (isbn.get().isEmpty()) {
+        if (isbn.trim().isEmpty()) {
             errors.add("Missing ISBN");
         }
-        if (bookTitle.get().isEmpty()) {
+        if (bookTitle.trim().isEmpty()) {
             errors.add("Missing Title");
         }
-        if (author.get().isEmpty()) {
+        if (author.trim().isEmpty()) {
             errors.add("Missing Author");
         }
     }
 
-    public void validateVideoOrBlogParams(Optional<String> url, Optional<String> title, Optional<String> author) {
-        if (url.get().isEmpty()) {
+    protected static void validateVideoOrBlogParams(String url, String title, String author) {
+        if (url.trim().isEmpty()) {
             errors.add("Missing URL");
         }
-        if (title.get().isEmpty()) {
+        if (title.trim().isEmpty()) {
             errors.add("Missing Title");
         }
-        if (author.get().isEmpty()) {
+        if (author.trim().isEmpty()) {
             errors.add("Missing Poster");
         }
     }
@@ -132,7 +132,7 @@ public class Controllers {
         switch (type) {
             case "book": {
                 System.out.println("Redirected user : " + user);
-                validateBookParams(author, isbn, bookTitle, year);
+                validateBookParams(author.get(), isbn.get(), bookTitle.get(), year.get());
                 if (!errors.isEmpty()) {
                     model.addAttribute("errors", errors);
                     return "newItem";
@@ -156,7 +156,7 @@ public class Controllers {
 
             case "video": {
                 System.out.println("Redirected user : " + user);
-                validateVideoOrBlogParams(videoURL, videoTitle, videoPoster);
+                validateVideoOrBlogParams(videoURL.get(), videoTitle.get(), videoPoster.get());
                 if (!errors.isEmpty()) {
                     model.addAttribute("errors", errors);
                     return "newItem";
@@ -174,7 +174,7 @@ public class Controllers {
 
             case "blog": {
                 System.out.println("Redirected user : " + user);
-                validateVideoOrBlogParams(blogURL, blogTitle, blogPoster);
+                validateVideoOrBlogParams(blogURL.get(), blogTitle.get(), blogPoster.get());
                 if (!errors.isEmpty()) {
                     model.addAttribute("errors", errors);
                     return "newItem";
@@ -310,13 +310,8 @@ public class Controllers {
         String user = userController.getUserFromCookie(request);
 
         if (user == null || user.equals("NOT LOGGED IN")) {
-            Book book = itemMan.getBookMan().findOne(id);
-            book.setTags(itemMan.getTags(book.getId()));
-            book.setComments(itemMan.getCommentsForID(book.getId()));
-            model.addAttribute("book", book);
-            model.addAttribute("tags", book.getTags());
-            model.addAttribute("comments", book.getComments());
-            return "book";
+            model.addAttribute("error", "not logged in, please login before attempting to view an entry");
+            return "error";
         }
 
         Book book = itemMan.getBookMan().findOne(id, user);
@@ -339,13 +334,8 @@ public class Controllers {
         }
 
         if (user == null || user.equals("NOT LOGGED IN")) {
-            Blog blog = itemMan.getBlogMan().findOne(id);
-            blog.setTags(itemMan.getTags(id));
-            blog.setComments(itemMan.getCommentsForID(blog.getId()));
-            model.addAttribute("blog", blog);
-            model.addAttribute("tags", blog.getTags());
-            model.addAttribute("comments", blog.getComments());
-            return "blog";
+            model.addAttribute("error", "not logged in, please login before attempting to view an entry");
+            return "error";
         }
 
         Blog blog = itemMan.getBlogMan().findOne(id, user);
@@ -368,13 +358,8 @@ public class Controllers {
         }
 
         if (user == null || user.equals("NOT LOGGED IN")) {
-            Video video = itemMan.getVideoMan().findOne(id);
-            video.setTags(itemMan.getTags(id));
-            video.setComments(itemMan.getCommentsForID(video.getId()));
-            model.addAttribute("video", video);
-            model.addAttribute("tags", video.getTags());
-            model.addAttribute("comments", video.getComments());
-            return "video";
+            model.addAttribute("error", "not logged in, please login before attempting to view an entry");
+            return "error";
         }
 
         Video video = itemMan.getVideoMan().findOne(id, user);
