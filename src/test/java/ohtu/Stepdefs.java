@@ -121,6 +121,9 @@ public class Stepdefs {
 
     @When("^field \"([^\"]*)\" is filled with \"([^\"]*)\"$")
     public void field_is_filled_with(String fieldName, String fieldInput) throws Throwable {
+        if (fieldInput.equals("Already-in-use")) {
+            fieldInput = getBook(1, "testUser").getIsbn();
+        }
         findElementAndFill(fieldName, fieldInput);
     }
 
@@ -403,20 +406,6 @@ public class Stepdefs {
         String other = getBook(1, "default").getAuthor();
         ItemType unwanted = itemMan.getItemsByAuthor(other).get(0);
         is_not_shown(unwanted.getTitle());
-    }
-
-    @When("^book fields are filled with title \"([^\"]*)\", isbn \"([^\"]*)\", author \"([^\"]*)\" and year \"([^\"]*)\"$")
-    public void book_fields_are_filled_with(String title, String isbn, String author, String year) throws Throwable {
-        Thread.sleep(SleepTime);
-        if (isbn.equals("random")) {
-            isbn = Integer.toString(Math.abs(random.nextInt()));
-        } else if (isbn.equals("Already-in-use")) {
-            isbn = getBook(1, "testUser").getIsbn();
-        }
-        findElementAndFill("bookTitle", title);
-        findElementAndFill("isbn", isbn);
-        findElementAndFill("author", author);
-        findElementAndFill("year", year);
     }
 
     @When("^book fields are cleared$")

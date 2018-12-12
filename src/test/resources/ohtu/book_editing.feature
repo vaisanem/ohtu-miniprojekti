@@ -5,7 +5,10 @@ Feature: user can edit a book
     And "editor" is at "book"'s page
     And user clicks button "editButton"
     And book fields are cleared
-    And book fields are filled with title "Edited", isbn "random", author "Testaaja" and year "2018"
+    And field "bookTitle" is filled with "Edited"
+    And field "author" is filled with "Testaaja"
+    And field "isbn" is filled with "random"
+    And field "year" is filled with "2018"
     And user clicks button "saveChangeButton"
     And user is redirected to "/items"
     And link for "book" named "Edited" is clicked
@@ -17,7 +20,10 @@ Feature: user can edit a book
     And "editor" is at "book"'s page
     And user clicks button "editButton"
     And book fields are cleared
-    And book fields are filled with title "Edited", isbn "Already-in-use", author "Testaaja" and year "2018"
+        And field "bookTitle" is filled with "Edited"
+    And field "author" is filled with "Testaaja"
+    And field "isbn" is filled with "Already-in-use"
+    And field "year" is filled with "2018"
     And user clicks button "saveChangeButton"
     Then "Internal Server Error" is shown
 
@@ -26,7 +32,10 @@ Feature: user can edit a book
     And "editor" is at "book"'s page
     And user clicks button "editButton"
     And book fields are cleared
-    And book fields are filled with title "Edited", isbn "random", author "Testaaja" and year "once upon a time"
+    And field "bookTitle" is filled with "Edited"
+    And field "author" is filled with "Testaaja"
+    And field "isbn" is filled with "random"
+    And field "year" is filled with "von Supon Taheim"
     And user clicks button "saveChangeButton"
     Then "Missing year or not numeric" is shown
 
@@ -35,7 +44,10 @@ Feature: user can edit a book
     And "editor" is at "book"'s page
     And user clicks button "editButton"
     And book fields are cleared
-    And book fields are filled with title "", isbn "random", author "Testaaja" and year "2018"
+    And field "bookTitle" is filled with ""
+    And field "author" is filled with "Testaaja"
+    And field "isbn" is filled with "random"
+    And field "year" is filled with "2018"
     And user clicks button "saveChangeButton"
     Then "Missing Title" is shown
 
@@ -44,7 +56,10 @@ Feature: user can edit a book
     And "editor" is at "book"'s page
     And user clicks button "editButton"
     And book fields are cleared
-    And book fields are filled with title "Edited", isbn "", author "Testaaja" and year "2018"
+    And field "bookTitle" is filled with "Edited"
+    And field "author" is filled with "Testaaja"
+    And field "isbn" is filled with ""
+    And field "year" is filled with "2018"
     And user clicks button "saveChangeButton"
     Then "Missing ISBN" is shown
 
@@ -53,7 +68,10 @@ Feature: user can edit a book
     And "editor" is at "book"'s page
     And user clicks button "editButton"
     And book fields are cleared
-    And book fields are filled with title "Edited", isbn "random", author "" and year "2018"
+    And field "bookTitle" is filled with "Edited"
+    And field "author" is filled with ""
+    And field "isbn" is filled with "random"
+    And field "year" is filled with "2018"
     And user clicks button "saveChangeButton"
     Then "Missing Author" is shown
 
@@ -62,6 +80,9 @@ Feature: user can edit a book
     And "editor" is at "book"'s page
     And user clicks button "editButton"
     And book fields are cleared
-    And book fields are filled with title "Edited", isbn "random", author "Testaaja" and year ""
+    And field "bookTitle" is filled with "Edited"
+    And field "author" is filled with "Testaaja"
+    And field "isbn" is filled with "random"
+    And field "year" is filled with ""
     And user clicks button "saveChangeButton"
     Then "Missing year or not numeric" is shown
