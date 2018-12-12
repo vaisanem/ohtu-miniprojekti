@@ -740,17 +740,6 @@ public class Stepdefs {
         element.click();
     }
     // </editor-fold>
-    
-    //Deletion testing
-    @Then("^user can successfully remove an item$")
-    public void successful_remove() throws Throwable {
-        int before = itemMan.findAll("testUser").size();
-        if (before > 0) {
-            user_clicks_button("remove");
-            int after = itemMan.findAll("testUser").size();
-            assertTrue(before > after);
-        }
-    }
 
     //Comment testing
     @When("^comment field is filled with \"([^\"]*)\" and submitted$")
