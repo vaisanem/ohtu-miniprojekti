@@ -572,26 +572,6 @@ public class Stepdefs {
         Thread.sleep(SleepTime);
     }
 
-    @When("^blog adding fields are filled with title \"([^\"]*)\", poster \"([^\"]*)\" and URL \"([^\"]*)\"$")
-    public void blog_adding_fields_are_filled_with(String title, String poster, String URL) throws Throwable {
-        driver.findElement(By.id("blog")).click();
-        System.out.println("Attempted to click blog radiobutton..");
-        if (!URL.isEmpty()) {
-            URL += random.nextInt(100); //call AddBlogAndLink seems to throw SQLException with already existing author and URL combination
-        }
-        blog_fields_are_filled_with(title, poster, URL);
-    }
-
-    @When("^blog fields are filled with title \"([^\"]*)\", poster \"([^\"]*)\" and URL \"([^\"]*)\"$")
-    public void blog_fields_are_filled_with(String title, String poster, String URL) throws Throwable {
-        Thread.sleep(SleepTime);
-        findElementAndFill("blogTitle", title);
-        Thread.sleep(SleepTime);
-        findElementAndFill("blogPoster", poster);
-        Thread.sleep(SleepTime);
-        findElementAndFill("blogURL", URL);
-    }
-
     @When("^blog fields are cleared$")
     public void blog_fields_are_cleared() throws Throwable {
         Thread.sleep(SleepTime);

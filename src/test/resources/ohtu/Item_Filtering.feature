@@ -18,7 +18,6 @@ Feature: User can filter view items
 
   Scenario: User can view only listed blogs
     Given user is at the main page
-    When link "View List" is clicked
     And user is logged in as "default" with password "anything"
     And user is redirected to "/items"
     And user chooses "vBooks" and "vVideos"
