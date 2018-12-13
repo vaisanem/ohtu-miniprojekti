@@ -7,9 +7,11 @@ package ohtu.db;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import ohtu.types.Blog;
 import ohtu.types.Book;
+import ohtu.types.Comment;
 import ohtu.types.ItemType;
 import ohtu.types.Video;
 import org.junit.Before;
@@ -57,6 +59,27 @@ public class ManagerClassTestNoMock {
         int id = data.stream().filter(item -> item.getType() == ItemType.typeIdentifier.blog).findAny().get().getId();
         Blog blog = itemMan.getBlogMan().findOne(id);
         assertTrue(blog != null);
+    }
+
+    @Test
+    public void bookFindOneIncorrectInput() throws SQLException {
+        int id = -1;
+        Book book = itemMan.getBookMan().findOne(id);
+        assertTrue(book == null);
+    }
+
+    @Test
+    public void videoFindOneIncorrectInput() throws SQLException {
+        int id = -1;
+        Video vid = itemMan.getVideoMan().findOne(id);
+        assertTrue(vid == null);
+    }
+
+    @Test
+    public void blogFindOneIncorrectInput() throws SQLException {
+        int id = -1;
+        Blog blog = itemMan.getBlogMan().findOne(id);
+        assertTrue(blog == null);
     }
 
     @Test
@@ -153,6 +176,7 @@ public class ManagerClassTestNoMock {
         assertTrue(sameItem.getIsRead() == 1);
     }
 
+    @Test
     public void canMarkAsUnread() throws SQLException {
         List<ItemType> data = itemMan.findAll("testUser");
         ItemType oitem = data.stream().findAny().get();
@@ -182,4 +206,10 @@ public class ManagerClassTestNoMock {
         assertTrue(sameItem.getIsRead() == 0);
     }
 
+    @Test
+    public void commentsAreAppliedCorrectly() throws SQLException {
+        List<ItemType> items = itemMan.findAll("testUser");
+        itemMan.getAndApplyComments(items);
+        assertTrue(items.stream().anyMatch(item -> item.getComments() != null && item.getComments().size() >= 2));
+    }
 }
