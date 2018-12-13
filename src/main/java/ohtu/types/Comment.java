@@ -13,7 +13,7 @@ import java.sql.SQLException;
  *
  * @author ColdFish
  */
-public class Comment {
+public class Comment implements Comparable{
 
     private String text;
     private String timeStamp;
@@ -43,8 +43,11 @@ public class Comment {
         return timeStamp;
     }
 
-    
-    
+    @Override
+    public int compareTo(Object t) {
+        Comment other = (Comment) t;
+        return other.itemID - this.itemID;
+    }
 
-    
+
 }

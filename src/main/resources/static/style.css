@@ -33,6 +33,10 @@ h3 {
 }
 body {
     margin: 0;
+	background-image: url("/blue-close-up-concrete-304664.jpg");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size:cover;
 }
 div.all {
     margin-left: 10%;
@@ -61,7 +65,7 @@ ul.nav {
     margin: 0;
     padding: 0;
     width: 10%;
-    background-color: lightsteelblue;
+    background-color: rgba(255,255,255, 0.6);
     border: 1px solid black;
     height: 100%;
     position: fixed;
@@ -97,7 +101,7 @@ ul.items {
     margin: 0;
     padding: 0;
     width: 100%;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.65);
     overflow: auto;
 }
 li.items a {
@@ -176,4 +180,5 @@ ul.comments {
 li.comments {
     border: 1px solid black;
     margin-bottom: 5px;
+	background-color: rgba(255, 255, 255, 0.65);
 }
